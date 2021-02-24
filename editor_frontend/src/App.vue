@@ -1,28 +1,72 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <main id="app">
+    <Navigation/>
+    <div class="wrapper">
+      <router-view></router-view>
+    </div>
+  </main>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import axios from 'axios';
+import Utils from './Common/Utils';
+import IOMixin from './Controller/IOMixin';
+import config from '../../main.config';
+import Navigation from './components/Navigation.vue';
+
 
 export default {
   name: 'App',
+  mixins : [IOMixin],
   components: {
-    HelloWorld
+    Navigation
+  },
+  mounted(){
+
+    this.CheckForLogin()
+
+  },
+  data(){
+    return {
+      currentText : "1"
+    }
+  },
+  methods:{
+    CheckForLogin(){
+      const jwtCookie = Utils.GetCookie("jwt");
+      if(
+          (jwtCookie == null) &&
+          this.$router.currentRoute.name != "Login"
+        ){
+        this.GoToLogin()
+      }else if(jwtCookie != null){
+        console.log(jwtCookie, this.$store.state.jwt);
+        this.$store.commit("SetJWT", jwtCookie );
+
+        this.Get(config.CMS_BASE_URL + "/users/me").then((response)=>{
+          this.$store.commit("SetUser" , response.data);
+        });
+      }else if(this.$router.currentRoute.name != "Login"){
+        this.GoToLogin()
+      }
+    },
+    GoToLogin(){
+      this.$router.push({ 
+        path: 'Login',
+      });
+    },    
+    ChangeTextField ({ type, target }){
+      this.currentText = target.value;
+    },
+   
+
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@import url("./scss/stylesheet.scss");
+
+
 </style>

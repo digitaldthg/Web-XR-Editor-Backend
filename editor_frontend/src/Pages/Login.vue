@@ -13,6 +13,7 @@
 
 <script>
 import axios from 'axios';
+import config from '../../../main.config';
 
 export default {
   name : "LoginPage",
@@ -33,7 +34,7 @@ export default {
       console.log(this.user.name, this.user.pw);
 
       axios
-      .post('http://192.168.0.10:1337/auth/local', {
+      .post(config.CMS_BASE_URL + '/auth/local', {
         identifier: this.user.name,
         password: this.user.pw,
       })

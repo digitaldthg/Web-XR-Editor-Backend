@@ -21,8 +21,8 @@ export default {
     return {
       failed : false,
       user:{
-        name : "dthg",
-        pw : "immtsdthg"
+        name : "wunsiedel",
+        pw : "dthgimmts"
       }
     }
   },

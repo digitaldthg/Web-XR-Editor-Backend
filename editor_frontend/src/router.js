@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import Login from './Pages/Login';
 import Userprofile from './Pages/Userprofile';
+import Projekt from './Pages/Projekt'
 
 Vue.use(VueRouter)
 
@@ -20,9 +21,9 @@ const router = new VueRouter({
       component: Userprofile
     },
     { 
-      path: '/Projekte',
-      name: "Userprofil",
-      component: Userprofile
+      path: '/Projekt/:id',
+      name: "Projekt",
+      component: Projekt
     },
 
 

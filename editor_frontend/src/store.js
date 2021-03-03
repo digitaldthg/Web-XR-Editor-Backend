@@ -8,7 +8,8 @@ export const store = new Vuex.Store({
     state: {
       jwt: null,
       user : null,
-      loggedIn : false
+      loggedIn : false,
+      currentProjekt: null
     },
 
     actions: {
@@ -38,7 +39,11 @@ export const store = new Vuex.Store({
       },
       SetUser(state,user){
         state.user = user;
+      },
+      SetProjekt(state,projekt){
+        state.currentProjekt = projekt;
       }
+      
     }
 
 })

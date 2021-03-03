@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <template v-if="this.$store.state.loggedIn">
+    <template v-if="this.$store.state.loggedIn && this.$store.state.user != null">
       <div class="user-main">
         {{this.$store.state.user.username}}
       </div>

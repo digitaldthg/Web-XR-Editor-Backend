@@ -1,3 +1,6 @@
+import axios from 'axios';
+import {store} from '../store'
+
 const Utils = {
   SetCookie(name, value,days){
     var expires = "";
@@ -20,6 +23,17 @@ const Utils = {
   },
   DeleteCookie(name){
     document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  },
+  Put(url, payload){
+    return axios({
+      method : "PUT",
+      url : url,
+      data : payload,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer `+store.state.jwt 
+      }
+    })
   }
 }
 

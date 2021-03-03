@@ -1,5 +1,6 @@
 <template>
   <div class="preview" v-if="this.$store.state.currentProjekt != null">
+    {{slide.Name}}
       <img class="preview-image" v-if="slide.PreviewImage != null" :src="this.GetImageUrl(slide.PreviewImage)"/>
   </div>
 </template>
@@ -28,12 +29,13 @@ export default {
 <style scoped>
 .preview {
     width:100%;
-    height:100%;
+    height:120px;
 }
 
 .preview-image {
   width:100%;
-    height:100%;
+height: auto;
+margin-bottom: 10px;;
 }
 
 .visible-true {

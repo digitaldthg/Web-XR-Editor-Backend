@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Utils from './Common/Utils';
+import Project from './Controller/ProjectController';
 
 Vue.use(Vuex);
 
@@ -40,8 +41,13 @@ export const store = new Vuex.Store({
       SetUser(state,user){
         state.user = user;
       },
-      SetProjekt(state,projekt){
-        state.currentProjekt = projekt;
+      SetProjekt(state,projectData){
+        if(projectData == null){
+          state.currentProjekt = null;
+          return;
+        }
+        var project = new Project(projectData);
+        state.currentProjekt = project;
       }
       
     }

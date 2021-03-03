@@ -3,10 +3,10 @@
     Slides Overview
     <div
       class="container"
-      v-for="container in this.$store.state.currentProjekt.slide_containers"
+      v-for="container in this.$store.state.currentProjekt.slidecontainers"
       v-bind:key="container.id"
     >
-      Container: {{ container.Name }} Marker: {{ container.Marker.Name }}
+      Container: {{ container.Name }} 
       <div class="slide-container">
         <SlidePreview
           v-for="slide in container.Slides"
@@ -16,7 +16,7 @@
       </div>
       <button @click="AddSlide(container)">Neue Slide</button>
     </div>
-    <button>Neuer Container</button>
+    <button @click="AddContainer()">Neuer Container</button>
   </div>
 </template>
 
@@ -30,22 +30,26 @@ export default {
   components: {
     SlidePreview,
   },
-  methods:{
-        AddSlide(container){
-            /*this.Post(config.CMS_BASE_URL + "/slides").then((response) => {
-            console.log("Neu Slide:" ,response.data);
-            const slide = response.data;
-            this.$store.state.currentProjekt.slide_containers.filter(c=>{
-                c == container;
-            })[0].Slides.push(slide);
-
-            });*/
-        }
+  methods: {
+    AddSlide(container) {
+      this.Post(
+        config.CMS_BASE_URL + "/slides"
+      ).then((response) => {
+        console.log("SLIDE:" , response.data);
+        this.$store.state.currentProjekt.AddSlide(container,response.data);
+      });
+    },
+    AddContainer() {
+      this.Post(
+        config.CMS_BASE_URL + "/slide-containers"
+      ).then((response) => {
+        console.log("SLIDECONTAINER:" , response.data);
+        this.$store.state.currentProjekt.AddContainer(response.data);
+      });
+    },
   },
-  mounted() {
-
-  }
-}
+  mounted() {},
+};
 </script>
 
 <style scoped>

@@ -69,8 +69,8 @@ export default {
   box-shadow: 0 0 1rem 0 rgb(0 0 0 / 20%);
   display: inline-block;
 
-  input{
+  /*input{
     display: block;
-  }
+  }*/
 }
 </style>

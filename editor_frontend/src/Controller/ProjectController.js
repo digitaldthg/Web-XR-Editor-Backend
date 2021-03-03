@@ -12,8 +12,7 @@ class Project {
 
     AddSlide(container, slide) {
         var targetContainer = this.slidecontainers.filter(c => {
-            console.log(c);
-            return c.id = container.id;
+            return c.id == container.id;
         })
         targetContainer[0].Slides.push(slide);
         console.log("TARGET: ", targetContainer);

@@ -10,7 +10,14 @@ export const store = new Vuex.Store({
       jwt: null,
       user : null,
       loggedIn : false,
-      currentProjekt: null
+      currentProjekt: null,
+      tmp:{
+        // projekt : {
+        //   5:{
+        //     name : "test"
+        //   } 
+        // }
+      }
     },
 
     actions: {
@@ -48,6 +55,9 @@ export const store = new Vuex.Store({
         }
         var project = new Project(projectData);
         state.currentProjekt = project;
+      },
+      SetTmp(state,tmp){
+        state.tmp = tmp;
       }
       
     }

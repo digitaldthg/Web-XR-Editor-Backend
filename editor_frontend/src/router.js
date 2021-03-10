@@ -27,12 +27,12 @@ const router = new VueRouter({
     },
 
 
-    // /*{ 
+    // { 
     //   path: '/', 
     //   redirect: { 
-    //     name: 'Idle' 
+    //     name: 'Login' 
     //   }
-    // }*/
+    // }
   ]
 })
 

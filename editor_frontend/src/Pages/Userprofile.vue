@@ -12,25 +12,25 @@
     <div class="content-block">
       <div
         class="content"
-        v-for="contentblock in content"
-        v-bind:key="contentblock.id"
+        v-for="projekt in projekts"
+        v-bind:key="projekt.id"
       >
         <div class="table">
-          <div class="table-cell">Name: {{ contentblock.Name }}</div>
-          <div class="table-cell">ID: {{ contentblock.id }}</div>
+          <div class="table-cell">Name: {{ projekt.Name }}</div>
+          <div class="table-cell">ID: {{ projekt.id }}</div>
           <div class="table-cell">
             Beschreibung:
-            <vue-markdown> {{ contentblock.Description }}</vue-markdown>
+            <vue-markdown> {{ projekt.Description }}</vue-markdown>
           </div>
-          <div class="table-cell" v-if="contentblock.author != null">
-            Autor:in: {{ contentblock.author.username }}
+          <div class="table-cell" v-if="projekt.author != null">
+            Autor:in: {{ projekt.author.username }}
           </div>
           <!--<div class="table-cell">
-            <button @click="DeleteEntry(contentblock)">x</button>
+            <button @click="DeleteEntry(projekt)">x</button>
           </div>-->
 
           <div class="table-cell">
-            <button @click="GoToProjekt(contentblock)">Projekt Öffnen</button>
+            <button @click="GoToProjekt(projekt)">Projekt Öffnen</button>
           </div>
         </div>
       </div>
@@ -48,21 +48,34 @@ export default {
   mixins: [IOMixin],
   data() {
     return {
-      content: null,
+      projekts: null,
     };
   },
-  mounted() {
-    if (this.$store.state.user == null) {
-      return;
+  watch : {
+    "$store.state.user" : function(){
+      this.Init();
     }
-
-    this.Get(config.CMS_BASE_URL + "/projekts").then((response) => {
-      console.log(response.data);
-
-      this.content = response.data;
-    });
   },
   methods: {
+    Init(){
+      console.log("store," , this.$store.state.user == null);
+
+      if (this.$store.state.user == null) {
+        return;
+      }
+
+
+
+      console.log(this.$store.state);
+
+      this.Get(config.CMS_BASE_URL + "/projekts").then((response) => {
+        console.log(response.data);
+
+        this.projekts = response.data;
+      }).catch(error=> {
+        console.log(error);
+      });
+    },
     GoToProjekt(projekt) {
       this.$router.push({
         path: "/Projekt/" + projekt.id,
@@ -71,18 +84,18 @@ export default {
     DeleteEntry(entry) {
       console.log(entry.id);
 
-      this.Delete(config.CMS_BASE_URL + "/test-contents/" + entry.id)
-        .then((response) => {
-          console.log("delete", response.data);
+      // this.Delete(config.CMS_BASE_URL + "/test-contents/" + entry.id)
+      //   .then((response) => {
+      //     console.log("delete", response.data);
 
-          // get index of object with id:37
-          this.content = this.content.filter(
-            (item) => item.id != response.data.id
-          );
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      //     // get index of object with id:37
+      //     this.content = this.content.filter(
+      //       (item) => item.id != response.data.id
+      //     );
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
     },
     NewProjekt() {
       this.Post(config.CMS_BASE_URL + "/projekts", {
@@ -92,8 +105,8 @@ export default {
       })
         .then((response) => {
           console.log(response);
-          if (this.content.length > 0) {
-            this.content.push(response.data);
+          if (this.projekts.length > 0) {
+            this.projekts.push(response.data);
           }
         })
         .catch((error) => {

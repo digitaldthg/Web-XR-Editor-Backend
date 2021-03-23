@@ -1,6 +1,11 @@
 <template>
   <div class="preview" v-if="this.$store.state.currentProjekt != null">
-    {{slide.Name}}
+    <button @click="e => DeleteSlide(slide)">delete</button>
+    {{slide.id}}
+    <TextField 
+      htmlTag="p" 
+      :object="slide" 
+      path="slide.Name"/>
       <img class="preview-image" v-if="slide.PreviewImage != null" :src="this.GetImageUrl(slide.PreviewImage)"/>
   </div>
 </template>
@@ -8,16 +13,17 @@
 <script>
 import config from "../../../main.config";
 import IOMixin from "../Controller/IOMixin";
+import TextField from '../Components/TextField';
 
 export default {
   name: "SlidePreview",
   mixins: [IOMixin],
-  props:["slide"],
+  props:["slide", "DeleteSlide"],
   components:{
-
+    TextField
   },
   methods:{
-      GetImageUrl(path) {
+    GetImageUrl(path) {
       return config.CMS_BASE_URL  + path.url;
     },
   },

@@ -1,8 +1,8 @@
 <template>
-  <nav>
+  <nav class="main-nav">
     <template v-if="this.$store.state.loggedIn && this.$store.state.user != null">
       <div class="user-main">
-        {{this.$store.state.user.username}}
+        <router-link to="/Home">{{this.$store.state.user.username}}</router-link>
       </div>
     </template>
     <div class="user-action">      
@@ -28,14 +28,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-nav{
-  width: 100%;
-  background: #fff;
-  padding: 1rem;
-  box-shadow: 0 0 0.5rem 0 rgba(0,0,0,.2);
-  display: flex;
-  justify-content: space-between;
-}
-</style>

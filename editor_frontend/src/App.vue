@@ -1,10 +1,11 @@
 <template>
-  <main id="app">
+  <div id="app" :class="'template-'+ this.$route.name">
     <Navigation/>
-    <div class="wrapper">
+
+    <div class="main-app">
       <router-view></router-view>
     </div>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -13,7 +14,7 @@ import axios from 'axios';
 import Utils from './Common/Utils';
 import IOMixin from './Controller/IOMixin';
 import config from '../../main.config';
-import Navigation from './components/Navigation.vue';
+import Navigation from './Components/Navigation';
 
 
 export default {

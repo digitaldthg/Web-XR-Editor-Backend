@@ -5,7 +5,6 @@ import router from './router'
 import VueMarkdown from 'vue-markdown';
 
 
-
 Vue.config.productionTip = false;
 
 Vue.component('vue-markdown', VueMarkdown);

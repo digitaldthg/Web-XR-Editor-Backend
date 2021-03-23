@@ -6,12 +6,12 @@ class Project {
         this.id = params.id;
         this.Name = params.Name;
         this.author = params.author;
-        this.slidecontainers = params.slide_containers;
+        this.slide_containers = params.slide_containers;
         console.log(this)
     }
 
     AddSlide(container, slide) {
-        var targetContainer = this.slidecontainers.filter(c => {
+        var targetContainer = this.slide_containers.filter(c => {
             return c.id == container.id;
         })
         targetContainer[0].Slides.push(slide);
@@ -21,22 +21,6 @@ class Project {
         }).then((response) => {
             console.log("Upadted SlideContainer:", response.data);
         });
-    }
-
-    AddContainer(container) {
-        this.slidecontainers.push(container);
-        this.Upload();
-    }
-
-    Upload() {
-        console.log("Upload Project to CMS");
-        Utils.Put(config.CMS_BASE_URL + "/projekts/" + this.id, {
-            Name: this.Name,
-            slide_containers: this.slidecontainers
-        }).then((response) => {
-            console.log("Upadted project:", response.data);
-        });
-
     }
 
 

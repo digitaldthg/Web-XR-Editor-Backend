@@ -23,7 +23,25 @@ export default {
         }
       })
     },
+    PostData(url, formData){
+      return axios({
+        method : "POST",
+        url : url,
+        data : formData,
+        headers: {
+          'Content-Type': `multipart/form-data;`,
+          'Authorization': `Bearer ${ this.$store.state.jwt }`
+        }
+      })
+    },
     Delete(url){
+
+      // return axios.delete(url,{
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${ this.$store.state.jwt }`
+      //   }
+      // });
       return axios({
         method : "DELETE",
         url : url,
@@ -34,6 +52,8 @@ export default {
       })
     },
     Put(url, payload){
+
+      console.log(url, payload);
       return axios({
         method : "PUT",
         url : url,

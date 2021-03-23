@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Login from './Pages/Login';
 import Userprofile from './Pages/Userprofile';
 import Projekt from './Pages/Projekt'
+import Editor from './Pages/Editor';
 
 Vue.use(VueRouter)
 
@@ -16,8 +17,8 @@ const router = new VueRouter({
       component: Login
     },
     { 
-      path: '/Userprofile',
-      name: "Userprofil",
+      path: '/Home',
+      name: "Home",
       component: Userprofile
     },
     { 
@@ -25,14 +26,19 @@ const router = new VueRouter({
       name: "Projekt",
       component: Projekt
     },
+    { 
+      path: '/Editor/:id',
+      name: "Editor",
+      component: Editor
+    },
 
 
-    // { 
-    //   path: '/', 
-    //   redirect: { 
-    //     name: 'Login' 
-    //   }
-    // }
+    { 
+      path: '/', 
+      redirect: { 
+        name: 'Home' 
+      }
+    }
   ]
 })
 

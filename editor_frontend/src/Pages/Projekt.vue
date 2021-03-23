@@ -1,6 +1,12 @@
 <template>
   <div v-if="this.$store.state.currentProjekt != null">
-    Projektname: {{ GetValue(this.$store.state.currentProjekt, "projekt.Name") }}
+    <TextField 
+      htmlTag="p" 
+      :object="this.$store.state.currentProjekt" 
+      path="projekt.Name"/>
+    
+    
+    <h1>{{ GetValue(this.$store.state.currentProjekt, "projekt.Name") }}</h1>
     <input type="text" :value="GetValue(this.$store.state.currentProjekt, 'projekt.Name')" @input="e => SetValue({ object: this.$store.state.currentProjekt, path: 'projekt.Name', value: e.target.value})"/>
     
     <SlideOverview />
@@ -12,18 +18,15 @@
 import config from "../../../main.config";
 import IOMixin from "../Controller/IOMixin";
 import DataBehaviourMixin from "../Controller/DataBehaviourMixin";
-import SlideOverview from "../components/SlideOverview";
+import SlideOverview from "../Components/SlideOverview";
+import TextField from '../Components/TextField';
 
 export default {
   name: "Projekt",
   mixins: [IOMixin, DataBehaviourMixin],
   components: {
     SlideOverview,
-  },
-  methods: {
-    SaveProject() {
-      this.$store.state.currentProjekt.Upload();
-    },
+    TextField
   },
   watch : {
     "$store.state.user" : function(){
@@ -34,9 +37,21 @@ export default {
     
   },
   mounted() {
-   
+
+    if(this.$store.state.user != null){
+      this.Init();
+    }
   },
   methods:{
+    SaveProject() {
+
+      if(Object.keys(this.$store.state.tmp).length > 0){
+        console.log(this.$store.state.tmp);
+        this.Put(config.CMS_BASE_URL + "/db-update", this.$store.state.tmp).then((res)=>{
+          console.log("return value" , res)
+        });
+      }
+    },
     Init(){
        this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id).then(
         (response) => {
@@ -45,19 +60,7 @@ export default {
         }
       );
     },
-    /**
-      * @param object (Object): The object to modify.
-      * @param path (Array|string): The path of the property to set.
-      * @param value (*): The value to set.
-    */
-    // ChangeValue(object, path, value){
-
-    //   this.$store.commit("ChangeField" , {
-    //     object : object,
-    //     path : path,
-    //     value : value
-    //   });
-    // },
+    
     
   },
   destroyed(){

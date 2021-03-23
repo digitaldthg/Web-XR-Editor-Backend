@@ -1,43 +1,51 @@
 <template>
   <div class="" v-if="this.$store.state.user != null">
-    <h1>
-      Hallo <span class="tag">{{ this.$store.state.user.username }}</span>
-    </h1>
-    <div class="role-info">
-      <span class="tag">{{ this.$store.state.user.role.name }}</span>
-      {{ this.$store.state.user.role.description }}
-    </div>
-    <h2>Projekte:</h2>
+    <header>
+      <h1>
+        Hallo <span class="tag">{{ this.$store.state.user.username }}</span>
+      </h1>
 
-    <div class="content-block">
-      <div
-        class="content"
-        v-for="projekt in projekts"
-        v-bind:key="projekt.id"
-      >
-        <div class="table">
-          <div class="table-cell">Name: {{ projekt.Name }}</div>
-          <div class="table-cell">ID: {{ projekt.id }}</div>
-          <div class="table-cell">
-            Beschreibung:
-            <vue-markdown> {{ projekt.Description }}</vue-markdown>
-          </div>
-          <div class="table-cell" v-if="projekt.author != null">
-            Autor:in: {{ projekt.author.username }}
-          </div>
-          <!--<div class="table-cell">
-            <button @click="DeleteEntry(projekt)">x</button>
-          </div>-->
 
-          <div class="table-cell">
-            <button @click="GoToProjekt(projekt)">Projekt Öffnen</button>
+      <div class="role-info">
+        <span class="tag">{{ this.$store.state.user.role.name }}</span>
+        {{ this.$store.state.user.role.description }}
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <h2>Projekte:</h2>
+
+      <div class="content-block flex">
+        <div
+          class="content width-4"
+          v-for="projekt in projekts"
+          v-bind:key="projekt.id"
+        >
+          <div class="table">
+            <div class="table-cell">Name: {{ projekt.Name }}</div>
+            <div class="table-cell">ID: {{ projekt.id }}</div>
+            <div class="table-cell">
+              Beschreibung:
+              <vue-markdown> {{ projekt.Description }}</vue-markdown>
+            </div>
+            <div class="table-cell" v-if="projekt.author != null">
+              Autor:in: {{ projekt.author.username }}
+            </div>
+            <!--<div class="table-cell">
+              <button @click="DeleteEntry(projekt)">x</button>
+            </div>-->
+
+            <div class="table-cell">
+              <button @click="GoToProjekt(projekt)">Projekt Öffnen</button>
+            </div>
           </div>
         </div>
       </div>
+
+      <button @click="NewProjekt">Neues Projekt</button>
     </div>
-    <button @click="NewProjekt">Neues Projekt</button>
   </div>
 </template>
+
 <script>
 import axios from "axios";
 import config from "../../../main.config";
@@ -50,6 +58,9 @@ export default {
     return {
       projekts: null,
     };
+  },
+  mounted(){
+    this.Init();
   },
   watch : {
     "$store.state.user" : function(){
@@ -118,7 +129,5 @@ export default {
 </script>
 
 <style scoped>
-.content {
-  margin: 20px;
-}
+
 </style>

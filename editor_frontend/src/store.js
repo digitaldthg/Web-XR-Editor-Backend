@@ -2,10 +2,21 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Utils from './Common/Utils';
 import Project from './Controller/ProjectController';
+import IOMixins from './Controller/IOMixin';
+import config from '../../main.config';
 
 Vue.use(Vuex);
+// main.js
+Vue.mixin({
+  //methods: IOMixins
+});
+
+
 
 export const store = new Vuex.Store({
+    mixins : {
+      mutations : [IOMixins]
+    },
     state: {
       jwt: null,
       user : null,
@@ -19,11 +30,6 @@ export const store = new Vuex.Store({
         // }
       }
     },
-
-    actions: {
-
-    },
-
     mutations: {
       Logout(state,data){
         Utils.DeleteCookie("jwt");
@@ -53,9 +59,11 @@ export const store = new Vuex.Store({
           state.currentProjekt = null;
           return;
         }
-        var project = new Project(projectData);
-        state.currentProjekt = project;
+        var projekt = new Project(projectData);
+        state.currentProjekt = projekt;
+       
       },
+      
       SetTmp(state,tmp){
         state.tmp = tmp;
       }

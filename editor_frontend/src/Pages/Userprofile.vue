@@ -112,7 +112,6 @@ export default {
       this.Post(config.CMS_BASE_URL + "/projekts", {
         Name: "Test Projekt",
         Description: "Per API kreiierter Beitrag",
-        Author: this.$store.state.user,
       })
         .then((response) => {
           console.log(response);

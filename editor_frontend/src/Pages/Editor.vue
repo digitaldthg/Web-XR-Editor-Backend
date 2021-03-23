@@ -18,7 +18,7 @@
         </div>
       </nav>
     </aside>
-    <main class="slide-scene-preview">
+    <main class="slide-scene-preview" id="xr-scene">
 
     </main>
 
@@ -76,6 +76,10 @@ import SidebarContainerSettings from '../Components/Editor/SidebarComp/SlideCont
 import SaveComponent from '../Components/Editor/SidebarComp/SaveComponent';
 import SlideSettings from '../Components/Editor/SidebarComp/SlideSettingsComponent';
 import SlideHierarchie from '../Components/Editor/SidebarComp/SlideHierarchieComponent.vue';
+
+
+//XR
+import webXRScene from '../webxr_scene/src/index';
 
 export default {
   name : "EditorPage",
@@ -194,9 +198,18 @@ export default {
         (response) => {
 
           this.$store.commit("SetProjekt", response.data);
+
+          this.InitWebXR();
+          
+
         }
       );
     },
+    InitWebXR(){
+
+      console.log(webXRScene);
+      const webXRScene = new webXRScene("xr-scene");
+    }
     
   }
 }

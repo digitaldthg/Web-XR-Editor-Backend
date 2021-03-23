@@ -1,47 +1,47 @@
 <template>
   <div class="" v-if="this.$store.state.user != null">
     <header>
-      <h1>
-        Hallo <span class="tag">{{ this.$store.state.user.username }}</span>
-      </h1>
+      <div class="wrapper">
+        <h1>
+          Hallo <span class="tag">{{ this.$store.state.user.username }}</span>
+        </h1>
 
 
-      <div class="role-info">
-        <span class="tag">{{ this.$store.state.user.role.name }}</span>
-        {{ this.$store.state.user.role.description }}
-      </div>
-    </header>
-    <div class="content-wrapper">
-      <h2>Projekte:</h2>
-
-      <div class="content-block flex">
-        <div
-          class="content width-4"
-          v-for="projekt in projekts"
-          v-bind:key="projekt.id"
-        >
-          <div class="table">
-            <div class="table-cell">Name: {{ projekt.Name }}</div>
-            <div class="table-cell">ID: {{ projekt.id }}</div>
-            <div class="table-cell">
-              Beschreibung:
-              <vue-markdown> {{ projekt.Description }}</vue-markdown>
-            </div>
-            <div class="table-cell" v-if="projekt.author != null">
-              Autor:in: {{ projekt.author.username }}
-            </div>
-            <!--<div class="table-cell">
-              <button @click="DeleteEntry(projekt)">x</button>
-            </div>-->
-
-            <div class="table-cell">
-              <button @click="GoToProjekt(projekt)">Projekt Öffnen</button>
-            </div>
-          </div>
+        <div class="role-info">
+          <span class="tag">{{ this.$store.state.user.role.name }}</span>
+          {{ this.$store.state.user.role.description }}
         </div>
       </div>
+    </header>
 
-      <button @click="NewProjekt">Neues Projekt</button>
+
+    <div class="content-wrapper">
+      <div class="wrapper">
+        <h2>Projekte:</h2>
+
+        <div class="content-block flex">
+          
+          <ProjektCard
+            class="content width-4"
+            v-for="projekt in projekts"
+            v-bind:key="projekt.id"
+            :projekt="projekt"
+          />
+
+
+          <div class="projekt">
+            <div class="projekt-inner">
+
+              <button class="cta-button" @click="NewProjekt">Neues Projekt</button>
+            </div>
+          </div>
+
+
+          </div>
+        </div>
+
+        
+      </div>
     </div>
   </div>
 </template>
@@ -50,9 +50,11 @@
 import axios from "axios";
 import config from "../../../main.config";
 import IOMixin from "../Controller/IOMixin";
+import ProjektCard from '../Components/Projekt/ProjektCard.vue';
 
 export default {
-  name: "Userprofile",
+  components: { ProjektCard },
+  name: "Projekte",
   mixins: [IOMixin],
   data() {
     return {
@@ -75,10 +77,6 @@ export default {
         return;
       }
 
-
-
-      console.log(this.$store.state);
-
       this.Get(config.CMS_BASE_URL + "/projekts").then((response) => {
         console.log(response.data);
 
@@ -89,7 +87,7 @@ export default {
     },
     GoToProjekt(projekt) {
       this.$router.push({
-        path: "/Projekt/" + projekt.id,
+        path: "/Editor/" + projekt.id,
       });
     },
     DeleteEntry(entry) {
@@ -128,5 +126,9 @@ export default {
 </script>
 
 <style scoped>
-
+header {
+  padding: 2rem 0;
+  background: #eee;
+  margin-bottom: 2rem;
+}
 </style>

@@ -22,6 +22,7 @@ export const store = new Vuex.Store({
       user : null,
       loggedIn : false,
       currentProjekt: null,
+      xr : null,
       tmp:{
         // projekt : {
         //   5:{
@@ -63,7 +64,9 @@ export const store = new Vuex.Store({
         state.currentProjekt = projekt;
        
       },
-      
+      ApplyXR(state,xr){
+        state.xr = xr;
+      },
       SetTmp(state,tmp){
         state.tmp = tmp;
       }

@@ -1,18 +1,20 @@
 <template>
-  <div class="vector">
+  <div class="quaternion">
     <template v-if="edit">
       <input type="number" ref="axisX" @input="e => Change(e,'x')" :value="GetValue(object, path + '.x', 0)">
       <input type="number" ref="axisY" @input="e => Change(e,'y')" :value="GetValue(object, path + '.y', 0)">
       <input type="number" ref="axisZ" @input="e => Change(e,'z')" :value="GetValue(object, path + '.z', 0)">
+      <input type="number" ref="axisW" @input="e => Change(e,'w')" :value="GetValue(object, path + '.w', 1)">
 
       <button @click="ToggleEdit(false)">close</button>
       <slot />
     </template>
     <template v-if="!edit">
-      <div class="vector-field">
+      <div class="quaternion-field">
         <div class="value">x : {{RoundNumbers(GetValue(object, path + ".x", 0))}}</div>
         <div class="value">y : {{RoundNumbers(GetValue(object, path + ".y", 0))}}</div>
         <div class="value">z : {{RoundNumbers(GetValue(object, path + ".z", 0))}}</div>
+        <div class="value">z : {{RoundNumbers(GetValue(object, path + ".w", 1))}}</div>
       </div>
       <button class="edit-button" @click="ToggleEdit(true)">edit</button>
 
@@ -25,7 +27,7 @@
 import DataBehaviourMixin from '../Controller/DataBehaviourMixin';
 
 export default {
-  name : "VectorField",
+  name : "QuaternionField",
   mixins : [DataBehaviourMixin],
   props:[
     "object",
@@ -43,16 +45,17 @@ export default {
     ToggleEdit(bool){
       this.edit = bool;
     },
-    Change(e, axis){
-      var value = e.target.value;
+    Change(e){
       this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : this.$refs.axisX.value});
       this.SetValue({object : this.$props.object, path : this.$props.path + ".y", value : this.$refs.axisY.value});
       this.SetValue({object : this.$props.object, path : this.$props.path + ".z", value : this.$refs.axisZ.value});
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".w", value : this.$refs.axisW.value});
     },
-    SetValueFromOutside(vector3){
-      this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : vector3.x});
-      this.SetValue({object : this.$props.object, path : this.$props.path + ".y", value : vector3.y});
-      this.SetValue({object : this.$props.object, path : this.$props.path + ".z", value : vector3.z});
+    SetValueFromOutside(quaternion){
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : quaternion.x});
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".y", value : quaternion.y});
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".z", value : quaternion.z});
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".w", value : quaternion.w});
     },
     RoundNumbers(number){
       console.log(number);
@@ -64,7 +67,7 @@ export default {
 </script>
 
 <style scoped>
-.vector{
+.quaternion{
   display: flex;
   position: relative;
 }
@@ -81,7 +84,7 @@ button{
   vertical-align: middle;
 }
 
-.vector-field {
+.quaternion-field {
   display: flex;
 }
 .value,input{

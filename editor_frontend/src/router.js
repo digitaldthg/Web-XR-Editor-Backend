@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 
 import Login from './Pages/Login';
 import Projekte from './Pages/Projekte';
-import Editor from './Pages/Editor';
+import Editor from './Pages/Editor.vue';
 
 Vue.use(VueRouter)
 

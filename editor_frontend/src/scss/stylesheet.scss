@@ -48,6 +48,7 @@ nav.main-nav{
   padding: 1rem;
   box-shadow: 0 0 0.5rem 0 rgba(0,0,0,.2);
   display: flex;
+  z-index: 1;
   justify-content: space-between;
 }
 
@@ -66,7 +67,6 @@ nav.main-nav{
 
 .flex{
   display:flex;
-  flex-wrap:wrap;
 }
 
 .row {
@@ -77,11 +77,14 @@ nav.main-nav{
 margin:0 -1rem;  
 }
 
+.align-left{
+  text-align: left;
+}
+
+.align-right{
+  text-align: right;
+}
 
 @import url("./flex.scss");
 @import url("./button.scss");
 @import url("./layout.scss");
-@import url("./slide-component.scss");
-
-
-@import url("./pages/editor.scss");

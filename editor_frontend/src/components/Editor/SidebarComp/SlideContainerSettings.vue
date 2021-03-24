@@ -1,40 +1,43 @@
 <template>
   <div class="slide-component slide-container-component">
-    <SidebarCompHeader name="SlideContainerSettings"/>
+    <SidebarCompHeader name="SlideContainerSettings" />
     
-    <div class="row">
-      <TextField  :object="slideContainer" path="slideContainer.Name" htmlTag="h3"/>
-    </div>
-
-    <div class="row">
-      <VectorField :object="slideContainer" path="slideContainer.SlideContainerOffset" />
-    </div>
-
-    <div class="row">
-      {{slideContainer.PreviewImage}}
-    </div>
-
-
-    <div class="row">
-      <form @submit="UploadFile">
-        <input type="file" name="files" ref="previewImage"/>
-        <input type="submit" value="Submit" />
-      </form>
-
-      <div class="marker-image">
-        <template v-if="slideContainer.Marker != null">
-          {{slideContainer.Marker.Marker.url}}
-          <img :src="slideContainer.Marker.MarkerPreview.url" />
-        </template>
+    <template v-if="toggleOpen">
+      <div class="row">
+        <TextField  :object="slideContainers" path="slideContainers.Name" htmlTag="h3"/>
       </div>
-    </div>
+
+      <div class="row">
+        <VectorField :object="slideContainers" path="slideContainers.SlideContainerOffset" />
+      </div>
+
+      <div class="row">
+        {{slideContainers.PreviewImage}}
+      </div>
+
+
+      <div class="row">
+        <form @submit="UploadFile">
+          <input type="file" name="files" ref="previewImage"/>
+          <input type="submit" value="Submit" />
+        </form>
+
+        <div class="marker-image">
+          <template v-if="slideContainers.Marker != null">
+            {{slideContainers.Marker.Marker.url}}
+            <img :src="slideContainers.Marker.MarkerPreview.url" />
+          </template>
+        </div>
+      </div>
 
     
+    </template>
   </div>
 </template>
 <script>
 import config from '../../../../../main.config';
 import IOMixin from '../../../Controller/IOMixin';
+import ToggleMixin from '../../../Controller/ToggleMixin';
 
 import TextField from '../../TextField';
 import VectorField from '../../VectorField.vue';
@@ -42,8 +45,8 @@ import SidebarCompHeader from './SidebarCompHeader.vue';
 
 export default {
   name : "SlideContainerSettings",
-  mixins:[IOMixin],
-  props : ["slideContainer"],
+  mixins:[IOMixin, ToggleMixin],
+  props : ["slideContainers"],
   components:{
     TextField,
     VectorField,
@@ -55,7 +58,7 @@ export default {
     }
   },
   mounted(){
-    console.log("SlideContainerSettings", this.$props.slideContainer)
+    console.log("SlideContainerSettings", this.$props.slideContainers)
   },
   methods:{
     UploadFile(e){

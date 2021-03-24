@@ -1,27 +1,37 @@
 <template>
   <div class="slide-component">
     <SidebarCompHeader name="Slide Hierarchie"/>
-    <div class="row">
-      <div class="hierarchie">
-        <div class="hierarchie-item" v-for="slideElement in slide.SlideElements" v-bind:key="slideElement.id">
-          {{slideElement.Name}}
-          <VectorField :object="slideElement" path="slideElement.Offset" />
-          
+
+    <template v-if="toggleOpen">
+      <div class="row">
+        <div class="hierarchie">
+          <div class="hierarchie-item" v-for="SlideElements in slide.SlideElements" v-bind:key="SlideElements.id">
+            <input type="checkbox" />
+            {{SlideElements.Name}}
+            <VectorField :object="SlideElements" path="SlideElements.Offset" />
+            <VectorField :object="SlideElements" path="SlideElements.Scale" />
+            <QuaternionField :object="SlideElements" path="SlideElements.Rotation" />
+            
+            
+          </div>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script>
+import ToggleMixin from '../../../Controller/ToggleMixin'
+import QuaternionField from '../../QuaternionField.vue'
 import VectorField from '../../VectorField.vue'
 import SidebarCompHeader from './SidebarCompHeader.vue'
 export default {
-  components: { VectorField, SidebarCompHeader },
+  components: { VectorField, SidebarCompHeader, QuaternionField },
+  mixins:[ToggleMixin],
   name : "SlideHierarchie",
   props: ["slide"],
   mounted(){
-    console.log("SlideHierarchie", this.$props.slide)
+    console.log("SlideHierarchie", this.$props.slide, this.$props.slide.SlideElements)
   }
 }
 </script>

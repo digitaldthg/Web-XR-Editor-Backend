@@ -16,6 +16,7 @@ import * as THREE from 'three';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
 import config from '../../../../main.config';
 import DataBehaviourMixin from '../../Controller/DataBehaviourMixin';
+import Utils from '../../Common/Utils';
 
 
 export default {
@@ -26,7 +27,8 @@ export default {
     return {
       attachedModels : {},
       progress : null,
-      selected : null
+      selected : null,
+      library : {}
     }
   },
   mounted(){
@@ -37,6 +39,54 @@ export default {
   watch:{
     "$store.state.currentProjekt" : function(){
       console.log("currentProjekt has changed in WebXRScene"  ,this.$store.state.currentProjekt);
+      console.log("currentProjekt has changed in WebXRScene Attached Models",this.attachedModels);
+      var slide = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex];
+
+      var elementsNotInScene = slide.SlideElements.filter(sElement => !this.attachedModels.hasOwnProperty(sElement.id));
+
+      console.log("elementsNotInScene" , this.library, elementsNotInScene);
+
+      var elementsToLoad = elementsNotInScene.map(el => {
+        return { name : el.Name , url: config.CMS_BASE_URL + el.element.Asset.url}
+      }).filter(el => !this.library.hasOwnProperty(el.name) );
+
+
+      if(elementsToLoad.length > 0){
+        this.$store.state.xr.Loader.loadStack({
+          stack : elementsToLoad,
+          progress : this.LoadProgress
+        }).then(loadedItems => {
+
+          Object.keys(loadedItems).map(loadItem => {
+            if(!this.library.hasOwnProperty(loadItem)){
+              this.library[loadItem] = loadedItems[loadItem];
+            }
+          });
+
+          elementsNotInScene.map(elementNotInScene =>{
+
+            console.log("add Single Element Model to Scene", elementNotInScene);
+            this.AddSingleModelToScene(elementNotInScene, this.library[elementNotInScene.Name])    
+          });
+
+
+          console.log("library" , this.library);
+        });
+      }else{
+        console.log("elementsNotInScene but in library" , elementsNotInScene);
+
+        elementsNotInScene.map(elementNotInScene =>{
+          console.log("add Single Element Model to Scene", elementNotInScene);
+          this.AddSingleModelToScene(elementNotInScene, this.library[elementNotInScene.Name])    
+        });
+      }
+
+
+
+      console.log("elementsToLoad" , elementsToLoad);
+
+      console.log("slide" , slide.SlideElements);
+
     },
     "$props.slideIndex" : function(){
       console.log("slideIndex changed");
@@ -52,9 +102,7 @@ export default {
       xr.Renderer.instance.setClearColor(0xffffff,1);
       var box = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshNormalMaterial());
       box.position.set(0,.5,0);
-      xr.Scene.add(box)
-
-console.log(xr, this.$store.state.currentProjekt);
+      xr.Scene.add(box);
   
       var {CameraPosition, CameraTarget} = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex];
       console.log(CameraPosition);
@@ -137,10 +185,47 @@ console.log(xr, this.$store.state.currentProjekt);
             break;
           }
     },
+    AddSingleModelToScene(item, libraryItem){
+      var slideElements = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex].SlideElements;
+      var sElement = slideElements.find(element => element === item);
 
+      console.log(libraryItem);
+
+      this.attachedModels[item.id] = libraryItem;
+      //make a copy of the object
+      this.attachedModels[item.id].scene = this.attachedModels[item.id].scene.clone();
+      this.attachedModels[item.id].position = new THREE.Vector3(0,0,0);
+      this.attachedModels[item.id].scale = new THREE.Vector3(1,1,1);
+      this.attachedModels[item.id].quaternion = new THREE.Quaternion();
+
+      console.log("AddSingleModelToScene" , item, libraryItem);
+
+      this.attachedModels[item.id].scene.traverse(child => {
+        if(!child){return;}
+        if(!child.hasOwnProperty("userData")){child.userData = {}}
+
+        child.userData.slideElements = item;
+
+        child.isUI = true;
+        child.setState = this.SetStateOfObject;
+        this.$store.state.xr.Controls.ActiveObjects.push(child);
+      });
+
+      
+      this.attachedModels[item.id].scene.position = item.Offset != null ? new THREE.Vector3(item.Offset.x,item.Offset.y,item.Offset.z) : new THREE.Vector3(0,0,0);
+      this.attachedModels[item.id].scene.scale = item.Scale != null ? new THREE.Vector3(item.Scale.x,item.Scale.y,item.Scale.z) : new THREE.Vector3(1,1,1);
+      this.attachedModels[item.id].scene.quaternion = item.Rotation != null ? new THREE.Quaternion(item.Rotation.x,item.Rotation.y,item.Rotation.z,item.Rotation.w) : new THREE.Quaternion();
+      this.$store.state.xr.Scene.add(this.attachedModels[item.id].scene);
+    },
     AppendCurrentSlideModels(){
       var slideElements = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex].SlideElements;
+      
+
+      
       var elementsToLoad = slideElements.map(slideElement => {
+        if(typeof(slideElement.element.Asset) == "undefined"){return null;}
+        console.log(slideElement.element.Asset);
+
         var path = config.CMS_BASE_URL + slideElement.element.Asset.url;
         var name = slideElement.Name;
 
@@ -149,47 +234,38 @@ console.log(xr, this.$store.state.currentProjekt);
           url : path,
           name : name
         }
+      }).filter(el => el != null);
 
-      });
 
+      console.log("stack" , elementsToLoad);
+
+      elementsToLoad = elementsToLoad.reduce((acc, current) => {
+        const x = acc.find(item => item.name === current.name);
+        if (!x) {
+          return acc.concat([current]);
+        } else {
+          return acc;
+        }
+      }, []);
+      
       this.$store.state.xr.Loader.loadStack({
         stack : elementsToLoad,
         progress : this.LoadProgress
       }).then(library => {
+        
+        this.library = library;
+
+        slideElements.map(slideElement =>{
+          if(typeof(library[slideElement.Name]) === "undefined"){return;}
           
-
-        Object.keys(library).map(item => {
-          this.attachedModels[item] = library[item];
-
-          this.attachedModels[item].scene.traverse(child => {
-            if(!child || child.type != "Mesh"){return;}
-            if(!child.hasOwnProperty("userData")){child.userData = {}}
-
-            child.userData.item = item;
-            var sElement = slideElements.find(element => element.Name === item);
-            
-            child.userData.slideElements = sElement;
-            
-            child.isUI = true;
-            child.setState = this.SetStateOfObject;
-            this.$store.state.xr.Controls.ActiveObjects.push(child);
-
-
-          });
-
-          var sElement = slideElements.find(element => element.Name === item);
-
-          this.attachedModels[item].scene.position = sElement.Offset != null ? new THREE.Vector3(sElement.Offset.x,sElement.Offset.y,sElement.Offset.z) : new THREE.Vector3(0,0,0);
-          this.attachedModels[item].scene.scale = sElement.Scale != null ? new THREE.Vector3(sElement.Scale.x,sElement.Scale.y,sElement.Scale.z) : new THREE.Vector3(1,1,1);
-          this.attachedModels[item].scene.quaternion = sElement.Rotation != null ? new THREE.Quaternion(sElement.Rotation.x,sElement.Rotation.y,sElement.Rotation.z,sElement.Rotation.w) : new THREE.Quaternion();
-          this.$store.state.xr.Scene.add(this.attachedModels[item].scene);
+          this.AddSingleModelToScene(slideElement, library[slideElement.Name])
         });
 
 
         this.$store.state.xr.Events.addEventListener("ui-mouse-down" , this.Select);
         this.$store.state.xr.Events.addEventListener("ui-hovered" , this.Hover);
       });
-      console.log(slideElements, this.$store.state.xr);
+      
     },
     SetStateOfObject(state){
       //console.log(state);
@@ -206,14 +282,21 @@ console.log(xr, this.$store.state.currentProjekt);
     },
     Select(mesh){
       
-      if(mesh === this.selected){return;}
-      console.log("select", mesh);
+      var parent = Utils.GetParent(mesh);
+      if(parent === this.selected){return;}
+
+      // var parent = mesh;
+      // while(parent.parent.type === "Scene"){
+      //   parent = parent.parent;
+      // }
+
+      console.log("select", parent);
 
       if(this.selected != null){
         this.$store.state.xr.transformControls.detach(this.selected);
       }
 
-      this.selected = mesh;
+      this.selected = parent;
       this.$store.state.xr.transformControls.attach(this.selected);
 
     },

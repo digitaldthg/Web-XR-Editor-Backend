@@ -11,6 +11,7 @@ import Toolbar from '../Components/Editor/Toolbar/Toolbar';
 
 //Components für die Sidebar
 import SidebarContainerSettings from '../Components/Editor/SidebarComp/SlideContainerSettings';
+import FilesComponent from '../Components/Editor/SidebarComp/FilesComponent';
 import SaveComponent from '../Components/Editor/SidebarComp/SaveComponent';
 import SlideSettings from '../Components/Editor/SidebarComp/SlideSettingsComponent';
 import SlideHierarchie from '../Components/Editor/SidebarComp/SlideHierarchieComponent.vue';
@@ -31,7 +32,8 @@ export default {
     SlideHierarchie,
     XRScene,
     LightPresets,
-    Toolbar
+    Toolbar,
+    FilesComponent
   },
   data(){
     return {

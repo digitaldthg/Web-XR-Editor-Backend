@@ -31,6 +31,8 @@
           <button class="slide-nav-button" @click="PrevSlide">prev</button>
         </div>
         <nav class="slide-navigation-wrapper" v-if="this.$store.state.currentProjekt != null">
+
+          {{this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex]}}
           <SlideLink 
             v-for="(slide,slideIndex) in this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides" 
             v-bind:key="slide.id"
@@ -50,6 +52,9 @@
     </div>
 
     <aside class="slide-components" :style="GetComponentsWidth">
+
+      {{activeSlideContainerIndex}}
+      {{activeSlideIndex}}
       <template v-if="this.$store.state.currentProjekt != null">
         <div class="slide-component-settings-tabbar">
           <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'scene')"><button @click="e => ChangeTab('scene')">Scene</button></div>
@@ -59,7 +64,9 @@
           <SidebarContainerSettings :slideContainers="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex]"/>
         </div>
         <div class="slide-component-settings" v-if="activeTab == 'slide'">
-          
+
+          <FilesComponent :slide="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides[activeSlideIndex]"/>
+
           <SlideHierarchie :slide="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides[activeSlideIndex]"/>
 
           <SlideSettings :slides="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides[activeSlideIndex]"/>

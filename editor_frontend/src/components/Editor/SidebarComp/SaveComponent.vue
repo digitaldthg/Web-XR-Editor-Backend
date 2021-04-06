@@ -16,20 +16,27 @@ export default {
   methods :{
     SaveTmp :function(){
       console.log(this.$store.state.tmp);
-      Object.keys(this.$store.state.tmp).map((category)=>{
+
+
+      var savePromises = Object.keys(this.$store.state.tmp).map((category)=>{
         var splited = category.split(/(?=[A-Z])/);
         splited = splited.map(s => s.toLowerCase()).join("-");
 
-        Object.keys(this.$store.state.tmp[category]).map((id)=>{
+        return Object.keys(this.$store.state.tmp[category]).map((id)=>{
 
             console.log(splited, category, this.$store.state.tmp[category][id]);
 
-          this.Put( config.CMS_BASE_URL + "/" + splited + "/" + id , this.$store.state.tmp[category][id] ).then(response => {
-            console.log("successful saved " , response);
-          }).catch(error => console.log(error));
+          return this.Put( config.CMS_BASE_URL + "/" + splited + "/" + id , this.$store.state.tmp[category][id] ).then(response => {
+            }).catch(error => console.log(error));
         });
       });
 
+      Promise.all(savePromises).then(()=>{
+        console.log("successful saved ");
+
+        this.$store.commit("SetTmp" , {});
+
+      });
     }
   }
 }

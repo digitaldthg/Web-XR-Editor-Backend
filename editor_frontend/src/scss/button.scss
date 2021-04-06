@@ -21,7 +21,27 @@ button:hover{
   margin:auto;
   border-radius: 5px;
   position: relative;
-  display: block;
+  display: block; 
+}
+
+.cta-button-small{
+  text-align: center;
+  padding:.2rem .5rem;
+  background: #595fa8;
+  color:#fff;
+  font-weight: 700;
+  margin:auto;
+  border-radius: 3px;
+  position: relative;
+  display: block; 
+}
+
+.cta-button.--warning{
+  background:tomato;
+}
+
+.cta-button-small.--warning{
+  background:tomato;
 }
 
 .small-button{

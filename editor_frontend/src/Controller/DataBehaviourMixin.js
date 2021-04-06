@@ -8,8 +8,6 @@ module.exports = {
         return defaultIfNull;
       }
 
-      console.log(object, path,defaultIfNull != null)
-
       const pathChain = path.split(".");
       //extract info für path
       const contentType = pathChain.shift();
@@ -27,9 +25,6 @@ module.exports = {
         return tmpValue;
       }else{
         var pathChainCopyForObj = [...pathChain];
-        
-        console.log(tmpValue,Utils.GetNestedObjectValue(pathChainCopyForObj.join("."),object));
-
         var realValue =  Utils.GetNestedObjectValue(pathChainCopyForObj.join("."),object);
 
         if(realValue === null && defaultIfNull != null ){

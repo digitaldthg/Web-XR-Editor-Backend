@@ -39,7 +39,7 @@ export default {
     }
   },
   mounted(){
-    console.log("props" , this.$props.object, this.$props.path);
+    //console.log("props" , this.$props.object, this.$props.path);
   },
   methods:{
     ToggleEdit(bool){
@@ -58,7 +58,6 @@ export default {
       this.SetValue({object : this.$props.object, path : this.$props.path + ".w", value : quaternion.w});
     },
     RoundNumbers(number){
-      console.log(number);
       return parseFloat(number).toFixed(2);
     }
   },

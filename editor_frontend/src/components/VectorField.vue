@@ -37,7 +37,7 @@ export default {
     }
   },
   mounted(){
-    console.log("props" , this.$props.object, this.$props.path);
+    //console.log("props" , this.$props.object, this.$props.path);
   },
   methods:{
     ToggleEdit(bool){
@@ -47,7 +47,7 @@ export default {
       var value = e.target.value;
       this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : this.$refs.axisX.value});
       this.SetValue({object : this.$props.object, path : this.$props.path + ".y", value : this.$refs.axisY.value});
-      this.SetValue({object : this.$props.object, path : this.$props.path + ".z", value : this.$refs.axisZ.value});
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".z", value : this.$refs.axisZ.value});    
     },
     SetValueFromOutside(vector3){
       this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : vector3.x});
@@ -55,7 +55,7 @@ export default {
       this.SetValue({object : this.$props.object, path : this.$props.path + ".z", value : vector3.z});
     },
     RoundNumbers(number){
-      console.log(number);
+      //console.log(number);
       return parseFloat(number).toFixed(2);
     }
   },

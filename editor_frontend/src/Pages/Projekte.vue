@@ -26,6 +26,7 @@
             v-for="projekt in projekts"
             v-bind:key="projekt.id"
             :projekt="projekt"
+            @deleteProjekt ="OnDelete"
           />
 
 
@@ -85,31 +86,19 @@ export default {
         console.log(error);
       });
     },
+    OnDelete(data){
+      this.projekts = this.projekts.filter(p => p.id != data.id);
+    },
     GoToProjekt(projekt) {
       this.$router.push({
         path: "/Editor/" + projekt.id,
       });
     },
-    DeleteEntry(entry) {
-      console.log(entry.id);
-
-      // this.Delete(config.CMS_BASE_URL + "/test-contents/" + entry.id)
-      //   .then((response) => {
-      //     console.log("delete", response.data);
-
-      //     // get index of object with id:37
-      //     this.content = this.content.filter(
-      //       (item) => item.id != response.data.id
-      //     );
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //   });
-    },
     NewProjekt() {
       this.Post(config.CMS_BASE_URL + "/projekts", {
         Name: "Test Projekt",
         Description: "Per API kreiierter Beitrag",
+        
       })
         .then((response) => {
           console.log(response);

@@ -1,5 +1,5 @@
 <template>
-<div class="projekt">
+<div class="projekt" @click="LogProjekt">
   <div class="projekt-inner">
     <div class="projekt-card-header">
       <h3>{{ projekt.Name }}({{ projekt.id }})</h3>
@@ -11,18 +11,39 @@
 
 
       <div class="projekt-card-footer">
-        <router-link :to="'/editor/' + projekt.id">Projekt Öffnen</router-link>
+        <router-link class="cta-button" :to="'/editor/' + projekt.id">Projekt Öffnen</router-link>
+
+        <button class="cta-button --warning" @click="DeleteProjekt">Projekt löschen</button>
       </div>
     </div>
   </div>
 </div>
 </template>
 <script>
+import IOMixin from '../../Controller/IOMixin';
+import mainConfig from '../../../../main.config';
+
 export default {
   name : "ProjektCard",
+  mixins : [IOMixin],
   props : ["projekt"],
   mounted(){
     console.log("projekt mounted");
+  },
+  methods:{
+    LogProjekt(){
+      console.log(this.$props.projekt);
+    },
+    DeleteProjekt(){
+      console.log("delete projekt" , this.$props.projekt);
+
+      this.Delete(mainConfig.CMS_BASE_URL + "/projekts/"+ this.$props.projekt.id).then((response)=>{
+        console.log(this.$store.state, response);
+
+        this.$emit('deleteProjekt', response.data)
+      });
+
+    }
   }
 }
 </script>

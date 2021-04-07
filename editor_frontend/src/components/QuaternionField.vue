@@ -32,7 +32,13 @@ export default {
   props:[
     "object",
     "path",
+    "value"
   ],
+  watch:{
+    "$props.value" : function(){
+      console.log(this.$props.value);
+    }
+  },
   data (){
     return {
       edit : false
@@ -46,10 +52,19 @@ export default {
       this.edit = bool;
     },
     Change(e){
+      var quat = {
+        x : isNaN(parseFloat(this.$refs.axisX.value)) ? 0 : parseFloat(this.$refs.axisX.value),
+        y : isNaN(parseFloat(this.$refs.axisY.value)) ? 0 : parseFloat(this.$refs.axisY.value),
+        z : isNaN(parseFloat(this.$refs.axisZ.value)) ? 0 : parseFloat(this.$refs.axisZ.value),
+        w : isNaN(parseFloat(this.$refs.axisW.value)) ? 0 : parseFloat(this.$refs.axisW.value),
+      }
+
       this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : this.$refs.axisX.value});
       this.SetValue({object : this.$props.object, path : this.$props.path + ".y", value : this.$refs.axisY.value});
       this.SetValue({object : this.$props.object, path : this.$props.path + ".z", value : this.$refs.axisZ.value});
       this.SetValue({object : this.$props.object, path : this.$props.path + ".w", value : this.$refs.axisW.value});
+
+      this.$emit("change" , quat);
     },
     SetValueFromOutside(quaternion){
       this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : quaternion.x});

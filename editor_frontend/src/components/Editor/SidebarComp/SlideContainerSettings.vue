@@ -16,7 +16,7 @@
       </div>
 
 
-      <div class="row">
+      <!-- <div class="row">
         <form @submit="UploadFile">
           <input type="file" name="files" ref="previewImage"/>
           <input type="submit" value="Submit" />
@@ -28,7 +28,7 @@
             <img :src="slideContainers.Marker.MarkerPreview.url" />
           </template>
         </div>
-      </div>
+      </div> -->
 
     
     </template>
@@ -60,19 +60,19 @@ export default {
   mounted(){
     console.log("SlideContainerSettings", this.$props.slideContainers)
   },
-  methods:{
-    UploadFile(e){
-      e.preventDefault(e);
+  // methods:{
+  //   UploadFile(e){
+  //     e.preventDefault(e);
 
-      if(this.$refs.previewImage.files.length == 0){return;}
-      var formData = new FormData();
-          formData.append("files", this.$refs.previewImage.files[0]);
+  //     if(this.$refs.previewImage.files.length == 0){return;}
+  //     var formData = new FormData();
+  //         formData.append("files", this.$refs.previewImage.files[0]);
 
-        this.PostData(config.CMS_BASE_URL + "/upload/", formData).then(response =>{
-          console.log(response);
-        });
+  //       this.PostData(config.CMS_BASE_URL + "/upload/", formData).then(response =>{
+  //         console.log(response);
+  //       });
 
-    }
-  }
+  //   }
+  // }
 }
 </script>

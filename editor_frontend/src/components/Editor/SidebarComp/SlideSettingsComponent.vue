@@ -15,13 +15,13 @@
             Template: {{slides.SlideTemplate.Name}}
           </div>
           <div class="row">
-            CamPos : <VectorField ref="camPos" :object="slides" path="slides.CameraPosition" ><button @click="GetCamPos">Pos</button></VectorField>
+            <VectorField title="Kamera Position" ref="camPos" :object="slides" path="slides.CameraPosition" ><button class="icon-button" @click="GetCamPos"><SpotIcon /></button></VectorField>
           </div>
           <div class="row">
-            CamTarget : <VectorField ref="targetPos" :object="slides" path="slides.CameraTarget" ><button @click="GetTargetPos">Pos</button></VectorField>
+            <VectorField title="Kamera Target" ref="targetPos" :object="slides" path="slides.CameraTarget" ><button class="icon-button" @click="GetTargetPos"><SpotIcon /></button></VectorField>
           </div>
           <div class="row">
-            SlideOffset : <VectorField :object="slides" path="slides.SlideOffset" />
+            <VectorField title="SlideOffset" :object="slides" path="slides.SlideOffset" />
           </div>
       </template>
     </template>
@@ -34,8 +34,17 @@ import ToggleMixin from '../../../Controller/ToggleMixin';
 import TextField from '../../TextField.vue';
 import VectorField from '../../VectorField.vue';
 import SidebarCompHeader from './SidebarCompHeader.vue';
+
+import SpotIcon from '../../../Images/Icons/spot.svg';
+
+
 export default {
-  components: { TextField, VectorField, SidebarCompHeader },
+  components: { 
+    TextField, 
+    VectorField, 
+    SidebarCompHeader ,
+    SpotIcon
+  },
   mixins: [ToggleMixin],
   name : "SlideSettings",
   props : ["slides"],
@@ -57,3 +66,11 @@ export default {
 
 }
 </script>
+
+<style scope lang="scss">
+label{
+  display: block;
+  color:#aaa;
+  font-size: 80%;
+}
+</style>

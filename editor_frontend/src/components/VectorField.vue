@@ -1,35 +1,45 @@
 <template>
-  <div class="vector">
-    <template v-if="edit">
-      <input type="number" ref="axisX" @input="e => Change(e,'x')" :value="GetValue(object, path + '.x', 0)">
-      <input type="number" ref="axisY" @input="e => Change(e,'y')" :value="GetValue(object, path + '.y', 0)">
-      <input type="number" ref="axisZ" @input="e => Change(e,'z')" :value="GetValue(object, path + '.z', 0)">
-
-      <button @click="ToggleEdit(false)">close</button>
-      <slot />
-    </template>
-    <template v-if="!edit">
-      <div class="vector-field">
-        <div class="value">x : {{RoundNumbers(GetValue(object, path + ".x", 0))}}</div>
-        <div class="value">y : {{RoundNumbers(GetValue(object, path + ".y", 0))}}</div>
-        <div class="value">z : {{RoundNumbers(GetValue(object, path + ".z", 0))}}</div>
-      </div>
-      <button class="edit-button" @click="ToggleEdit(true)">edit</button>
-
-      <slot />
-    </template>
+  <div class="vector-field-wrapper">
+    <label v-if="title != null">{{title}}</label>
+    <div class="vector">
+      <template v-if="edit">
+        <div class="vector-field width-10">
+          <input class="value" type="number" ref="axisX" @input="e => Change(e,'x')" :value="GetValue(object, path + '.x', 0)">
+          <input class="value" type="number" ref="axisY" @input="e => Change(e,'y')" :value="GetValue(object, path + '.y', 0)">
+          <input class="value" type="number" ref="axisZ" @input="e => Change(e,'z')" :value="GetValue(object, path + '.z', 0)">
+        </div>
+        <div class="flex width-2">
+          <button class="icon-button" @click="ToggleEdit(false)"><CloseIcon /></button>
+        </div>
+      </template>
+      <template v-if="!edit">
+        <div class="vector-field width-10" @click="ToggleEdit(true)">
+          <div class="value">x : {{RoundNumbers(GetValue(object, path + ".x", 0))}}</div>
+          <div class="value">y : {{RoundNumbers(GetValue(object, path + ".y", 0))}}</div>
+          <div class="value">z : {{RoundNumbers(GetValue(object, path + ".z", 0))}}</div>
+        </div>
+        <div class="flex width-2">
+          <button class="icon-button edit-button" @click="ToggleEdit(true)"><EditIcon/></button>
+          <slot />
+        </div>
+      </template>
+    </div>
   </div>
 </template>
 <script>
 
 import DataBehaviourMixin from '../Controller/DataBehaviourMixin';
+import EditIcon from '../Images/Icons/edit.svg';
+import CloseIcon from '../Images/Icons/close.svg';
 
 export default {
   name : "VectorField",
+  components :{EditIcon,CloseIcon},
   mixins : [DataBehaviourMixin],
   props:[
     "object",
     "path",
+    "title"
   ],
   data (){
     return {
@@ -45,9 +55,16 @@ export default {
     },
     Change(e, axis){
       var value = e.target.value;
-      this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : this.$refs.axisX.value});
-      this.SetValue({object : this.$props.object, path : this.$props.path + ".y", value : this.$refs.axisY.value});
-      this.SetValue({object : this.$props.object, path : this.$props.path + ".z", value : this.$refs.axisZ.value});    
+      var vector3 = {
+        x : isNaN(parseFloat(this.$refs.axisX.value)) ? 0 : parseFloat(this.$refs.axisX.value),
+        y : isNaN(parseFloat(this.$refs.axisY.value)) ? 0 : parseFloat(this.$refs.axisY.value),
+        z : isNaN(parseFloat(this.$refs.axisZ.value)) ? 0 : parseFloat(this.$refs.axisZ.value),
+      }
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : parseFloat(this.$refs.axisX.value) });
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".y", value : parseFloat(this.$refs.axisY.value) });
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".z", value : parseFloat(this.$refs.axisZ.value) });    
+
+      this.$emit("change", vector3);
     },
     SetValueFromOutside(vector3){
       this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : vector3.x});
@@ -68,10 +85,11 @@ export default {
   display: flex;
   position: relative;
 }
-
+.value {
+  width: 33%;
+}
 input{
-  padding:.5rem;
-  width: 50px;
+  
 }
 
 button{
@@ -82,6 +100,7 @@ button{
 }
 
 .vector-field {
+  justify-content: space-between;
   display: flex;
 }
 .value,input{

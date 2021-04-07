@@ -67,6 +67,7 @@ $width : 100px;
   -webkit-overflow-scrolling: touch;
 }
 
+.slide-component-settings::-webkit-scrollbar{display:none}
 .slide-navigation-wrapper::-webkit-scrollbar{display:none}
 
 
@@ -128,7 +129,7 @@ $width : 100px;
 }
 
 .tabbar-selector button{
-  background: #fff;
+  background: #eee;
   border: 1px solid;
   border-radius: 5px 5px 0 0;
   border-bottom: 0;
@@ -137,6 +138,24 @@ $width : 100px;
 
 .tabbar-selector-active-true button {
   font-weight: 700;
-  background:#eee;
+  background:#fff;
   text-decoration: underline;
 }
+
+
+.tabbar-selector-active-false:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: #000;
+}
+
+.tabbar-selector-active-true:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: #fff;
+}
+

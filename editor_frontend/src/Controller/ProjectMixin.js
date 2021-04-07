@@ -5,6 +5,7 @@ export default {
   mixins:[IOMixin],
   methods : {
     AddSlide(slideContainer) {
+      console.log("%c Projektmixin legt neues Slide an", "background:tomato;color:#fff;");
       this.Post(config.CMS_BASE_URL + "/slides", {
         Name : "New Slide",
       }).then((response) => {
@@ -12,9 +13,10 @@ export default {
         container.Slides.push(response.data);
         return container;
       }).then(container => {
-        this.Put( config.CMS_BASE_URL + "/slide-containers/" + container.id, container).then(response => {
-          this.$store.commit("SetProjekt", response.data);
-        });
+        return this.Put( config.CMS_BASE_URL + "/slide-containers/" + container.id, container);
+      }).then(response =>{
+        
+        this.$store.commit("SetProjekt", response.data);
       });
     },
     AddContainer(){

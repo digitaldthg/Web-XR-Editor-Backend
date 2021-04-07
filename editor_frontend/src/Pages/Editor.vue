@@ -30,9 +30,8 @@
         <div class="slide-navigation-button">
           <button class="slide-nav-button" @click="PrevSlide">prev</button>
         </div>
-        <nav class="slide-navigation-wrapper" v-if="this.$store.state.currentProjekt != null">
+        <nav class="slide-navigation-wrapper" v-if="this.$store.state.currentProjekt != null && typeof(this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex]) != 'undefined'">
 
-          {{this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex]}}
           <SlideLink 
             v-for="(slide,slideIndex) in this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides" 
             v-bind:key="slide.id"
@@ -51,10 +50,9 @@
       </div>
     </div>
 
-    <aside class="slide-components" :style="GetComponentsWidth">
 
-      {{activeSlideContainerIndex}}
-      {{activeSlideIndex}}
+
+    <aside class="slide-components" :style="GetComponentsWidth">
       <template v-if="this.$store.state.currentProjekt != null">
         <div class="slide-component-settings-tabbar">
           <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'scene')"><button @click="e => ChangeTab('scene')">Scene</button></div>
@@ -64,6 +62,8 @@
           <SidebarContainerSettings :slideContainers="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex]"/>
         </div>
         <div class="slide-component-settings" v-if="activeTab == 'slide'">
+          
+          <SelectedInfoComponent />
 
           <FilesComponent :slide="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides[activeSlideIndex]"/>
 

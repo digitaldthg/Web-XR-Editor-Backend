@@ -16,6 +16,7 @@ import SaveComponent from '../Components/Editor/SidebarComp/SaveComponent';
 import SlideSettings from '../Components/Editor/SidebarComp/SlideSettingsComponent';
 import SlideHierarchie from '../Components/Editor/SidebarComp/SlideHierarchieComponent.vue';
 import LightPresets from '../Components/Editor/SidebarComp/LightPresetsComponent.vue';
+import SelectedInfoComponent from '../Components/Editor/SidebarComp/SelectedInfoComponent.vue';
 
 //XR
 import XRScene from '../Components/Editor/XRScene.vue';
@@ -33,7 +34,8 @@ export default {
     XRScene,
     LightPresets,
     Toolbar,
-    FilesComponent
+    FilesComponent,
+    SelectedInfoComponent
   },
   data(){
     return {
@@ -87,10 +89,12 @@ export default {
     }
   },
   mounted(){
-    console.log("editor page has mounted");
+    console.log("editor page has mounted", this.$store.state.currentProjekt);
     if(this.$store.state.user != null){
       this.Init();
     }
+
+
   },
   methods : {
     ChangeSlideContainer(id, index){

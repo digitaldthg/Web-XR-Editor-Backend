@@ -11,6 +11,10 @@ class Project {
     }
 
     AddSlide(container, slide) {
+
+      console.log("AddSlide" , container, slide);
+
+      return ;
         var targetContainer = this.slide_containers.filter(c => {
             return c.id == container.id;
         })

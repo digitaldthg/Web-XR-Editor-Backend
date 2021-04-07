@@ -18,6 +18,7 @@ import config from '../../../../main.config';
 import DataBehaviourMixin from '../../Controller/DataBehaviourMixin';
 import Utils from '../../Common/Utils';
 
+import {EventManager} from '../../Events/EventManager.js';
 
 export default {
   name : "XRScene",
@@ -35,16 +36,15 @@ export default {
     console.log("XRScene");
   
     this.InitWebXR();
+
+
+    EventManager.$on("Select", this.HandleModelSelection.bind(this));
+    EventManager.$on("Deselect", this.HandleModelDeselection.bind(this));
   },
   watch:{
     "$store.state.currentProjekt" : function(){
-      console.log("currentProjekt has changed in WebXRScene"  ,this.$store.state.currentProjekt);
-      console.log("currentProjekt has changed in WebXRScene Attached Models",this.attachedModels);
       var slide = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex];
-
       var elementsNotInScene = slide.SlideElements.filter(sElement => !this.attachedModels.hasOwnProperty(sElement.id));
-
-      console.log("elementsNotInScene" , this.library, elementsNotInScene);
 
       var elementsToLoad = elementsNotInScene.map(el => {
         return { name : el.Name , url: config.CMS_BASE_URL + el.element.Asset.url}
@@ -96,6 +96,15 @@ export default {
     }
   },
   methods : {
+    HandleModelSelection(slideElement){
+      console.log(slideElement ,this);
+
+      this.Select(Utils.GetSceneReference(this.$store.state.xr.Scene, slideElement));
+    },
+    HandleModelDeselection(slideElement){
+      console.log("deselect" , slideElement ,this.selected);
+      this.Deselect(Utils.GetSceneReference(this.$store.state.xr.Scene, slideElement))
+    },
     InitWebXR(){
 
       var xr = new webXRScene("xr-scene");
@@ -154,6 +163,8 @@ export default {
 
     },
     LoadProgress(progress){
+      console.log(progress);
+
       this.progress = progress;
     },
 
@@ -164,12 +175,27 @@ export default {
           switch(mode){
             case "translate":
               this.SetValue({object : slideElements, path : "slideElements.Offset", value : this.selected.position});
-
+              EventManager.$emit("ChangeTransfrom3D", {
+                  type : "position",
+                  object : this.selected
+                });
               console.log( this.selected.userData.slideElements);
+              var slideElements = this.selected.userData.slideElements;
+              this.SetValue({
+                object : slideElements, 
+                path : "slideElements.Offset", 
+                value : this.selected.position 
+              });
+      
+
             break;
             case "scale":
               this.SetValue({object : slideElements, path : "slideElements.Scale", value : this.selected.scale});
               console.log(this.selected.scale);
+              EventManager.$emit("ChangeTransfrom3D", {
+                  type : "scale",
+                  object : this.selected
+                });
             break;
             case "rotate":
 
@@ -181,6 +207,10 @@ export default {
                 w : this.selected.quaternion.w, 
                 
                 }});
+                EventManager.$emit("ChangeTransfrom3D", {
+                  type : "rotation",
+                  object : this.selected
+                });
               console.log(this.selected.rotation);
             break;
           }
@@ -220,6 +250,7 @@ export default {
     AppendCurrentSlideModels(){
       var slideElements = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex].SlideElements;
       
+      
 
       
       var elementsToLoad = slideElements.map(slideElement => {
@@ -248,12 +279,18 @@ export default {
         }
       }, []);
       
+      console.log("stack" , elementsToLoad);
+      
       this.$store.state.xr.Loader.loadStack({
         stack : elementsToLoad,
         progress : this.LoadProgress
       }).then(library => {
         
+        console.log("library has loaded" , library);
+
         this.library = library;
+
+        console.log("this.library");
 
         slideElements.map(slideElement =>{
           if(typeof(library[slideElement.Name]) === "undefined"){return;}
@@ -272,8 +309,15 @@ export default {
     },
 
     DetatchCurrentSlideModels(){
+
+      if(this.selected != null){
+        this.Deselect(this.selected);
+      }
       Object.keys(this.attachedModels).map(item => {
         this.$store.state.xr.Scene.remove(this.attachedModels[item].scene);
+
+        //clear all active Objects in scene
+        this.$store.state.xr.Controls.ActiveObjects = [];
 
         delete this.attachedModels[item];
       });
@@ -281,23 +325,37 @@ export default {
 
     },
     Select(mesh){
-      
+      if(mesh.parent === null){
+        console.warn("Selected mesh is not present in scene any more!");
+        return;
+      }
+      console.log("OnSelect Mesh: " , mesh);
+
       var parent = Utils.GetParent(mesh);
       if(parent === this.selected){return;}
-
-      // var parent = mesh;
-      // while(parent.parent.type === "Scene"){
-      //   parent = parent.parent;
-      // }
 
       console.log("select", parent);
 
       if(this.selected != null){
+        EventManager.$emit("3DDeselect" , this.selected);
+        this.selected.userData.selected = false;
         this.$store.state.xr.transformControls.detach(this.selected);
       }
 
       this.selected = parent;
+      this.selected.userData.selected = true;
       this.$store.state.xr.transformControls.attach(this.selected);
+
+      EventManager.$emit("3DSelect" , this.selected);
+    },
+    Deselect(mesh){
+      if(mesh != this.selected){return;}
+
+      this.selected.userData.selected = false;
+      this.$store.state.xr.transformControls.detach(this.selected);
+      EventManager.$emit("3DDeselect" , this.selected);
+
+      this.selected = null;
 
     },
     Hover(mesh){

@@ -17,25 +17,30 @@ export default {
     SaveTmp :function(){
       console.log(this.$store.state.tmp);
 
-
+      return;
       var savePromises = Object.keys(this.$store.state.tmp).map((category)=>{
         var splited = category.split(/(?=[A-Z])/);
         splited = splited.map(s => s.toLowerCase()).join("-");
-
-        return Object.keys(this.$store.state.tmp[category]).map((id)=>{
+        var promises = Object.keys(this.$store.state.tmp[category]).map((id)=>{
 
             console.log(splited, category, this.$store.state.tmp[category][id]);
 
-          return this.Put( config.CMS_BASE_URL + "/" + splited + "/" + id , this.$store.state.tmp[category][id] ).then(response => {
-            }).catch(error => console.log(error));
+          return this.Put( config.CMS_BASE_URL + "/" + splited + "/" + id , this.$store.state.tmp[category][id] );
         });
+
+        return Promise.all(promises);
       });
 
-      Promise.all(savePromises).then(()=>{
-        console.log("successful saved ");
+      Promise.all(savePromises).then((response)=>{
+        console.log("successful saved ", response);
+        return this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id);
+      }).then(response =>{
 
-        this.$store.commit("SetTmp" , {});
+        console.log("%c updated Projekt" , "background:tomato; color:#fff;");
+        console.log(response);
 
+        this.$store.commit("SetProjekt", response.data);
+        this.$store.commit("SetTmp" , {});        
       });
     }
   }

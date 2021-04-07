@@ -3,6 +3,27 @@ import IOMixin from '../Controller/IOMixin';
 import {store} from '../store'
 
 const Utils = {
+  guid(){
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  },
+  GetSceneReference(scene, slideElement){
+    const {id} = slideElement;
+    var sceneReference = null;
+    scene.traverse(child =>{
+      if(child.userData.hasOwnProperty("slideElements")){
+        if(child.userData.slideElements.id == id){
+          sceneReference = child;
+        }
+      }
+    });
+
+    sceneReference = sceneReference != null ? Utils.GetParent(sceneReference) : sceneReference;
+
+    return sceneReference;
+  },
   SetCookie(name, value,days){
     var expires = "";
     if (days) {
@@ -83,11 +104,13 @@ const Utils = {
     return obj;
   },
   GetParent(item){
-    var childParent = item;//{type: null};
-    // console.log("found" , childParent);
+
+    if(item === null){return null;}
+    var childParent = item;
     var maxIteration = 10;
     var currentIteration = 0;
-    var mustContinue = true;
+    var mustContinue = childParent.parent != null;
+
     while(mustContinue && currentIteration < maxIteration){
      mustContinue = childParent.parent.type != "Scene";
      if(mustContinue){

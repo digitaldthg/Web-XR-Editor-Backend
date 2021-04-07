@@ -1,4 +1,9 @@
 @import url("./reset.scss");
+
+.hidden{
+  display: none;
+}
+
 *{
   box-sizing: border-box;
 }
@@ -11,6 +16,12 @@ html,body{
   position: relative;
 }
 
+img{
+  display: block;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
 
 h1,h2,h3,h4,h5,h6{
   margin-top:0;
@@ -84,6 +95,14 @@ margin:0 -1rem;
 .align-right{
   text-align: right;
 }
+
+
+.svg-icon {
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+}
+
 
 @import url("./flex.scss");
 @import url("./button.scss");

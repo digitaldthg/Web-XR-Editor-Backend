@@ -20,6 +20,7 @@
     </aside>
 
     <Toolbar />
+
     <template v-if="this.$store.state.currentProjekt != null" >
       <XRScene :slideIndex="activeSlideIndex" :containerIndex="activeSlideContainerIndex" />
     </template>
@@ -57,15 +58,14 @@
         <div class="slide-component-settings-tabbar">
           <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'scene')"><button @click="e => ChangeTab('scene')">Scene</button></div>
           <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'slide')"><button @click="e => ChangeTab('slide')">Slide</button></div>
+          <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'file')"><button @click="e => ChangeTab('file')">File</button></div>
+          <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'object')"><button @click="e => ChangeTab('object')">3D Objekt</button></div>
         </div>
         <div class="slide-component-settings" v-if="activeTab == 'scene'">
           <SidebarContainerSettings :slideContainers="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex]"/>
         </div>
         <div class="slide-component-settings" v-if="activeTab == 'slide'">
           
-          <SelectedInfoComponent />
-
-          <FilesComponent :slide="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides[activeSlideIndex]"/>
 
           <SlideHierarchie :slide="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides[activeSlideIndex]"/>
 
@@ -74,6 +74,15 @@
           <LightPresets />
 
         </div>
+        <div class="slide-component-settings" v-if="activeTab == 'file'">
+          <FilesComponent :slide="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides[activeSlideIndex]"/>
+        </div>
+        <div class="slide-component-settings" v-if="activeTab == 'object'">
+          <SelectedInfoComponent />
+          <PrimitiveComponent />
+        </div>
+
+
         <SaveComponent />
 
       </template>

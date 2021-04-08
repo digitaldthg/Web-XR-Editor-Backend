@@ -11,6 +11,7 @@
             </div>
             <div class="hierarchie-item-col align-left width-8">
               {{SlideElements.Name === "" ? "Kein Modelname" : SlideElements.Name}}
+              ({{SlideElements.id}})
 
             </div>
             <div class="hierarchie-item-col flex width-3">

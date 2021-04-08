@@ -23,6 +23,7 @@
 <script>
 import IOMixin from '../../../Controller/IOMixin';
 import ToggleMixin from '../../../Controller/ToggleMixin';
+import ProjectMixin from '../../../Controller/ProjectMixin';
 import SidebarCompHeader from "./SidebarCompHeader.vue";
 import mainConfig from '../../../../../main.config';
 import Utils from '../../../Common/Utils';
@@ -33,7 +34,7 @@ import placeHolderImage from '../../../Images/placeholder.jpg';
 
 export default {
   name : "Files",
-  mixins:[IOMixin,ToggleMixin],
+  mixins:[IOMixin,ToggleMixin, ProjectMixin],
   props:["slide"],
   components: {SidebarCompHeader, FileUpload},
   data(){
@@ -63,54 +64,16 @@ export default {
       var Element = {
         Name : uploadedAsset.name,
         Asset : uploadedAsset,
+        Type : {
+          Type: "Object3D"
+        }
       }
 
-      this.Post(mainConfig.CMS_BASE_URL + "/elements", Element).then(response => {
+      console.log("slideElements " , this.$props.slide.SlideElements);
 
-        return response.data;
-      }).then((element) =>{
-        console.log("%c 1. Element" ,"background:tomato; color:#fff;");
-        console.log("received element" , element);
-        
-        var SlideElement = {
-          Name : element.Name,
-          element : element
-        }
+      this.AddElement(Element);
 
-        return this.Post(mainConfig.CMS_BASE_URL + "/slide-elements" , SlideElement);
-      }).then(response =>{
-
-        console.log("%c 2. slideElement" ,"background:tomato; color:#fff;");
-        var slideElement = response.data;
-
-        console.log("received slideELement" , slideElement);
-
-        var sElements = [... this.$props.slide.SlideElements];
-
-          sElements.push(slideElement);
-
-          //PUT SlideElements update
-          return this.Put(mainConfig.CMS_BASE_URL + "/slides/" + this.$props.slide.id , {
-            SlideElements : sElements
-          })
-
-      }).then(response =>{
-        console.log("%c 3. Slide" ,"background:tomato; color:#fff;");
-        console.log("final new Slides" , response.data);
-
-        return this.Get(mainConfig.CMS_BASE_URL + "/projekts/" + this.$route.params.id);
-      }).then(response =>{
-        console.log("%c 4. Projekt" ,"background:tomato; color:#fff;");
-        console.log("Get Complete Response for new Slide" , response);
-
-        this.$store.commit("SetProjekt", response.data);
-
-        return response.data;
-      }).then(projekt =>{
-        console.log("%c 4. Final" ,"background:tomato; color:#fff;");
-        console.log("projekt" , projekt);
-
-      });
+     
 
     },
     DeleteItem(item){
@@ -125,24 +88,9 @@ export default {
       });
     },
     AppendItemToScene(cms_element){
-      
-      var item = cms_element.Asset;
-      var elementName = item.name.replace(item.ext, "");
-      
-      // var Element = {
-      //   Name : elementName,
-      //   Asset : item
-      // }
-
-
-      //console.log(elementName);
-      //return;
-
-      // this.Post(mainConfig.CMS_BASE_URL + "/elements", Element).then(response => {
-        // const element = response.data;
-// 
+   
         var SlideElement = {
-          Name : "",
+          Name : cms_element.Name.replace(cms_element.Asset.ext, ""),
           element : cms_element
         }
         
@@ -152,31 +100,24 @@ export default {
 
           sElements.push(res.data);
 
+          return sElements;
+          
+        }).then(sElements =>{
           //PUT SlideElements update
-          this.Put(mainConfig.CMS_BASE_URL + "/slides/" + this.$props.slide.id , {
+          return this.Put(mainConfig.CMS_BASE_URL + "/slides/" + this.$props.slide.id , {
             SlideElements : sElements
-          }).then(d => {
-
-            //must update scene and add model
-           
-            this.Get(mainConfig.CMS_BASE_URL + "/projekts/" + this.$route.params.id).then((result) => {
-
-              console.log("success updating Project and set in store");
-              this.$store.commit("SetProjekt", result.data);
-            });
-
-
           });
 
+        }).then(d =>{
+            //must update scene and add model           
+            return this.Get(mainConfig.CMS_BASE_URL + "/projekts/" + this.$route.params.id);
+
+        }).then(result =>{
+              console.log("success updating Project and set in store");
+              this.$store.commit("SetProjekt", result.data);  
         });
-        
-     // });
-      // create Element from Asset
-      // create SlideElement
-      // Add to current Slide
-
-
     },
+
     FilterData(data){
       var filteredData = Object.keys(data).map( d => {
         
@@ -199,7 +140,6 @@ export default {
 .file-items{
   display: flex;
   flex-wrap: wrap;
-  max-height:300px;
   overflow: hidden;
   overflow-y: auto;
   padding: .25rem;

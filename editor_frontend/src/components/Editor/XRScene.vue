@@ -34,8 +34,11 @@ export default {
   },
   mounted(){
     console.log("XRScene");
-  
+    //Create Primitive first
+    this.CreatePrimitives();
+
     this.InitWebXR();
+
 
 
     EventManager.$on("Select", this.HandleModelSelection.bind(this));
@@ -46,7 +49,16 @@ export default {
       var slide = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex];
       var elementsNotInScene = slide.SlideElements.filter(sElement => !this.attachedModels.hasOwnProperty(sElement.id));
 
-      var elementsToLoad = elementsNotInScene.map(el => {
+      var primitiveElements = elementsNotInScene.filter(el => el.element.Type.Type === "Primitive");
+
+      primitiveElements.map(element => {
+
+        console.log("element primitive" , element.element.Primitive.PrimitiveType);
+
+        this.AddSingleModelToScene(element, this.library.Cube);
+      });
+
+      var elementsToLoad = elementsNotInScene.filter(el => el.element.Type.Type === "Object3D").filter(el => {console.log(el); return el;}).map(el => {
         return { name : el.Name , url: config.CMS_BASE_URL + el.element.Asset.url}
       }).filter(el => !this.library.hasOwnProperty(el.name) );
 
@@ -75,7 +87,7 @@ export default {
       }else{
         console.log("elementsNotInScene but in library" , elementsNotInScene);
 
-        elementsNotInScene.map(elementNotInScene =>{
+        elementsNotInScene.filter(el => el.element.Type.Type === "Object3D").map(elementNotInScene =>{
           console.log("add Single Element Model to Scene", elementNotInScene);
           this.AddSingleModelToScene(elementNotInScene, this.library[elementNotInScene.Name])    
         });
@@ -96,6 +108,14 @@ export default {
     }
   },
   methods : {
+    CreatePrimitives(){
+      this.library.Cube = {scene : new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshNormalMaterial())};
+      this.library.Cone= {scene : new THREE.Mesh(new THREE.ConeGeometry(.5,1,32), new THREE.MeshNormalMaterial())};
+      this.library.Cylinder= {scene :  new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,1,32), new THREE.MeshNormalMaterial())};
+      this.library.Sphere= {scene :  new THREE.Mesh(new THREE.SphereGeometry(.5,16,16), new THREE.MeshNormalMaterial())};
+      this.library.Torus= {scene :  new THREE.Mesh(new THREE.TorusGeometry(.314,.15,12,32), new THREE.MeshNormalMaterial())};
+      this.library.Plane= {scene :  new THREE.Mesh(new THREE.PlaneGeometry(1,1), new THREE.MeshNormalMaterial())};
+    },
     HandleModelSelection(slideElement){
       console.log(slideElement ,this);
 
@@ -109,9 +129,9 @@ export default {
 
       var xr = new webXRScene("xr-scene");
       xr.Renderer.instance.setClearColor(0xffffff,1);
-      var box = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshNormalMaterial());
-      box.position.set(0,.5,0);
-      xr.Scene.add(box);
+      // var box = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshNormalMaterial());
+      // box.position.set(0,.5,0);
+      // xr.Scene.add(box);
   
       var {CameraPosition, CameraTarget} = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex];
       console.log(CameraPosition);
@@ -136,9 +156,9 @@ export default {
       xr.Scene.add( gridHelper );
 
       //Extra Camera
-      const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-      const helper = new THREE.CameraHelper( camera );
-      xr.Scene.add( helper );
+      // const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+      // const helper = new THREE.CameraHelper( camera );
+      // xr.Scene.add( helper );
       
 
       xr.transformControls = new TransformControls( xr.Camera.instance, xr.Renderer.instance.domElement );
@@ -174,11 +194,12 @@ export default {
           var slideElements = this.selected.userData.slideElements;
           switch(mode){
             case "translate":
-              this.SetValue({object : slideElements, path : "slideElements.Offset", value : this.selected.position});
-              EventManager.$emit("ChangeTransfrom3D", {
+
+              EventManager.$emit("ChangeTransform3D", {
                   type : "position",
                   object : this.selected
                 });
+
               console.log( this.selected.userData.slideElements);
               var slideElements = this.selected.userData.slideElements;
               this.SetValue({
@@ -190,27 +211,31 @@ export default {
 
             break;
             case "scale":
-              this.SetValue({object : slideElements, path : "slideElements.Scale", value : this.selected.scale});
               console.log(this.selected.scale);
-              EventManager.$emit("ChangeTransfrom3D", {
+              EventManager.$emit("ChangeTransform3D", {
                   type : "scale",
                   object : this.selected
                 });
+              this.SetValue({
+                object : slideElements, 
+                path : "slideElements.Scale", 
+                value : this.selected.scale
+              });
+
             break;
             case "rotate":
 
               console.log(this.selected.quaternion);
-              this.SetValue({object : slideElements, path : "slideElements.Rotation", value : {
-                x : this.selected.quaternion.x, 
-                y : this.selected.quaternion.y, 
-                z : this.selected.quaternion.z, 
-                w : this.selected.quaternion.w, 
-                
-                }});
-                EventManager.$emit("ChangeTransfrom3D", {
-                  type : "rotation",
-                  object : this.selected
-                });
+              EventManager.$emit("ChangeTransform3D", {
+                type : "quaternion",
+                object : this.selected
+              });
+
+              this.SetValue({
+                object : slideElements, 
+                path : "slideElements.Rotation", 
+                value : this.selected.quaternion
+              });
               console.log(this.selected.rotation);
             break;
           }
@@ -219,14 +244,18 @@ export default {
       var slideElements = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex].SlideElements;
       var sElement = slideElements.find(element => element === item);
 
-      console.log(libraryItem);
+      console.log("libraryItem" ,libraryItem);
 
       this.attachedModels[item.id] = libraryItem;
+
+
+        console.log("this.attachedModels[item.id]" , this.attachedModels[item.id]);
+
       //make a copy of the object
       this.attachedModels[item.id].scene = this.attachedModels[item.id].scene.clone();
       this.attachedModels[item.id].position = new THREE.Vector3(0,0,0);
       this.attachedModels[item.id].scale = new THREE.Vector3(1,1,1);
-      this.attachedModels[item.id].quaternion = new THREE.Quaternion();
+      this.attachedModels[item.id].quaternion = new THREE.Quaternion(0,0,0,1);
 
       console.log("AddSingleModelToScene" , item, libraryItem);
 
@@ -250,10 +279,20 @@ export default {
     AppendCurrentSlideModels(){
       var slideElements = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex].SlideElements;
       
-      
+      var otherElements = slideElements.filter(el => el.element.Type.Type != "Object3D");
 
+      var primitiveElements = otherElements.filter(el => el.element.Type.Type === "Primitive");
+
+      primitiveElements.map(element => {
+
+        console.log("element primitive" , element.element.Primitive.PrimitiveType);
+
+        this.AddSingleModelToScene(element, this.library[element.element.Primitive.PrimitiveType]);
+      });
+
+      console.log("otherElements" , otherElements);
       
-      var elementsToLoad = slideElements.map(slideElement => {
+      var elementsToLoad = slideElements.filter(el => {console.log("el" ,el.element.Type.Type === "Object3D"); return el.element.Type.Type === "Object3D";}).map(slideElement => {
         if(typeof(slideElement.element.Asset) == "undefined"){return null;}
         console.log(slideElement.element.Asset);
 
@@ -288,7 +327,7 @@ export default {
         
         console.log("library has loaded" , library);
 
-        this.library = library;
+        this.library = Object.assign(this.library, library);
 
         console.log("this.library");
 

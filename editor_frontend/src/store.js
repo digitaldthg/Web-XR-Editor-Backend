@@ -22,6 +22,8 @@ export const store = new Vuex.Store({
       user : null,
       loggedIn : false,
       currentProjekt: null,
+      slideIndex : 0,
+      slideContainerIndex : 0,
       xr : null,
       tmp:{
         // projekt : {
@@ -69,6 +71,12 @@ export const store = new Vuex.Store({
       },
       SetTmp(state,tmp){
         state.tmp = tmp;
+      },
+      SetSlideIndex(state,index){
+        state.slideIndex = index;
+      },
+      SetSlideContainerIndex(state,index){
+        state.slideContainerIndex = index;
       }
       
     }

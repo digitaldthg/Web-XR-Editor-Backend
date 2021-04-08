@@ -5,18 +5,50 @@
       <button class="small-button" @click="ChangeMode('rotate')">rotate</button>
       <button class="small-button" @click="ChangeMode('scale')">scale</button>
     </div>
+    
+
+    <div class="width-1"></div>
+    <div class="flex primitives">
+      <button class="small-button" @click="e=>AddPrimitive('Plane')">Plane</button>
+      <button class="small-button" @click="e=>AddPrimitive('Cube')">Cube</button>
+      <button class="small-button" @click="e=>AddPrimitive('Sphere')">Sphere</button>
+      <button class="small-button" @click="e=>AddPrimitive('Cylinder')">Cylinder</button>
+      <button class="small-button" @click="e=>AddPrimitive('Cone')">Cone</button>
+      <button class="small-button" @click="e=>AddPrimitive('Torus')">Torus</button>
+    </div>
+
+
   </div>
 
 </template>
 
 <script>
+import ProjectMixin from '../../../Controller/ProjectMixin';
+
 export default {
   name : "Toolbar",
+  mixins:[
+    ProjectMixin
+  ],
   mounted(){
     console.log("Toolbar");
   },
   methods:{
+    AddPrimitive(primitiveType){
+      console.log(primitiveType);
 
+      var Element = {
+        Name : primitiveType + " Primitive",
+        Type: {
+          Type: "Primitive"
+        },
+        Primitive: {
+          PrimitiveType: primitiveType
+        }
+      }
+       
+      this.AddElement(Element);
+    },
     ChangeMode(mode){
       switch (mode) {
         case "translate":

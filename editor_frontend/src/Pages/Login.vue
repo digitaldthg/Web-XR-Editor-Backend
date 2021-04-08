@@ -44,7 +44,7 @@ export default {
 
         console.log("success 1");
         this.$router.push({ 
-          path: 'UserProfile',
+          path: 'Home',
         });
         
           console.log("success 2");

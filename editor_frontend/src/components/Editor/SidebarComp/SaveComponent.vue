@@ -17,7 +17,6 @@ export default {
     SaveTmp :function(){
       console.log(this.$store.state.tmp);
 
-      return;
       var savePromises = Object.keys(this.$store.state.tmp).map((category)=>{
         var splited = category.split(/(?=[A-Z])/);
         splited = splited.map(s => s.toLowerCase()).join("-");

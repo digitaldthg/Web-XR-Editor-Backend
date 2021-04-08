@@ -1,24 +1,34 @@
 <template>
-  <div class="quaternion">
+  <div class="quaternion-field-wrapper">
+    <label v-if="title != null">{{title}}</label>
     <template v-if="edit">
-      <input type="number" ref="axisX" @input="e => Change(e,'x')" :value="GetValue(object, path + '.x', 0)">
-      <input type="number" ref="axisY" @input="e => Change(e,'y')" :value="GetValue(object, path + '.y', 0)">
-      <input type="number" ref="axisZ" @input="e => Change(e,'z')" :value="GetValue(object, path + '.z', 0)">
-      <input type="number" ref="axisW" @input="e => Change(e,'w')" :value="GetValue(object, path + '.w', 1)">
-
-      <button @click="ToggleEdit(false)">close</button>
-      <slot />
+      <div class="quaternion">
+        <div class="flex width-10">
+        <input type="number" ref="axisX" @input="e => Change(e,'x')" :value="GetValue(object, path + '.x', 0)">
+        <input type="number" ref="axisY" @input="e => Change(e,'y')" :value="GetValue(object, path + '.y', 0)">
+        <input type="number" ref="axisZ" @input="e => Change(e,'z')" :value="GetValue(object, path + '.z', 0)">
+        <input type="number" ref="axisW" @input="e => Change(e,'w')" :value="GetValue(object, path + '.w', 1)">
+        </div>
+        <div class="width-2 flex">
+          <button class="icon-button" @click="ToggleEdit(false)"><CloseIcon/></button>
+          <slot />
+        </div>
+      </div>
     </template>
     <template v-if="!edit">
-      <div class="quaternion-field">
-        <div class="value">x : {{RoundNumbers(GetValue(object, path + ".x", 0))}}</div>
-        <div class="value">y : {{RoundNumbers(GetValue(object, path + ".y", 0))}}</div>
-        <div class="value">z : {{RoundNumbers(GetValue(object, path + ".z", 0))}}</div>
-        <div class="value">z : {{RoundNumbers(GetValue(object, path + ".w", 1))}}</div>
-      </div>
-      <button class="edit-button" @click="ToggleEdit(true)">edit</button>
+      <div class="quaternion">
+        <div class="flex width-10">
+          <div class="value">x : {{RoundNumbers(GetValue(object, path + ".x", 0))}}</div>
+          <div class="value">y : {{RoundNumbers(GetValue(object, path + ".y", 0))}}</div>
+          <div class="value">z : {{RoundNumbers(GetValue(object, path + ".z", 0))}}</div>
+          <div class="value">z : {{RoundNumbers(GetValue(object, path + ".w", 1))}}</div>
+        </div>
+        <div class="width-2 flex">
+          <button class="icon-button edit-button" @click="ToggleEdit(true)"><EditIcon/></button>
 
-      <slot />
+          <slot />
+        </div>
+      </div>
     </template>
   </div>
 </template>
@@ -26,13 +36,21 @@
 
 import DataBehaviourMixin from '../Controller/DataBehaviourMixin';
 
+import CloseIcon from '../Images/Icons/close.svg';
+import EditIcon from '../Images/Icons/edit.svg';
+
 export default {
   name : "QuaternionField",
   mixins : [DataBehaviourMixin],
+  components:{
+    CloseIcon,
+    EditIcon
+  },
   props:[
     "object",
     "path",
-    "value"
+    "value",
+    "title"
   ],
   watch:{
     "$props.value" : function(){
@@ -59,10 +77,10 @@ export default {
         w : isNaN(parseFloat(this.$refs.axisW.value)) ? 0 : parseFloat(this.$refs.axisW.value),
       }
 
-      this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : this.$refs.axisX.value});
-      this.SetValue({object : this.$props.object, path : this.$props.path + ".y", value : this.$refs.axisY.value});
-      this.SetValue({object : this.$props.object, path : this.$props.path + ".z", value : this.$refs.axisZ.value});
-      this.SetValue({object : this.$props.object, path : this.$props.path + ".w", value : this.$refs.axisW.value});
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".x", value : quat.x});
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".y", value : quat.y});
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".z", value : quat.z});
+      this.SetValue({object : this.$props.object, path : this.$props.path + ".w", value : quat.w});
 
       this.$emit("change" , quat);
     },
@@ -88,7 +106,6 @@ export default {
 
 input{
   padding:.5rem;
-  width: 50px;
 }
 
 button{
@@ -98,9 +115,6 @@ button{
   vertical-align: middle;
 }
 
-.quaternion-field {
-  display: flex;
-}
 .value,input{
   border:0;
   white-space: nowrap;

@@ -17,6 +17,7 @@ import SlideSettings from '../Components/Editor/SidebarComp/SlideSettingsCompone
 import SlideHierarchie from '../Components/Editor/SidebarComp/SlideHierarchieComponent.vue';
 import LightPresets from '../Components/Editor/SidebarComp/LightPresetsComponent.vue';
 import SelectedInfoComponent from '../Components/Editor/SidebarComp/SelectedInfoComponent.vue';
+import PrimitiveComponent from '../Components/Editor/SidebarComp/PrimitiveComponent.vue';
 
 //XR
 import XRScene from '../Components/Editor/XRScene.vue';
@@ -35,7 +36,8 @@ export default {
     LightPresets,
     Toolbar,
     FilesComponent,
-    SelectedInfoComponent
+    SelectedInfoComponent,
+    PrimitiveComponent
   },
   data(){
     return {
@@ -59,9 +61,10 @@ export default {
       var slide_id = this.$store.state.currentProjekt.slide_containers[0].Slides.length === 0 ? null : this.$store.state.currentProjekt.slide_containers[0].Slides[0].id;
       this.activeSlideID = slide_id;
       this.activeSlideIndex = 0;
-
+      this.$store.commit("SetSlideIndex",  0);
       this.activeSlideContainerID = this.$store.state.currentProjekt.slide_containers[0].id;
       this.activeSlideContainerIndex = 0;
+      this.$store.commit("SetSlideContainerIndex",  0);
     }
   },
   computed : {
@@ -105,7 +108,7 @@ export default {
       var slide_id = this.$store.state.currentProjekt.slide_containers[index].Slides.length === 0 ? null : this.$store.state.currentProjekt.slide_containers[index].Slides[0].id;
       this.activeSlideID = slide_id;
 
-
+      this.$store.commit("SetSlideContainerIndex", index);
       console.log(this.activeSlideID);
     },
     ChangeTab(tab){
@@ -117,33 +120,34 @@ export default {
       console.log(id);
       this.activeSlideID = id;
 
-      this.activeSlideIndex = this.$store.state.currentProjekt.slide_containers[this.activeSlideContainerIndex].Slides.findIndex(slide => slide.id === this.activeSlideID);
+      var index = this.$store.state.currentProjekt.slide_containers[this.$store.state.slideContainerIndex].Slides.findIndex(slide => slide.id === this.activeSlideID);
 
+      this.$store.commit("SetSlideIndex", index);
     },
     NextSlide(){
-      var currentIndex = this.activeSlideIndex;
-      var maxLength = this.$store.state.currentProjekt.slide_containers[this.activeSlideContainerIndex].Slides.length - 1;
+      var currentIndex = this.$store.state.slideIndex;//this.activeSlideIndex;
+      var maxLength = this.$store.state.currentProjekt.slide_containers[this.$store.state.slideContainerIndex].Slides.length - 1;
 
       if(currentIndex < maxLength){
-        this.activeSlideIndex = this.activeSlideIndex + 1;
+        currentIndex = currentIndex + 1;
       }else{
-        this.activeSlideIndex = 0;
+        currentIndex = 0;
       }
       
-      this.activeSlideID = this.$store.state.currentProjekt.slide_containers[this.activeSlideContainerIndex].Slides[this.activeSlideIndex].id;
-
-      console.log(this.activeSlideIndex);
+      this.activeSlideID = this.$store.state.currentProjekt.slide_containers[this.$store.state.slideContainerIndex].Slides[currentIndex].id;
+      this.$store.commit("SetSlideIndex", currentIndex);
     },
     PrevSlide(){
-      var currentIndex = this.activeSlideIndex;
-      var maxLength = this.$store.state.currentProjekt.slide_containers[this.activeSlideContainerIndex].Slides.length - 1;
+      var currentIndex = this.$store.state.slideIndex;
+      var maxLength = this.$store.state.currentProjekt.slide_containers[this.$store.state.slideContainerIndex].Slides.length - 1;
 
       if(currentIndex >= 1){
-        this.activeSlideIndex = this.activeSlideIndex - 1;
+        currentIndex = currentIndex - 1;
       }else{
-        this.activeSlideIndex = maxLength;
+        currentIndex = maxLength;
       }
-      this.activeSlideID = this.$store.state.currentProjekt.slide_containers[this.activeSlideContainerIndex].Slides[this.activeSlideIndex].id;
+      this.activeSlideID = this.$store.state.currentProjekt.slide_containers[this.$store.state.slideContainerIndex].Slides[currentIndex].id;
+      this.$store.commit("SetSlideIndex", currentIndex);
     },
     Init(){
        this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id).then(

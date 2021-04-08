@@ -35,6 +35,59 @@ export default {
           this.$store.commit("SetProjekt", response.data);
         });
       });
+    },
+    AddElement(Element){
+      
+      return this.Post(config.CMS_BASE_URL + "/elements", Element).then(response => {
+        return response.data;
+      }).then((element) =>{
+        console.log("%c 1. Element" ,"background:tomato; color:#fff;");
+        console.log("received element" , element);
+        
+        var SlideElement = {
+          Name : element.Name,
+          element : element
+        }
+        return this.Post(config.CMS_BASE_URL + "/slide-elements" , SlideElement);
+      }).then(response =>{
+
+        console.log("%c 2. slideElement" ,"background:tomato; color:#fff;");
+        
+        var slideElement = response.data;
+
+        console.log("received slideELement" , slideElement);
+        var slideContainerIndex = this.$store.state.slideContainerIndex;
+        var slideIndex = this.$store.state.slideIndex;
+        
+        var currentSlide = this.$store.state.currentProjekt.slide_containers[slideContainerIndex].Slides[slideIndex];
+        var sElements = currentSlide.SlideElements;
+        //var sElements = [... this.$props.slide.SlideElements];
+
+          sElements.push(slideElement);
+
+          //PUT SlideElements update
+          return this.Put(config.CMS_BASE_URL + "/slides/" + currentSlide.id , {
+            SlideElements : sElements
+          })
+
+      }).then(response =>{
+        console.log("%c 3. Slide" ,"background:tomato; color:#fff;");
+        console.log("final new Slides" , response.data);
+
+        return this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id);
+      }).then(response =>{
+        console.log("%c 4. Projekt" ,"background:tomato; color:#fff;");
+        console.log("Get Complete Response for new Slide" , response);
+
+        this.$store.commit("SetProjekt", response.data);
+
+        return response.data;
+      }).then(projekt =>{
+        console.log("%c 4. Final" ,"background:tomato; color:#fff;");
+        console.log("projekt" , projekt);
+        return projekt;
+      });
+
     }
   }
 }

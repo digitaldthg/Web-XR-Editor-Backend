@@ -100,7 +100,7 @@ export default {
       console.log("slide" , slide.SlideElements);
 
     },
-    "$props.slideIndex" : function(){
+    "$store.state.slideIndex" : function(){
       console.log("slideIndex changed");
 
       this.DetatchCurrentSlideModels();
@@ -277,7 +277,7 @@ export default {
       this.$store.state.xr.Scene.add(this.attachedModels[item.id].scene);
     },
     AppendCurrentSlideModels(){
-      var slideElements = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex].SlideElements;
+      var slideElements = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$store.state.slideIndex].SlideElements;
       
       var otherElements = slideElements.filter(el => el.element.Type.Type != "Object3D");
 

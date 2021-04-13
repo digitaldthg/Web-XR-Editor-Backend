@@ -135,6 +135,8 @@ export default {
       }
       
       this.activeSlideID = this.$store.state.currentProjekt.slide_containers[this.$store.state.slideContainerIndex].Slides[currentIndex].id;
+      
+      console.log("nextSlide " , currentIndex);
       this.$store.commit("SetSlideIndex", currentIndex);
     },
     PrevSlide(){

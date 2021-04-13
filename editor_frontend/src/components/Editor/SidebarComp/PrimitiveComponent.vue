@@ -1,5 +1,5 @@
 <template>
-  <div class="slide-component">
+  <div class="slide-component" v-if="">
     <SidebarCompHeader name="Primitive"/>
 
     <template v-if="toggleOpen">

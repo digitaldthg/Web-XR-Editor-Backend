@@ -25,6 +25,7 @@ export const store = new Vuex.Store({
       slideIndex : 0,
       slideContainerIndex : 0,
       xr : null,
+      selectedMesh : null,
       tmp:{
         // projekt : {
         //   5:{
@@ -77,6 +78,9 @@ export const store = new Vuex.Store({
       },
       SetSlideContainerIndex(state,index){
         state.slideContainerIndex = index;
+      },
+      SetSelection(state,mesh){
+        state.selectedMesh = mesh
       }
       
     }

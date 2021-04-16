@@ -16,8 +16,12 @@ import SaveComponent from '../Components/Editor/SidebarComp/SaveComponent';
 import SlideSettings from '../Components/Editor/SidebarComp/SlideSettingsComponent';
 import SlideHierarchie from '../Components/Editor/SidebarComp/SlideHierarchieComponent.vue';
 import LightPresets from '../Components/Editor/SidebarComp/LightPresetsComponent.vue';
-import SelectedInfoComponent from '../Components/Editor/SidebarComp/SelectedInfoComponent.vue';
+
+import SelectedComponent from '../Components/Editor/SidebarComp/SelectedComponent.vue';
+import TransformComponent from '../Components/Editor/SidebarComp/TransformComponent.vue';
+
 import PrimitiveComponent from '../Components/Editor/SidebarComp/PrimitiveComponent.vue';
+import TextComponent from '../Components/Editor/SidebarComp/TextComponent.vue';
 
 //XR
 import XRScene from '../Components/Editor/XRScene.vue';
@@ -36,8 +40,10 @@ export default {
     LightPresets,
     Toolbar,
     FilesComponent,
-    SelectedInfoComponent,
-    PrimitiveComponent
+    TransformComponent,
+    SelectedComponent,
+    PrimitiveComponent,
+    TextComponent
   },
   data(){
     return {
@@ -45,7 +51,6 @@ export default {
       slideComponentsWidth :400,
       activeSlideContainerID : null,
       activeSlideContainerIndex : null,
-      activeSlideID : null,
       activeSlideIndex : null,
       activeTab : "slide"
     }
@@ -54,18 +59,7 @@ export default {
     "$store.state.user" : function(){
       this.Init();
     },
-    "$store.state.currentProjekt" : function(){
-      if(this.$store.state.currentProjekt == null) {return}
-      if(this.$store.state.currentProjekt.slide_containers == null) {return}
-
-      var slide_id = this.$store.state.currentProjekt.slide_containers[0].Slides.length === 0 ? null : this.$store.state.currentProjekt.slide_containers[0].Slides[0].id;
-      this.activeSlideID = slide_id;
-      this.activeSlideIndex = 0;
-      this.$store.commit("SetSlideIndex",  0);
-      this.activeSlideContainerID = this.$store.state.currentProjekt.slide_containers[0].id;
-      this.activeSlideContainerIndex = 0;
-      this.$store.commit("SetSlideContainerIndex",  0);
-    }
+    
   },
   computed : {
     GetSlideContainerWidth: function(){
@@ -102,63 +96,66 @@ export default {
   methods : {
     ChangeSlideContainer(id, index){
 
-      this.activeSlideContainerID = id;
-      this.activeSlideContainerIndex = index;
-
-      var slide_id = this.$store.state.currentProjekt.slide_containers[index].Slides.length === 0 ? null : this.$store.state.currentProjekt.slide_containers[index].Slides[0].id;
-      this.activeSlideID = slide_id;
-
       this.$store.commit("SetSlideContainerIndex", index);
-      console.log(this.activeSlideID);
+
+      this.$router.push({
+        params:{
+          slideContainerIndex : index,
+          slideIndex : 0
+        }
+      });
     },
     ChangeTab(tab){
       console.log(tab);
       this.activeTab = tab;
     },
     ChangeSlide(id){
-
-      console.log(id);
-      this.activeSlideID = id;
-
-      var index = this.$store.state.currentProjekt.slide_containers[this.$store.state.slideContainerIndex].Slides.findIndex(slide => slide.id === this.activeSlideID);
+      
+      var index = this.slideContainer.Slides.findIndex(slide => slide.id === id);
 
       this.$store.commit("SetSlideIndex", index);
+
+      this.$router.push({ params: {
+        slideIndex : index
+      }})
+
+
     },
     NextSlide(){
-      var currentIndex = this.$store.state.slideIndex;//this.activeSlideIndex;
-      var maxLength = this.$store.state.currentProjekt.slide_containers[this.$store.state.slideContainerIndex].Slides.length - 1;
+      var currentIndex = parseFloat(this.$route.params.slideIndex);//this.activeSlideIndex;
 
+      var maxLength = this.slideContainer.Slides.length - 1;
+      
       if(currentIndex < maxLength){
         currentIndex = currentIndex + 1;
       }else{
         currentIndex = 0;
       }
+      console.log("currentIndex" , currentIndex, this.slideContainer.Slides[currentIndex]);
       
-      this.activeSlideID = this.$store.state.currentProjekt.slide_containers[this.$store.state.slideContainerIndex].Slides[currentIndex].id;
+      var slideID = this.slideContainer.Slides[currentIndex].id;
       
-      console.log("nextSlide " , currentIndex);
-      this.$store.commit("SetSlideIndex", currentIndex);
+      this.ChangeSlide(slideID);
+      
     },
     PrevSlide(){
-      var currentIndex = this.$store.state.slideIndex;
-      var maxLength = this.$store.state.currentProjekt.slide_containers[this.$store.state.slideContainerIndex].Slides.length - 1;
+      var currentIndex = parseFloat(this.$route.params.slideIndex);
+      var maxLength = this.slideContainer.Slides.length - 1;
 
       if(currentIndex >= 1){
         currentIndex = currentIndex - 1;
       }else{
         currentIndex = maxLength;
       }
-      this.activeSlideID = this.$store.state.currentProjekt.slide_containers[this.$store.state.slideContainerIndex].Slides[currentIndex].id;
-      this.$store.commit("SetSlideIndex", currentIndex);
+      var slideID = this.slideContainer.Slides[currentIndex].id;
+      this.ChangeSlide(slideID);
     },
     Init(){
        this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id).then(
         (response) => {
 
           this.$store.commit("SetProjekt", response.data);
-
-          
-
+        
         }
       );
     },

@@ -13,9 +13,12 @@ export default {
   methods:{
     Select3D(mesh){
       this.slideElements = mesh;
+
+      this.$store.commit("SetSelection", mesh );
     },
     Deselect3D(){
       this.slideElements = null;
+      this.$store.commit("SetSelection", null );
     }
   }
 }

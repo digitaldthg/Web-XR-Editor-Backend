@@ -25,7 +25,10 @@ export default {
   },
   mounted(){
 
-    this.CheckForLogin()
+    this.CheckForLogin();
+
+
+    
 
   },
   data(){

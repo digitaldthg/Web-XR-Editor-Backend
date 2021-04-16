@@ -11,7 +11,7 @@
 
 
       <div class="projekt-card-footer">
-        <router-link class="cta-button" :to="'/editor/' + projekt.id">Projekt Öffnen</router-link>
+        <router-link class="cta-button" :to="'/editor/' + projekt.id + '/0/0' ">Projekt Öffnen</router-link>
 
         <button class="cta-button --warning" @click="DeleteProjekt">Projekt löschen</button>
       </div>
@@ -37,7 +37,7 @@ export default {
     DeleteProjekt(){
       console.log("delete projekt" , this.$props.projekt);
 
-      this.Delete(mainConfig.CMS_BASE_URL + "/projekts/"+ this.$props.projekt.id).then((response)=>{
+      this.Delete(mainConfig.CMS_BASE_URL + "/projekts/"+ this.$props.projekt.id ).then((response)=>{
         console.log(this.$store.state, response);
 
         this.$emit('deleteProjekt', response.data)

@@ -17,6 +17,11 @@
       <button class="small-button" @click="e=>AddPrimitive('Torus')">Torus</button>
     </div>
 
+    <div class="width-1"></div>
+    <div class="flex primitives">
+      <button class="small-button" @click="e=>AddText()">Text</button>
+    </div>
+
 
   </div>
 
@@ -44,6 +49,28 @@ export default {
         },
         Primitive: {
           PrimitiveType: primitiveType
+        }
+      }
+       
+      this.AddElement(Element);
+    },
+    AddText(){
+      var Element = {
+        Name : "Text",
+        TextContent : "Default Text",
+        FontSettings: {
+          Color : "#000000",
+          Content : "API Text Component",
+          Alignment : "left",
+          Justification : "start",
+          FontSize : 1,
+          LineHeight : 1,
+          BackgroundColor : "#aaaaaa",
+          BackgroundOpacity : 1,
+          Padding : .2
+        },
+        Type: {
+          Type: "Text"
         }
       }
        

@@ -81,7 +81,7 @@ nav.main-nav{
 }
 
 .row {
-  padding: 1rem 0;
+  padding: .1rem 0;
 }
 
 .content-block{
@@ -95,7 +95,9 @@ margin:0 -1rem;
 .align-right{
   text-align: right;
 }
-
+.justify-center {
+  align-items: center;
+}
 
 .svg-icon {
   width: 25px;

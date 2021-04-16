@@ -5,6 +5,14 @@ module.exports = {
   },
   chainWebpack: config => {
     config.module.rules.delete("svg");
+    config.module
+      .rule('images')
+      .use('url-loader')
+      .loader('url-loader')
+      .tap(options => {
+        options.limit = -1
+        return options
+      });
   },
 
   configureWebpack: {
@@ -19,13 +27,21 @@ module.exports = {
           ]
         },
         {
-          test: /\.(bin|glb|patt|png|dat)$/,
+          test: /\.(bin|glb|patt|dat)$/,
           use: [
             {
               loader: 'file-loader'
             }
           ]
         },
+        // ,{
+        //   test: /\.(png)$/,
+        //   use: [
+        //     {
+        //       loader: 'file-loader'
+        //     }
+        //   ]
+        // },
         {
           test: /\.svg$/,
           use: [

@@ -3,25 +3,26 @@
     <SidebarCompHeader name="Slide Settings"/>
 
     <template v-if="toggleOpen">
-      <template v-if="slides == null">
+      
+      <template v-if="slide == null">
         <div class="slide-component">Kein Slide</div> 
       </template>
 
-      <template v-if="slides != null">
+      <template v-if="slide != null">
           <div class="row">
-          <TextField :object="slides" path="slides.Name" htmlTag="h3"/>
+          <TextField :object="slide" path="slides.Name" htmlTag="h3"/>
           </div>
           <div class="row">
-            Template: {{slides.SlideTemplate.Name}}
+            Template: {{slide.SlideTemplate.Name}}
           </div>
           <div class="row">
-            <VectorField title="Kamera Position" ref="camPos" :object="slides" path="slides.CameraPosition" ><button class="icon-button" @click="GetCamPos"><SpotIcon /></button></VectorField>
+            <VectorField title="Kamera Position" ref="camPos" :object="slide" path="slides.CameraPosition" ><button class="icon-button" @click="GetCamPos"><SpotIcon /></button></VectorField>
           </div>
           <div class="row">
-            <VectorField title="Kamera Target" ref="targetPos" :object="slides" path="slides.CameraTarget" ><button class="icon-button" @click="GetTargetPos"><SpotIcon /></button></VectorField>
+            <VectorField title="Kamera Target" ref="targetPos" :object="slide" path="slides.CameraTarget" ><button class="icon-button" @click="GetTargetPos"><SpotIcon /></button></VectorField>
           </div>
           <div class="row">
-            <VectorField title="SlideOffset" :object="slides" path="slides.SlideOffset" />
+            <VectorField title="SlideOffset" :object="slide" path="slides.SlideOffset" />
           </div>
       </template>
     </template>
@@ -36,6 +37,7 @@ import VectorField from '../../VectorField.vue';
 import SidebarCompHeader from './SidebarCompHeader.vue';
 
 import SpotIcon from '../../../Images/Icons/spot.svg';
+import ProjectMixin from '../../../Controller/ProjectMixin';
 
 
 export default {
@@ -45,11 +47,11 @@ export default {
     SidebarCompHeader ,
     SpotIcon
   },
-  mixins: [ToggleMixin],
+  mixins: [ToggleMixin, ProjectMixin],
   name : "SlideSettings",
-  props : ["slides"],
+ // props : ["slides"],
   mounted(){
-    console.log("SlideSettings mounted" , this.$props.slides);
+    //console.log("SlideSettings mounted" , this.$props.slides);
   },
   methods:{
     GetCamPos(){

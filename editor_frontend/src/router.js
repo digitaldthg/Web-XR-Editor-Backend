@@ -21,7 +21,7 @@ const router = new VueRouter({
       component: Projekte
     },
     { 
-      path: '/Editor/:id',
+      path: '/Editor/:id/:slideContainerIndex?/:slideIndex?',
       name: "Editor",
       component: Editor
     },

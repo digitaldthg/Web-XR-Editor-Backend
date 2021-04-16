@@ -15,7 +15,7 @@ export default {
   mixins:[ToggleMixin],
   name : "LightPresets",
   mounted(){
-    console.log("LightPresets");
+    //console.log("LightPresets");
   }
 }
 </script>

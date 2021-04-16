@@ -10,7 +10,7 @@ export default {
   name : "SidebarCompHeader",
   props:["name"],
   mounted(){
-    console.log("SidebarCompHeader");
+    
   },
   methods:{
     Toggle: function(){

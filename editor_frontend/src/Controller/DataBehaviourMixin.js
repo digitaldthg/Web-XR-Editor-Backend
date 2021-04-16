@@ -40,7 +40,7 @@ module.exports = {
       * @param options.value (*): The value to set.
     */
       SetValue(options){
-        const {object,path,value} = options;
+        let {object,path,value} = options;
         
         var tmp = Object.assign({}, this.$store.state.tmp);
 
@@ -54,6 +54,11 @@ module.exports = {
         //setzt die pathChain wieder zusammen => [contentType , ID , restliche Chain]
         pathChainCopyForTmp.unshift(objID);
         pathChainCopyForTmp.unshift(contentType);
+
+        if(value.isQuaternion){
+          console.log(value);
+          value = {x : value._x,y: value._y, z: value._z,w : value._w};
+        }
 
         this.$store.commit("SetTmp", Utils.SetNestedObjectValue(pathChainCopyForTmp.join("."), tmp,value));
       }

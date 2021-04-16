@@ -18,10 +18,10 @@
     <template v-if="!edit">
       <div class="quaternion">
         <div class="flex width-10">
-          <div class="value">x : {{RoundNumbers(GetValue(object, path + ".x", 0))}}</div>
-          <div class="value">y : {{RoundNumbers(GetValue(object, path + ".y", 0))}}</div>
-          <div class="value">z : {{RoundNumbers(GetValue(object, path + ".z", 0))}}</div>
-          <div class="value">z : {{RoundNumbers(GetValue(object, path + ".w", 1))}}</div>
+          <div class="value width-4">x : {{RoundNumbers(GetValue(object, path + ".x", 0))}}</div>
+          <div class="value width-4">y : {{RoundNumbers(GetValue(object, path + ".y", 0))}}</div>
+          <div class="value width-4">z : {{RoundNumbers(GetValue(object, path + ".z", 0))}}</div>
+          <div class="value width-4">z : {{RoundNumbers(GetValue(object, path + ".w", 1))}}</div>
         </div>
         <div class="width-2 flex">
           <button class="icon-button edit-button" @click="ToggleEdit(true)"><EditIcon/></button>

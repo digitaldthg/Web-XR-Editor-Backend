@@ -2,18 +2,22 @@
   <div class="slide-component slide-container-component">
     <SidebarCompHeader name="SlideContainerSettings" />
     
-    <template v-if="toggleOpen">
+    <template v-if="toggleOpen && slideContainer != null">
       <div class="row">
-        <TextField  :object="slideContainers" path="slideContainers.Name" htmlTag="h3"/>
+        <TextField  :object="slideContainer" path="slideContainers.Name" htmlTag="h3"/>
       </div>
 
       <div class="row">
-        <VectorField :object="slideContainers" path="slideContainers.SlideContainerOffset" />
+        <VectorField :object="slideContainer" path="slideContainers.SlideContainerOffset" />
       </div>
 
-      <div class="row">
-        {{slideContainers.PreviewImage}}
-      </div>
+      <template v-if="slideContainer != null">
+        <div class="row">
+          {{slideContainer.PreviewImage}}
+
+          
+        </div>
+      </template>
 
 
       <!-- <div class="row">
@@ -37,6 +41,7 @@
 <script>
 import config from '../../../../../main.config';
 import IOMixin from '../../../Controller/IOMixin';
+import ProjectMixin from '../../../Controller/ProjectMixin';
 import ToggleMixin from '../../../Controller/ToggleMixin';
 
 import TextField from '../../TextField';
@@ -45,8 +50,7 @@ import SidebarCompHeader from './SidebarCompHeader.vue';
 
 export default {
   name : "SlideContainerSettings",
-  mixins:[IOMixin, ToggleMixin],
-  props : ["slideContainers"],
+  mixins:[IOMixin, ToggleMixin, ProjectMixin],
   components:{
     TextField,
     VectorField,
@@ -54,11 +58,11 @@ export default {
   },
   data(){
     return {
-      previewImage : null
+      previewImage : null,
     }
   },
   mounted(){
-    console.log("SlideContainerSettings", this.$props.slideContainers)
+    //console.log("SlideContainerSettings", this.$props.slideContainers)
   },
   // methods:{
   //   UploadFile(e){

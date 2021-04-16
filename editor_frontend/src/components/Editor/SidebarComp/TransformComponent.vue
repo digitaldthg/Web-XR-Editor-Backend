@@ -1,17 +1,15 @@
 <template>
   <div class="slide-component">
-    <SidebarCompHeader name="Selected Objekt"/>
+    <SidebarCompHeader name="Transform"/>
 
     <template v-if="toggleOpen">
-      <template v-if="slideElements != null">
-        <TextField title="Name" :object="slideElements.userData.slideElements" path="slideElements.Name" htmlTag="h3"/>
-        <VectorField title="Position" @change="vec=>Transform('position' , vec)" :object="slideElements.userData.slideElements" path="slideElements.Offset" />
-        <VectorField title="Scale" @change="vec=>Transform('scale' , vec)" :object="slideElements.userData.slideElements" path="slideElements.Scale" />
-        <QuaternionField title="Rotation" @change="quat=>Transform('quaternion' , quat)" :object="slideElements.userData.slideElements" path="slideElements.Rotation" />
+      <template v-if="$store.state.selectedMesh != null">
+        <VectorField title="Position" @change="vec=>Transform('position' , vec)" :object="$store.state.selectedMesh.userData.slideElements" path="slideElements.Offset" />
+        <VectorField title="Scale" @change="vec=>Transform('scale' , vec)" :object="$store.state.selectedMesh.userData.slideElements" path="slideElements.Scale" />
+        <QuaternionField title="Rotation" @change="quat=>Transform('quaternion' , quat)" :object="$store.state.selectedMesh.userData.slideElements" path="slideElements.Rotation" />
             
-        <MaterialField :object="slideElements" />
       </template>
-      <template v-if="slideElements === null">
+      <template v-if="$store.state.selectedMesh === null">
         Nichts ausgewählt
       </template>
     </template>
@@ -25,19 +23,17 @@ import SelectionMixin from '../../../Controller/SelectionMixin';
 import VectorField from '../../VectorField.vue';
 import QuaternionField from '../../QuaternionField.vue';
 import TextField from '../../TextField.vue';
-import MaterialField from '../../MaterialField.vue';
 
 import {Quaternion} from 'three';
 
 export default {
-  name : "SelectedInfoComponent",
+  name : "TransformComponent",
   mixins:[ToggleMixin, SelectionMixin],
   components : {
     SidebarCompHeader,
     VectorField, 
     QuaternionField, 
     TextField,
-    MaterialField
   },
   // data(){
   //   return {

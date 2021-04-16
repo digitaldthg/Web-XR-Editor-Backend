@@ -17,13 +17,18 @@ import { TransformControls } from 'three/examples/jsm/controls/TransformControls
 import config from '../../../../main.config';
 import DataBehaviourMixin from '../../Controller/DataBehaviourMixin';
 import Utils from '../../Common/Utils';
+import TWEEN from '@tweenjs/tween.js';
+import ThreeMeshUI from 'three-mesh-ui';
+
+import textJSON from './TextTextures/Roboto-msdf.json';
+import * as textPNG from '@/Components/Editor/TextTextures/Roboto-msdf.png';
 
 import {EventManager} from '../../Events/EventManager.js';
+import ProjectMixin from '../../Controller/ProjectMixin';
 
 export default {
   name : "XRScene",
-  props:["containerIndex", "slideIndex"],
-   mixins : [DataBehaviourMixin],
+  mixins : [DataBehaviourMixin, ProjectMixin],
   data(){
     return {
       attachedModels : {},
@@ -33,21 +38,30 @@ export default {
     }
   },
   mounted(){
-    console.log("XRScene");
     //Create Primitive first
     this.CreatePrimitives();
+   
+    
 
     this.InitWebXR();
 
-
+    
 
     EventManager.$on("Select", this.HandleModelSelection.bind(this));
     EventManager.$on("Deselect", this.HandleModelDeselection.bind(this));
+
+    this.$store.state.xr.Events.addEventListener("OnAnimationLoop", this.AnimationLoop.bind(this));
+
+    window._xrScene = this;
   },
   watch:{
     "$store.state.currentProjekt" : function(){
-      var slide = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex];
-      var elementsNotInScene = slide.SlideElements.filter(sElement => !this.attachedModels.hasOwnProperty(sElement.id));
+
+      console.log("slide" , this.slide);
+
+      if(this.slide === null){return;}
+      //var slide = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex];
+      var elementsNotInScene = this.slide.SlideElements.filter(sElement => !this.attachedModels.hasOwnProperty(sElement.id));
 
       var primitiveElements = elementsNotInScene.filter(el => el.element.Type.Type === "Primitive");
 
@@ -55,7 +69,7 @@ export default {
 
         console.log("element primitive" , element.element.Primitive.PrimitiveType);
 
-        this.AddSingleModelToScene(element, this.library.Cube);
+        this.AddSingleModelToScene(element, this.library[element.element.Primitive.PrimitiveType]);
       });
 
       var elementsToLoad = elementsNotInScene.filter(el => el.element.Type.Type === "Object3D").filter(el => {console.log(el); return el;}).map(el => {
@@ -77,52 +91,102 @@ export default {
 
           elementsNotInScene.map(elementNotInScene =>{
 
-            console.log("add Single Element Model to Scene", elementNotInScene);
+            //console.log("add Single Element Model to Scene", elementNotInScene);
             this.AddSingleModelToScene(elementNotInScene, this.library[elementNotInScene.Name])    
           });
 
 
-          console.log("library" , this.library);
+          //console.log("library" , this.library);
         });
       }else{
         console.log("elementsNotInScene but in library" , elementsNotInScene);
 
         elementsNotInScene.filter(el => el.element.Type.Type === "Object3D").map(elementNotInScene =>{
-          console.log("add Single Element Model to Scene", elementNotInScene);
+         // console.log("add Single Element Model to Scene", elementNotInScene);
           this.AddSingleModelToScene(elementNotInScene, this.library[elementNotInScene.Name])    
         });
       }
 
 
 
-      console.log("elementsToLoad" , elementsToLoad);
-
-      console.log("slide" , slide.SlideElements);
+      // console.log("elementsToLoad" , elementsToLoad);
+// 
+      // console.log("slide" , slide.SlideElements);
 
     },
-    "$store.state.slideIndex" : function(){
-      console.log("slideIndex changed");
+    "$store.state.slideIndex" : function(newValue, oldValue){
+      console.log("slideIndex changed", newValue, oldValue);
 
-      this.DetatchCurrentSlideModels();
+      this.DetatchCurrentSlideModels(oldValue);
+      this.AppendCurrentSlideModels();
+
+      this.MoveCamera(this.slideContainer.Slides[oldValue] , this.slideContainer.Slides[newValue]);
+    },
+    "$store.state.slideContainerIndex" : function(newValue, oldValue){
+      console.log("slideIndex changed", newValue, oldValue);
+
+      this.DetatchCurrentSlideModels(this.$store.state.slideIndex);
       this.AppendCurrentSlideModels();
     }
   },
   methods : {
+    MoveCamera(oldSlide,newSlide){
+      console.log("oldSlide, newSlide" , oldSlide, newSlide);
+
+      if(newSlide.CameraPosition != null){
+        this.$store.state.xr.Controls.SetPosition(newSlide.CameraPosition.x,newSlide.CameraPosition.y,newSlide.CameraPosition.z);      
+
+      }
+      if(newSlide.CameraTarget != null){
+        this.$store.state.xr.Controls.SetTarget(newSlide.CameraTarget.x,newSlide.CameraTarget.y,newSlide.CameraTarget.z);      
+      }
+
+    },
     CreatePrimitives(){
-      this.library.Cube = {scene : new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshNormalMaterial())};
-      this.library.Cone= {scene : new THREE.Mesh(new THREE.ConeGeometry(.5,1,32), new THREE.MeshNormalMaterial())};
-      this.library.Cylinder= {scene :  new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,1,32), new THREE.MeshNormalMaterial())};
-      this.library.Sphere= {scene :  new THREE.Mesh(new THREE.SphereGeometry(.5,16,16), new THREE.MeshNormalMaterial())};
-      this.library.Torus= {scene :  new THREE.Mesh(new THREE.TorusGeometry(.314,.15,12,32), new THREE.MeshNormalMaterial())};
-      this.library.Plane= {scene :  new THREE.Mesh(new THREE.PlaneGeometry(1,1), new THREE.MeshNormalMaterial())};
+      this.library.Cube = {scene : new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshBasicMaterial())};
+      this.library.Cone= {scene : new THREE.Mesh(new THREE.ConeGeometry(.5,1,32), new THREE.MeshBasicMaterial())};
+      this.library.Cylinder= {scene :  new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,1,32), new THREE.MeshBasicMaterial())};
+      this.library.Sphere= {scene :  new THREE.Mesh(new THREE.SphereGeometry(.5,16,16), new THREE.MeshBasicMaterial())};
+      this.library.Torus= {scene :  new THREE.Mesh(new THREE.TorusGeometry(.314,.15,12,32), new THREE.MeshBasicMaterial())};
+      this.library.Plane= {scene :  new THREE.Mesh(new THREE.PlaneGeometry(1,1), new THREE.MeshBasicMaterial())};
+    },
+    CreateText(element){
+
+      const container = new ThreeMeshUI.Block({
+        height: element.element.FontSettings.Height != null ? element.element.FontSettings.Height : 2.5,
+        width: element.element.FontSettings.Width != null ? element.element.FontSettings.Width : 4,
+        padding: element.element.FontSettings.Padding != null ? element.element.FontSettings.Padding : .2,
+        backgroundOpacity: element.element.FontSettings.BackgroundOpacity != null ? new THREE.Color( element.element.FontSettings.BackgroundOpacity) : 1,
+        backgroundColor: element.element.FontSettings.BackgroundColor != null ? new THREE.Color( element.element.FontSettings.BackgroundColor) : new THREE.Color( 0xaaaaaa ),
+        alignContent : element.element.FontSettings.Alignment != null ? element.element.FontSettings.Alignment : "left",
+        justifyContent : element.element.FontSettings.Justification != null ? element.element.FontSettings.Justification : "center",
+        interLine : element.element.FontSettings.LineHeight != null ? element.element.FontSettings.LineHeight * .01 : .01
+      });
+      //this.$store.state.xr.Scene.add(container);
+      console.log("element" , element);
+
+
+      const text = new ThreeMeshUI.Text({
+        content: element.element.FontSettings.Content != null ? element.element.FontSettings.Content : 'Default Text',
+        fontSize: element.element.FontSettings.FontSize != null ? element.element.FontSettings.FontSize * .5 : .5,
+        fontColor: element.element.FontSettings.Color != null ? new THREE.Color( element.element.FontSettings.Color) : new THREE.Color( 0x000000 ),
+        fontFamily: textJSON,
+        fontTexture: textPNG,
+      });
+
+      console.log("text" , text.fontTexture);
+    
+      container.add(text);
+      //this.library.Text = { scene: container };
+      return container;
     },
     HandleModelSelection(slideElement){
-      console.log(slideElement ,this);
+      //console.log(slideElement ,this);
 
       this.Select(Utils.GetSceneReference(this.$store.state.xr.Scene, slideElement));
     },
     HandleModelDeselection(slideElement){
-      console.log("deselect" , slideElement ,this.selected);
+      //console.log("deselect" , slideElement ,this.selected);
       this.Deselect(Utils.GetSceneReference(this.$store.state.xr.Scene, slideElement))
     },
     InitWebXR(){
@@ -132,9 +196,10 @@ export default {
       // var box = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshNormalMaterial());
       // box.position.set(0,.5,0);
       // xr.Scene.add(box);
+
+      console.log("slide", this.slide);
   
-      var {CameraPosition, CameraTarget} = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex];
-      console.log(CameraPosition);
+      var {CameraPosition, CameraTarget} = this.slide;//this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex];
       if(CameraPosition != null){
         xr.Controls.SetPosition(CameraPosition.x,CameraPosition.y,CameraPosition.z);
       }
@@ -167,8 +232,6 @@ export default {
 			xr.transformControls.addEventListener( 'dragging-changed', ( event ) => {
           xr.Controls.enabled = ! event.value;
 
-
-          console.log(event, this.selected);
           this.ChangeObjectByGizmo();
 					//orbit.enabled = ! event.value;
 
@@ -183,15 +246,18 @@ export default {
 
     },
     LoadProgress(progress){
-      console.log(progress);
+      //console.log(progress);
 
       this.progress = progress;
     },
 
     ChangeObjectByGizmo(){
-      console.log(event, this.selected );
+      //console.log(event, this.selected );
           var mode = this.$store.state.xr.transformControls.getMode();
           var slideElements = this.selected.userData.slideElements;
+
+          console.log(mode);
+
           switch(mode){
             case "translate":
 
@@ -200,7 +266,7 @@ export default {
                   object : this.selected
                 });
 
-              console.log( this.selected.userData.slideElements);
+             // console.log( this.selected.userData.slideElements);
               var slideElements = this.selected.userData.slideElements;
               this.SetValue({
                 object : slideElements, 
@@ -211,7 +277,7 @@ export default {
 
             break;
             case "scale":
-              console.log(this.selected.scale);
+              //console.log(this.selected.scale);
               EventManager.$emit("ChangeTransform3D", {
                   type : "scale",
                   object : this.selected
@@ -235,71 +301,120 @@ export default {
                 object : slideElements, 
                 path : "slideElements.Rotation", 
                 value : this.selected.quaternion
+                  
               });
-              console.log(this.selected.rotation);
+              //console.log(this.selected.rotation);
             break;
           }
     },
-    AddSingleModelToScene(item, libraryItem){
-      var slideElements = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex].SlideElements;
+    AddSingleModelToScene(item, libraryItem, copyItem = true){
+      var slideElements = this.slide.SlideElements;
       var sElement = slideElements.find(element => element === item);
 
-      console.log("libraryItem" ,libraryItem);
+      if(!this.attachedModels.hasOwnProperty(this.$store.state.containerIndex)){
+        this.attachedModels[this.$store.state.containerIndex] = {}
+      }
 
-      this.attachedModels[item.id] = libraryItem;
+      if(!this.attachedModels[this.$store.state.containerIndex].hasOwnProperty(this.$store.state.slideIndex)){
+        this.attachedModels[this.$store.state.containerIndex][this.$store.state.slideIndex] = new THREE.Scene();
+        this.$store.state.xr.Scene.add(this.attachedModels[this.$store.state.containerIndex][this.$store.state.slideIndex]);
+      }
 
+      var libItem = libraryItem;
 
-        console.log("this.attachedModels[item.id]" , this.attachedModels[item.id]);
+      //make a copy of the Object
+      if(copyItem){
+        libItem.scene = libItem.scene.clone();
+      }
 
-      //make a copy of the object
-      this.attachedModels[item.id].scene = this.attachedModels[item.id].scene.clone();
-      this.attachedModels[item.id].position = new THREE.Vector3(0,0,0);
-      this.attachedModels[item.id].scale = new THREE.Vector3(1,1,1);
-      this.attachedModels[item.id].quaternion = new THREE.Quaternion(0,0,0,1);
+      if(!libItem.scene.hasOwnProperty("userData")){libItem.scene.userData = {}}
 
-      console.log("AddSingleModelToScene" , item, libraryItem);
+      libItem.scene.userData.slideElements = item;
 
-      this.attachedModels[item.id].scene.traverse(child => {
+      //Tmp
+      libItem.scene.traverse(child => {
         if(!child){return;}
-        if(!child.hasOwnProperty("userData")){child.userData = {}}
-
-        child.userData.slideElements = item;
-
+        if(child.type != "Mesh"){return;}
+        
         child.isUI = true;
         child.setState = this.SetStateOfObject;
         this.$store.state.xr.Controls.ActiveObjects.push(child);
       });
+      var pos = new THREE.Vector3(0,0,0);
+      if(item.Offset != null){
+        pos.x = item.Offset.x != null ? item.Offset.x : pos.x;
+        pos.y = item.Offset.y != null ? item.Offset.y : pos.y;
+        pos.z = item.Offset.z != null ? item.Offset.z : pos.z;
+      }
+      libItem.scene.position.set(pos.x,pos.y,pos.z);
+      
+        //Set Scale
+      var scale = new THREE.Vector3(1,1,1);
+      if(item.Offset != null){
+        scale.x = item.Scale.x != null ? item.Scale.x : scale.x;
+        scale.y = item.Scale.y != null ? item.Scale.y : scale.y;
+        scale.z = item.Scale.z != null ? item.Scale.z : scale.z;
+      }
+      libItem.scene.scale.set(scale.x,scale.y,scale.z);
+
+      //Set Rotation
+      var quaternion = new THREE.Quaternion(0,0,0,1);
+
+      if(item.Rotation != null){
+        quaternion.x = item.Rotation.x != null ? item.Rotation.x : quaternion.x;
+        quaternion.y = item.Rotation.y != null ? item.Rotation.y : quaternion.y;
+        quaternion.z = item.Rotation.z != null ? item.Rotation.z : quaternion.z;
+        quaternion.w = item.Rotation.w != null ? item.Rotation.w : quaternion.w;
+      }
+        
+      libItem.scene.quaternion.set(quaternion.x,quaternion.y,quaternion.z,quaternion.w);
+
+        if(item.element.Type.Type == "Primitive"){
+          
+          libItem.scene.material = libItem.scene.material.clone();
+          
+          var color = new THREE.Color(0xff0000);
+          color = item.element.Color != null ? new THREE.Color(item.element.Color) : color;
+          libItem.scene.material.color = color;
+        }
+
+        if(item.element.Type.Type == "Text"){
+          
+          console.log("fontMaterial" , libItem.scene.fontMaterial);
+        }
+
 
       
-      this.attachedModels[item.id].scene.position = item.Offset != null ? new THREE.Vector3(item.Offset.x,item.Offset.y,item.Offset.z) : new THREE.Vector3(0,0,0);
-      this.attachedModels[item.id].scene.scale = item.Scale != null ? new THREE.Vector3(item.Scale.x,item.Scale.y,item.Scale.z) : new THREE.Vector3(1,1,1);
-      this.attachedModels[item.id].scene.quaternion = item.Rotation != null ? new THREE.Quaternion(item.Rotation.x,item.Rotation.y,item.Rotation.z,item.Rotation.w) : new THREE.Quaternion();
-      this.$store.state.xr.Scene.add(this.attachedModels[item.id].scene);
+      this.attachedModels[this.$store.state.containerIndex][this.$store.state.slideIndex].add(libItem.scene);
     },
     AppendCurrentSlideModels(){
-      var slideElements = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$store.state.slideIndex].SlideElements;
-      
+      var slideElements = this.slide.SlideElements;
+
       var otherElements = slideElements.filter(el => el.element.Type.Type != "Object3D");
 
-      var primitiveElements = otherElements.filter(el => el.element.Type.Type === "Primitive");
+      var primitiveElements = slideElements.filter(el => el.element.Type.Type === "Primitive");
+
+      var textElements = slideElements.filter(el => el.element.Type.Type === "Text");
 
       primitiveElements.map(element => {
-
-        console.log("element primitive" , element.element.Primitive.PrimitiveType);
-
         this.AddSingleModelToScene(element, this.library[element.element.Primitive.PrimitiveType]);
       });
-
-      console.log("otherElements" , otherElements);
       
+      textElements.map(element => {
+
+        const container = this.CreateText(element);
+
+        this.library.Text = {scene : container}
+
+        this.AddSingleModelToScene(element, {scene : container}, false);
+      });
+
       var elementsToLoad = slideElements.filter(el => {console.log("el" ,el.element.Type.Type === "Object3D"); return el.element.Type.Type === "Object3D";}).map(slideElement => {
         if(typeof(slideElement.element.Asset) == "undefined"){return null;}
-        console.log(slideElement.element.Asset);
-
+       
         var path = config.CMS_BASE_URL + slideElement.element.Asset.url;
         var name = slideElement.Name;
 
-        console.log(slideElement);
         return {
           url : path,
           name : name
@@ -307,8 +422,7 @@ export default {
       }).filter(el => el != null);
 
 
-      console.log("stack" , elementsToLoad);
-
+      
       elementsToLoad = elementsToLoad.reduce((acc, current) => {
         const x = acc.find(item => item.name === current.name);
         if (!x) {
@@ -318,18 +432,14 @@ export default {
         }
       }, []);
       
-      console.log("stack" , elementsToLoad);
+      
       
       this.$store.state.xr.Loader.loadStack({
         stack : elementsToLoad,
         progress : this.LoadProgress
       }).then(library => {
         
-        console.log("library has loaded" , library);
-
         this.library = Object.assign(this.library, library);
-
-        console.log("this.library");
 
         slideElements.map(slideElement =>{
           if(typeof(library[slideElement.Name]) === "undefined"){return;}
@@ -347,20 +457,22 @@ export default {
       //console.log(state);
     },
 
-    DetatchCurrentSlideModels(){
+    DetatchCurrentSlideModels(oldSlideIndex){
 
       if(this.selected != null){
         this.Deselect(this.selected);
       }
-      Object.keys(this.attachedModels).map(item => {
-        this.$store.state.xr.Scene.remove(this.attachedModels[item].scene);
 
-        //clear all active Objects in scene
-        this.$store.state.xr.Controls.ActiveObjects = [];
+      const itemsToDelete = {};
 
-        delete this.attachedModels[item];
-      });
-
+      if(this.attachedModels.hasOwnProperty(this.$store.state.containerIndex)){
+        if(this.attachedModels[this.$store.state.containerIndex].hasOwnProperty(oldSlideIndex)){
+          this.$store.state.xr.Scene.remove(this.attachedModels[this.$store.state.containerIndex][oldSlideIndex]);
+          delete this.attachedModels[this.$store.state.containerIndex][oldSlideIndex];
+          this.$store.state.xr.Controls.ActiveObjects = [];
+        }
+      }
+      
 
     },
     Select(mesh){
@@ -379,6 +491,8 @@ export default {
         EventManager.$emit("3DDeselect" , this.selected);
         this.selected.userData.selected = false;
         this.$store.state.xr.transformControls.detach(this.selected);
+
+        this.$store.commit("SetSelection" , null);
       }
 
       this.selected = parent;
@@ -386,6 +500,7 @@ export default {
       this.$store.state.xr.transformControls.attach(this.selected);
 
       EventManager.$emit("3DSelect" , this.selected);
+      this.$store.commit("SetSelection" , this.selected);
     },
     Deselect(mesh){
       if(mesh != this.selected){return;}
@@ -399,7 +514,13 @@ export default {
     },
     Hover(mesh){
       //console.log("hover", mesh);
+    },
+
+    AnimationLoop(clock){
+
+      ThreeMeshUI.update();
     }
+
   }
 }
 </script>

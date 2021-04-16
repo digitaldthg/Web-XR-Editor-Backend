@@ -3,6 +3,34 @@ import config from '../../../main.config';
 
 export default {
   mixins:[IOMixin],
+  data(){
+    return {
+      slide : null,
+      slideContainer : null
+    }
+  },
+  watch:{
+    "$store.state.currentProjekt" : function(){
+      console.log(this.$store.state.currentProjekt);
+
+      this.slide = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex].Slides[this.$route.params.slideIndex];
+      this.slideContainer = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex];
+      console.log("change currentProjekt");
+    },
+    "$route.params.slideIndex" : function(){
+      this.slide = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex].Slides[this.$route.params.slideIndex];
+    },
+    "$route.params.slideContainerIndex" : function(){
+      this.slide = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex].Slides[this.$route.params.slideIndex];
+      this.slideContainer = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex];
+      console.log("change SlideContainerINdex");
+    }
+  },
+  mounted(){
+    if(this.$store.state.currentProjekt === null){return;}
+    this.slide = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex].Slides[this.$route.params.slideIndex];
+    this.slideContainer = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex];
+  },
   methods : {
     AddSlide(slideContainer) {
       console.log("%c Projektmixin legt neues Slide an", "background:tomato;color:#fff;");
@@ -15,7 +43,11 @@ export default {
       }).then(container => {
         return this.Put( config.CMS_BASE_URL + "/slide-containers/" + container.id, container);
       }).then(response =>{
-        
+        console.log(response);
+
+        return this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id);
+        //this.$store.commit("SetProjekt", response.data);
+      }).then(response =>{
         this.$store.commit("SetProjekt", response.data);
       });
     },

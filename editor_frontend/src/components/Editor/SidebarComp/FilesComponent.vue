@@ -5,7 +5,10 @@
       <FileUpload @uploadComplete="HandleUploadedFile"/>
 
       <div class="file-items" >
-        <div class="file-item flex flex-between" v-for="asset in componentData" v-bind:key="asset.id" >
+        <div 
+          class="file-item flex flex-between" 
+          v-for="asset in componentData" 
+          v-bind:key="asset.id">
           <div class="preview-image">
             <img :src="placeHolderImage" />
           </div>
@@ -35,7 +38,6 @@ import placeHolderImage from '../../../Images/placeholder.jpg';
 export default {
   name : "Files",
   mixins:[IOMixin,ToggleMixin, ProjectMixin],
-  props:["slide"],
   components: {SidebarCompHeader, FileUpload},
   data(){
     return {
@@ -51,7 +53,7 @@ export default {
 
 
     this.Get(mainConfig.CMS_BASE_URL + "/elements").then(response => {
-      this.componentData = response.data;//this.FilterData(Utils.GroupByKey(response.data, "ext"));
+      this.componentData = response.data.filter(asset => asset.Type.Type === "Object3D");//this.FilterData(Utils.GroupByKey(response.data, "ext"));
       console.log("response slide-elements " , response.data);
     })
 
@@ -69,7 +71,7 @@ export default {
         }
       }
 
-      console.log("slideElements " , this.$props.slide.SlideElements);
+      console.log("slideElements " , this.slide.SlideElements);
 
       this.AddElement(Element);
 
@@ -96,7 +98,7 @@ export default {
         
         this.Post(mainConfig.CMS_BASE_URL + "/slide-elements" , SlideElement).then(res => {
         
-          var sElements = [... this.$props.slide.SlideElements];
+          var sElements = [... this.slide.SlideElements];
 
           sElements.push(res.data);
 
@@ -104,7 +106,7 @@ export default {
           
         }).then(sElements =>{
           //PUT SlideElements update
-          return this.Put(mainConfig.CMS_BASE_URL + "/slides/" + this.$props.slide.id , {
+          return this.Put(mainConfig.CMS_BASE_URL + "/slides/" + this.slide.id , {
             SlideElements : sElements
           });
 

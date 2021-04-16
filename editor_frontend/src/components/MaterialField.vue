@@ -1,25 +1,28 @@
 <template>
   <div class="material row">
-    <h3>Materials</h3>
-    <div class="material-slot" v-for="material in materials" v-bind:key="material.uuid">
-      {{material.name}}
-      {{material.type}}
-      <div class="color-field" :style="'background:' + GetColorField(material.color)"></div>
-    </div>
+    <label>{{title}}</label>
+    <slider-picker :value="colors" @input="updateValue"></slider-picker>
   </div>
 </template>
 
 <script>
 import {Color} from 'three';
+import { Slider } from 'vue-color';
+
 
 export default {
   name : "MaterialField",
-  props:[
-    "object",
-  ],
+  components : {
+    'slider-picker': Slider
+  },
+  props:{
+    onChange : null,
+    title : String
+  },
   data(){
     return {
-      materials : null
+      materials : null,
+      colors : "#ff0000"
     }
   },
   computed:{
@@ -27,15 +30,15 @@ export default {
   },
   mounted(){
     console.log("MaterialField");
-     this.$props.object.traverse(el =>{
-      console.log(el.material);
-      if(typeof(el.material) != "undefined"){
+    if(this.$store.state.selectedMesh != null){
 
-        console.log(this);
-        if(this.materials == null){this.materials = {}}
-        this.materials[el.uuid] = el.material;
-      }
-    })
+      this.$store.state.selectedMesh.traverse(el =>{
+        if(typeof(el.material) != "undefined"){
+          if(this.materials == null){this.materials = {}}
+          this.materials[el.uuid] = el.material;
+        }
+      })
+    }
   },
   methods:{
     GetColorField(color){
@@ -43,6 +46,15 @@ export default {
 
       console.log(col, col.getHexString());
       return "#" + col.getHexString();
+    },
+    updateValue(color){
+
+      if(this.$props.onChange != null){
+        this.$props.onChange(color);
+      }else{
+        this.$store.state.selectedMesh.material.color = new Color(color.hex);
+      }
+
     }
   }
 }
@@ -53,4 +65,11 @@ export default {
   width:25px;
   height:25px;
 }
+
+
+.vc-slider {
+  position: relative;
+  width: 100%!important;
+}
+
 </style>

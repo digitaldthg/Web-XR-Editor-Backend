@@ -95,13 +95,9 @@ export default {
       });
     },
     NewProjekt() {
-      this.Post(config.CMS_BASE_URL + "/projekts", {
-        Name: "Test Projekt",
-        Description: "Per API kreiierter Beitrag",
-        
-      })
+      this.Post(config.CMS_BASE_URL + "/projekts")
         .then((response) => {
-          console.log(response);
+          console.log(response.data);
           if (this.projekts.length > 0) {
             this.projekts.push(response.data);
           }

@@ -2,19 +2,29 @@
   <div class="slide-component">
     <SidebarCompHeader name="Slide Hierarchie"/>
 
-    <template v-if="toggleOpen">
+    <template v-if="toggleOpen && slide != null">
       <div class="row">
         <div class="hierarchie">
           <div @click="SelectItem(SlideElements)" @contextmenu="OpenContextMenu" :class="'flex flex-between hierarchie-item hierarchie-item-selected-' + (selection === SlideElements.id)" v-for="SlideElements in slide.SlideElements" v-bind:key="SlideElements.id">
-            <div class="hierarchie-item-col width-1">
-              <ItemIcon />
+            <div class="flex justify-center hierarchie-item-col width-1">
+             
+              <template v-if="SlideElements.element.Type.Type == 'Object3D'">
+                <ItemIcon />
+              </template>
+              <template v-if="SlideElements.element.Type.Type == 'Primitive'">
+                <PrimitiveIcon />
+              </template>
+              
+              <template v-if="SlideElements.element.Type.Type == 'Text'">
+                <TextIcon />
+              </template>
             </div>
-            <div class="hierarchie-item-col align-left width-8">
+            <div class="hierarchie-item-col align-left width-8 flex justify-center ">
               {{SlideElements.Name === "" ? "Kein Modelname" : SlideElements.Name}}
               ({{SlideElements.id}})
 
             </div>
-            <div class="hierarchie-item-col flex width-3">
+            <div class="hierarchie-item-col flex width-3 flex justify-center ">
               <input class="hidden" :checked="GetVisibility(SlideElements)" type="checkbox" :id="'visibility-'+SlideElements.id" @change="e => ToggleVisibility(e.target.checked, SlideElements)"/>
               <label :for="'visibility-'+SlideElements.id">
                 <template v-if="!GetVisibility(SlideElements)"><EyeClosedIcon /></template>
@@ -49,21 +59,49 @@ import ItemIcon from '../../../Images/Icons/item.svg';
 import EyeClosedIcon from '../../../Images/Icons/eyeClosed.svg';
 import EyeIcon from '../../../Images/Icons/eye.svg';
 import TrashIcon from '../../../Images/Icons/trash.svg';
+import PrimitiveIcon from '../../../Images/Icons/primitive.svg';
+import TextIcon from '../../../Images/Icons/text.svg';
 import Utils from '../../../Common/Utils';
 
 import {EventManager} from '../../../Events/EventManager.js';
+import ProjectMixin from '../../../Controller/ProjectMixin';
 
 export default {
-  components: { VectorField, SidebarCompHeader, QuaternionField , ItemIcon, EyeIcon, EyeClosedIcon, TrashIcon},
-  mixins:[ToggleMixin, IOMixin],
+  components: { 
+    VectorField, 
+    SidebarCompHeader, 
+    QuaternionField , 
+    ItemIcon, 
+    EyeIcon, 
+    EyeClosedIcon,
+    TrashIcon,
+    PrimitiveIcon,
+    TextIcon
+  },
+  mixins:[ToggleMixin, IOMixin, ProjectMixin],
   name : "SlideHierarchie",
-  props: ["slide"],
   data(){
     return {
+      //slide : null,
       selection : null
     }
   },
+  watch:{
+    "$store.state.currentProjekt" : function(){
+      console.log(this.$store.state.currentProjekt);
+    },
+    // "$route.params.slideIndex" : function(){
+    //   console.log(this.$store.state.currentProjekt);
+    //   this.slide = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex].Slides[this.$route.params.slideIndex];
+    // },
+    // "$route.params.slideContainerIndex" : function(){
+    //   console.log(this.$store.state.currentProjekt);
+    //   this.slide = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex].Slides[this.$route.params.slideIndex];
+    // }
+  },
   mounted(){
+    //this.slide = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex].Slides[this.$route.params.slideIndex];
+    console.log(this.$store.state.currentProjekt);
     EventManager.$on("3DSelect" , this.HandleSelection);
     EventManager.$on("3DDeselect" , this.HandleDeselection);
   },

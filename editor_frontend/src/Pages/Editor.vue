@@ -3,8 +3,8 @@
     <aside class="slide-container-navigation" :style="GetSlideContainerWidth">
       <nav  v-if="this.$store.state.currentProjekt != null">        
         <SlideContainerLink 
-          :active="slideContainer.id === activeSlideContainerID" 
-          v-for="(slideContainer,index) in this.$store.state.currentProjekt.slide_containers" 
+          v-for="(slideContainer,index) in $store.state.currentProjekt.slide_containers" 
+          :active="index === $store.state.slideContainerIndex" 
           v-bind:key="slideContainer.id" 
           :slideContainer="slideContainer"
           :ChangeSlideContainer="e => ChangeSlideContainer(slideContainer.id, index)"
@@ -22,27 +22,27 @@
     <Toolbar />
 
     <template v-if="this.$store.state.currentProjekt != null" >
-      <XRScene :slideIndex="activeSlideIndex" :containerIndex="activeSlideContainerIndex" />
+      <XRScene />
     </template>
     
 
+    
     <div class="slide-bottom-navigation" :style="GetBottomWidth">
       <div class="slide-navigation">
         <div class="slide-navigation-button">
           <button class="slide-nav-button" @click="PrevSlide">prev</button>
         </div>
-        <nav class="slide-navigation-wrapper" v-if="this.$store.state.currentProjekt != null && typeof(this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex]) != 'undefined'">
-
+        <nav class="slide-navigation-wrapper" v-if="slideContainer != null">
           <SlideLink 
-            v-for="(slide,slideIndex) in this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides" 
-            v-bind:key="slide.id"
-            :slide="slide"
+            v-for="(custom_slide,slideIndex) in slideContainer.Slides" 
+            v-bind:key="custom_slide.id"
+            :slide="custom_slide"
             :index="slideIndex"
-            :active="slide.id === activeSlideID"
-            :ChangeSlide="e => ChangeSlide(slide.id)"/>
+            :active="slideIndex === $store.state.slideIndex"
+            :ChangeSlide="e => ChangeSlide(custom_slide.id)"/>
           
           <div class="add-slide">
-            <button @click="e => AddSlide(this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex])">+</button>
+            <button @click="e => AddSlide(slideContainer)">+</button>
           </div>
         </nav>
         <div class="slide-navigation-button">
@@ -62,24 +62,26 @@
           <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'object')"><button @click="e => ChangeTab('object')">3D Objekt</button></div>
         </div>
         <div class="slide-component-settings" v-if="activeTab == 'scene'">
-          <SidebarContainerSettings :slideContainers="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex]"/>
+          <SidebarContainerSettings :slideContainers="this.$store.state.currentProjekt.slide_containers[$route.params.slideIndex]"/>
         </div>
         <div class="slide-component-settings" v-if="activeTab == 'slide'">
           
 
-          <SlideHierarchie :slide="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides[activeSlideIndex]"/>
+          <SlideHierarchie />
 
-          <SlideSettings :slides="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides[activeSlideIndex]"/>
+          <SlideSettings />
 
           <LightPresets />
 
         </div>
         <div class="slide-component-settings" v-if="activeTab == 'file'">
-          <FilesComponent :slide="this.$store.state.currentProjekt.slide_containers[activeSlideContainerIndex].Slides[activeSlideIndex]"/>
+          <FilesComponent />
         </div>
         <div class="slide-component-settings" v-if="activeTab == 'object'">
-          <SelectedInfoComponent />
+          <SelectedComponent />
+          <TransformComponent />
           <PrimitiveComponent />
+          <TextComponent />
         </div>
 
 

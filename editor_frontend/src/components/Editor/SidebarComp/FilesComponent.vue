@@ -2,7 +2,7 @@
   <div class="slide-component">
     <SidebarCompHeader name="Files"/>
     <template v-if="toggleOpen">
-      <FileUpload @uploadComplete="HandleUploadedFile"/>
+      
 
       <div class="file-items" >
         <div 
@@ -12,14 +12,15 @@
           <div class="preview-image">
             <img :src="placeHolderImage" />
           </div>
-          {{asset.Name}}
-          <div class="flex flex-column">
-            <button class="cta-button-small" @click="e => AppendItemToScene(asset)">Add to Scene</button>
-            <button class="cta-button-small --warning" @click="e => DeleteItem(asset)">delete</button>
+          <button class="align-left" @click="e => AppendItemToScene(asset)">{{asset.Name}}</button>
+          <div class="flex">
+            <button class="cta-button-small --white" @click="e => DeleteItem(asset)"><TrashIcon color="tomato"/></button>
           </div>
         </div>
       </div>
     </template>
+
+    <FileUpload @uploadComplete="HandleUploadedFile"/>
   </div>
 </template>
 
@@ -33,12 +34,16 @@ import Utils from '../../../Common/Utils';
 
 import FileUpload from './FileUpload';
 import placeHolderImage from '../../../Images/placeholder.jpg';
-
+import TrashIcon from '../../../Images/Icons/trash';
 
 export default {
   name : "Files",
   mixins:[IOMixin,ToggleMixin, ProjectMixin],
-  components: {SidebarCompHeader, FileUpload},
+  components: {
+    SidebarCompHeader, 
+    FileUpload,
+    TrashIcon
+    },
   data(){
     return {
       componentData : null,
@@ -145,6 +150,7 @@ export default {
   overflow: hidden;
   overflow-y: auto;
   padding: .25rem;
+  max-height: 180px;
 
 }
 .file-items::-webkit-scrollbar{display: hidden;}
@@ -152,15 +158,20 @@ export default {
 
 .file-item {
   width: 100%;
-  box-shadow: 0 0 0 1px #000;
   border-radius: 5px;
   padding: .25rem;
-  margin-bottom: .5rem;
+  align-items: center;
+
+  &:nth-child(even){
+    background: #eee;
+  }
 }
 
 .preview-image {
-  width: 50px;
-  height: 50px;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  margin-right: .5rem;
 }
 
 

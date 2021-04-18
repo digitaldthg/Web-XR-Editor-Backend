@@ -1,9 +1,5 @@
 <template>
-  <div class="slide-component">
-    <div class="row">
-      <button :class="'cta-button button-active-' + (Object.keys(this.$store.state.tmp).length > 0) " @click="SaveTmp">Speichern</button>
-    </div>
-  </div>
+  <button :class="'cta-button button-active-' + (Object.keys(this.$store.state.tmp).length > 0) " @click="SaveTmp">Speichern</button>  
 </template>
 
 <script>

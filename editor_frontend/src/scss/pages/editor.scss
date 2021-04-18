@@ -18,13 +18,12 @@ $width : 100px;
   top:50px;
   height:calc(100% - 50px);
   z-index: 1;
-  display:flex;
-  flex-direction:column;
+  display:grid;
   right:0;
   padding: 1rem;
   pointer-events: all;
+  grid-template-rows: auto 5fr auto;
 }
-
 
 .slide-components::-webkit-scrollbar{display: none;}
 
@@ -45,10 +44,22 @@ $width : 100px;
   display: flex;
 }
 
-.slide-nav-button{
+.slide-navigation-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 1rem;
-  height: 100%;
+
+}
+.slide-nav-button{
+  width:50px;
+  height:50px;
+  box-shadow: 0 0 .5rem 0 rgba(0, 0, 0 , .2);
+  border-radius: 50%;
   background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .add-slide{
@@ -59,12 +70,13 @@ $width : 100px;
   line-height: 100px;
 }
 .slide-component-settings {
-  flex: 1;
   margin-bottom: 1rem;
   background: #fff;
-  border: 1px solid;
+  border-radius: 5px;
+  box-shadow: .25rem .25rem .75rem 0 rgb(0 ,0, 0, .1);
   overflow-x: hidden;
   overflow-y: scroll;
+
   -webkit-overflow-scrolling: touch;
 }
 
@@ -93,7 +105,6 @@ $width : 100px;
   position: absolute;
   bottom:0;
   padding:1rem;
-  background: rgba(200,200,200,.5);
 }
 
 .slide-component {
@@ -104,6 +115,10 @@ $width : 100px;
   pointer-events: all;
   user-select: none;
   box-shadow: 0 0 .5rem 0 rgba(0, 0, 0 , .2);
+}
+
+.slide-component:last-child {
+  margin-bottom: 0;
 }
 
 .slide-component .header{
@@ -118,7 +133,7 @@ $width : 100px;
 }
 
 .slide-component-settings-tabbar{
-  display:flex;
+  display: flex;
   z-index: 9999;
   bottom: -1px;
   position: relative;

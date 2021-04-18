@@ -21,6 +21,12 @@
     <div class="flex primitives">
       <button class="small-button" @click="e=>AddText()">Text</button>
     </div>
+    
+    <div class="width-1"></div>
+    
+    <div class="flex">
+      <SaveComponent />
+    </div>
 
 
   </div>
@@ -29,9 +35,14 @@
 
 <script>
 import ProjectMixin from '../../../Controller/ProjectMixin';
+import SaveComponent from '../SidebarComp/SaveComponent.vue';
+
 
 export default {
   name : "Toolbar",
+  components:{
+    SaveComponent
+  },
   mixins:[
     ProjectMixin
   ],

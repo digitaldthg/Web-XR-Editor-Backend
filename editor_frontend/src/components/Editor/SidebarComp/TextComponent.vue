@@ -4,35 +4,43 @@
     <SidebarCompHeader name="Text"/>
 
     <template v-if="toggleOpen">
-      <TextField @onChange="ChangeText" :object="$store.state.selectedMesh.userData.slideElements.element" path="elements.FontSettings.Content" htmlTag="p"/>
+      <TextField @onChange="ChangeText" :object="$store.state.selectedMesh.userData.slideElements.element" path="elements.FontSettings.TextContent" htmlTag="p"/>
       
       <div class="row card-bg">
         <MaterialField title="Text Farbe" :onChange="ChangeTextColor"/>
       </div>
 
-      <div class="flex">
-        <div class="flex">
-          <button @click="ChangeAlignment('left')" class="icon-button">
-            <AlignLeftIcon />
-          </button>
-          <button @click="ChangeAlignment('center')" class="icon-button">
-            <AlignCenterIcon />
-          </button>
-          <button @click="ChangeAlignment('right')" class="icon-button">
-            <AlignRightIcon />
-          </button>
+      <div class="row flex">
+        <div class="row">
+          <label></label>
+          <div class="flex">
+            <button @click="ChangeAlignment('left')" class="icon-button">
+              <AlignLeftIcon />
+            </button>
+            <button @click="ChangeAlignment('center')" class="icon-button">
+              <AlignCenterIcon />
+            </button>
+            <button @click="ChangeAlignment('right')" class="icon-button">
+              <AlignRightIcon />
+            </button>
+          </div>
         </div>
         
-        <div class="flex">
-          <button @click="ChangeJustification('start')" class="icon-button">
-            <JustifyStartIcon />
-          </button>
-          <button @click="ChangeJustification('center')" class="icon-button">
-            <JustifyCenterIcon />
-          </button>
-          <button @click="ChangeJustification('end')" class="icon-button">
-            <JustifyEndIcon />
-          </button>
+        <div class="row flex">
+          <div class="row">
+            <label></label>
+            <div class="flex">
+              <button @click="ChangeJustification('start')" class="icon-button">
+                <JustifyStartIcon />
+              </button>
+              <button @click="ChangeJustification('center')" class="icon-button">
+                <JustifyCenterIcon />
+              </button>
+              <button @click="ChangeJustification('end')" class="icon-button">
+                <JustifyEndIcon />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

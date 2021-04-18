@@ -30,11 +30,11 @@
           />
 
 
-          <div class="projekt">
-            <div class="projekt-inner">
+          <div class="projekt flex flex-center">
+            
 
-              <button class="cta-button" @click="NewProjekt">Neues Projekt</button>
-            </div>
+              <button class="cta-button" @click="NewProjekt">+</button>
+            
           </div>
 
 

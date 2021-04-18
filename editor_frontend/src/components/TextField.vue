@@ -66,10 +66,13 @@ export default {
 .text{
   display: flex;
 }
-input {
+input,.html-tag{
+  height:40px;
   padding: .25rem;
   font-size: 1rem;
   vertical-align: middle;
+  border:0;
+  
 }
 button{
   margin:0;
@@ -82,5 +85,12 @@ button{
   margin: 0;
   padding: 0;
   margin-right:.25rem;
+  line-height: 40px;
+}
+
+
+.text-content {
+  background:#eee;
+  border-bottom: 1px solid #aaa;
 }
 </style>

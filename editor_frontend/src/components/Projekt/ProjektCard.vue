@@ -1,19 +1,22 @@
 <template>
 <div class="projekt" @click="LogProjekt">
   <div class="projekt-inner">
-    <div class="projekt-card-header">
-      <h3>{{ projekt.Name }}({{ projekt.id }})</h3>
-      <vue-markdown> {{ projekt.Description }}</vue-markdown>
+    <div class="row">
+      <div class="projekt-card-header">
+        <h3>{{ projekt.Name }}({{ projekt.id }})</h3>
+        <vue-markdown> {{ projekt.Description }}</vue-markdown>
+      </div>
+      <div class="projekt-card-meta-info">
+        Autor:in: {{ projekt.author.username }}
+      </div>
     </div>
-    <div class="projekt-card-meta-info">
-      Autor:in: {{ projekt.author.username }}
-    </div>
-
 
       <div class="projekt-card-footer">
-        <router-link class="cta-button" :to="'/editor/' + projekt.id + '/0/0' ">Projekt Öffnen</router-link>
-
-        <button class="cta-button --warning" @click="DeleteProjekt">Projekt löschen</button>
+        <div class="row flex">
+          <router-link class="cta-button" :to="'/editor/' + projekt.id + '/0/0' ">Projekt Öffnen</router-link>
+          <div class="width-1"></div>
+          <button class="cta-button --warning" @click="DeleteProjekt">Projekt löschen</button>
+        </div>
       </div>
     </div>
   </div>

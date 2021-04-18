@@ -30,7 +30,7 @@
     <div class="slide-bottom-navigation" :style="GetBottomWidth">
       <div class="slide-navigation">
         <div class="slide-navigation-button">
-          <button class="slide-nav-button" @click="PrevSlide">prev</button>
+          <button class="icon-button slide-nav-button" @click="PrevSlide"><PreviousIcon/></button>
         </div>
         <nav class="slide-navigation-wrapper" v-if="slideContainer != null">
           <SlideLink 
@@ -46,7 +46,7 @@
           </div>
         </nav>
         <div class="slide-navigation-button">
-          <button  class="slide-nav-button" @click="NextSlide">next</button>
+          <button  class="icon-button slide-nav-button" @click="NextSlide"><NextIcon /></button>
         </div>
       </div>
     </div>
@@ -54,40 +54,43 @@
 
 
     <aside class="slide-components" :style="GetComponentsWidth">
+
+      <div class="slide-component-settings" >
+        <SlideHierarchie />
+      </div>
+
+
       <template v-if="this.$store.state.currentProjekt != null">
-        <div class="slide-component-settings-tabbar">
-          <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'scene')"><button @click="e => ChangeTab('scene')">Scene</button></div>
-          <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'slide')"><button @click="e => ChangeTab('slide')">Slide</button></div>
-          <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'file')"><button @click="e => ChangeTab('file')">File</button></div>
-          <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'object')"><button @click="e => ChangeTab('object')">3D Objekt</button></div>
+        <div class="slide-component-settings">
+          <div class="grid-layout">
+            <div class="slide-component-settings-tabbar">
+              <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'scene')"><button @click="e => ChangeTab('scene')">Scene</button></div>
+              <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'slide')"><button @click="e => ChangeTab('slide')">Slide</button></div>
+              <div :class="'tabbar-selector tabbar-selector-active-' + (activeTab == 'object')"><button @click="e => ChangeTab('object')">3D Objekt</button></div>
+            </div>
+            <div class="slide-component-settings flex-3" v-if="activeTab == 'scene'">
+              <SidebarContainerSettings :slideContainers="this.$store.state.currentProjekt.slide_containers[$route.params.slideIndex]"/>
+            </div>
+            <div class="slide-component-settings flex-3" v-if="activeTab == 'slide'">
+              
+              <SlideSettings />
+              <LightPresets />
+            </div>
+            
+            <div class="slide-component-settings flex-3" v-if="activeTab == 'object'">
+              <SelectedComponent />
+              <TransformComponent />
+              <PrimitiveComponent />
+              <TextComponent />
+            </div>
+          </div>
         </div>
-        <div class="slide-component-settings" v-if="activeTab == 'scene'">
-          <SidebarContainerSettings :slideContainers="this.$store.state.currentProjekt.slide_containers[$route.params.slideIndex]"/>
-        </div>
-        <div class="slide-component-settings" v-if="activeTab == 'slide'">
-          
-
-          <SlideHierarchie />
-
-          <SlideSettings />
-
-          <LightPresets />
-
-        </div>
-        <div class="slide-component-settings" v-if="activeTab == 'file'">
-          <FilesComponent />
-        </div>
-        <div class="slide-component-settings" v-if="activeTab == 'object'">
-          <SelectedComponent />
-          <TransformComponent />
-          <PrimitiveComponent />
-          <TextComponent />
-        </div>
-
-
-        <SaveComponent />
-
       </template>
+
+      
+      <div class="slide-component-settings" >
+        <FilesComponent />
+      </div>
     </aside>
   </div>
 </template>

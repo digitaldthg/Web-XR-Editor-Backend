@@ -31,8 +31,12 @@ export default {
   position: relative;
   width:100px;
   min-width: 100px;
-
+  margin: .5rem;
+  border-radius: 1rem;
+  display: flex;
+  background: #aaa;
   img{
+    border-radius: 1rem;
     width: 100%;
     position: relative;
     display: block;
@@ -45,7 +49,8 @@ export default {
     content: "";
     display: block;
     pointer-events: none;
-    box-shadow: inset 0 0 0 2px red;
+    border-radius: 1rem;
+    box-shadow: inset 0 0 0 2px rgba(0,0,0,.5);
     position: absolute;
     width:100%;
     height:100%;

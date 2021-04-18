@@ -58,7 +58,7 @@ import IOMixin from '../../../Controller/IOMixin';
 import ItemIcon from '../../../Images/Icons/item.svg';
 import EyeClosedIcon from '../../../Images/Icons/eyeClosed.svg';
 import EyeIcon from '../../../Images/Icons/eye.svg';
-import TrashIcon from '../../../Images/Icons/trash.svg';
+import TrashIcon from '../../../Images/Icons/trash';
 import PrimitiveIcon from '../../../Images/Icons/primitive.svg';
 import TextIcon from '../../../Images/Icons/text.svg';
 import Utils from '../../../Common/Utils';

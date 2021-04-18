@@ -23,6 +23,10 @@ import TransformComponent from '../Components/Editor/SidebarComp/TransformCompon
 import PrimitiveComponent from '../Components/Editor/SidebarComp/PrimitiveComponent.vue';
 import TextComponent from '../Components/Editor/SidebarComp/TextComponent.vue';
 
+import NextIcon from '../Images/Icons/next.svg';
+import PreviousIcon from '../Images/Icons/previous.svg';
+
+
 //XR
 import XRScene from '../Components/Editor/XRScene.vue';
 
@@ -43,7 +47,9 @@ export default {
     TransformComponent,
     SelectedComponent,
     PrimitiveComponent,
-    TextComponent
+    TextComponent,
+    PreviousIcon,
+    NextIcon
   },
   data(){
     return {

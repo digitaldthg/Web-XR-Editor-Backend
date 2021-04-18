@@ -167,7 +167,7 @@ export default {
 
 
       const text = new ThreeMeshUI.Text({
-        content: element.element.FontSettings.Content != null ? element.element.FontSettings.Content : 'Default Text',
+        content: element.element.FontSettings.TextContent != null ? element.element.FontSettings.TextContent : 'Default Text',
         fontSize: element.element.FontSettings.FontSize != null ? element.element.FontSettings.FontSize * .5 : .5,
         fontColor: element.element.FontSettings.Color != null ? new THREE.Color( element.element.FontSettings.Color) : new THREE.Color( 0x000000 ),
         fontFamily: textJSON,

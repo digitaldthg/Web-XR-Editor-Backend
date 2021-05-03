@@ -58,7 +58,7 @@ export default {
       activeSlideContainerID : null,
       activeSlideContainerIndex : null,
       activeSlideIndex : null,
-      activeTab : "slide"
+      activeTab : "object"
     }
   },
   watch : {
@@ -93,6 +93,11 @@ export default {
   },
   mounted(){
     console.log("editor page has mounted", this.$store.state.currentProjekt);
+    // if( this.$store.state.currentProjekt === null){
+    //   this.$router.push("/home");
+    //   //return;
+    // }
+
     if(this.$store.state.user != null){
       this.Init();
     }
@@ -157,13 +162,17 @@ export default {
       this.ChangeSlide(slideID);
     },
     Init(){
+
+      this.$nextTick(()=>{
+        
        this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id).then(
         (response) => {
 
           this.$store.commit("SetProjekt", response.data);
         
-        }
-      );
+        }).catch(console.log);
+
+      });
     },
    
     

@@ -51,16 +51,20 @@ export default {
     }
   },
   mounted(){
-   
+    
+    this.$nextTick(()=>{
+
+    
     // this.Get(mainConfig.CMS_BASE_URL + "/upload/files").then(response => {
     //   this.componentData = this.FilterData(Utils.GroupByKey(response.data, "ext"));
     // });
 
 
-    this.Get(mainConfig.CMS_BASE_URL + "/elements").then(response => {
-      this.componentData = response.data.filter(asset => asset.Type.Type === "Object3D");//this.FilterData(Utils.GroupByKey(response.data, "ext"));
-      console.log("response slide-elements " , response.data);
-    })
+      this.Get(mainConfig.CMS_BASE_URL + "/elements").then(response => {
+        this.componentData = response.data.filter(asset => asset.Type.Type === "Object3D");//this.FilterData(Utils.GroupByKey(response.data, "ext"));
+        console.log("response slide-elements " , response.data);
+      });
+    });
 
 
   },

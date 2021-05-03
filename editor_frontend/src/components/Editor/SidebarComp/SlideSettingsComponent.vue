@@ -16,6 +16,9 @@
             Template: {{slide.SlideTemplate.Name}}
           </div>
           <div class="row">
+            Screenshot <button class="cta-button" @click="TakeScreenshot">Take Screenshot</button>
+          </div>
+          <div class="row">
             <VectorField title="Kamera Position" ref="camPos" :object="slide" path="slides.CameraPosition" ><button class="icon-button" @click="GetCamPos"><SpotIcon /></button></VectorField>
           </div>
           <div class="row">
@@ -38,7 +41,8 @@ import SidebarCompHeader from './SidebarCompHeader.vue';
 
 import SpotIcon from '../../../Images/Icons/spot.svg';
 import ProjectMixin from '../../../Controller/ProjectMixin';
-
+import config from '../../../../../main.config';
+import IOMixin from '../../../Controller/IOMixin';
 
 export default {
   components: { 
@@ -47,13 +51,65 @@ export default {
     SidebarCompHeader ,
     SpotIcon
   },
-  mixins: [ToggleMixin, ProjectMixin],
+  mixins: [ToggleMixin, ProjectMixin, IOMixin],
   name : "SlideSettings",
  // props : ["slides"],
   mounted(){
     //console.log("SlideSettings mounted" , this.$props.slides);
   },
   methods:{
+    urltoFile(url, filename, mimeType){
+        return (fetch(url)
+            .then(function(res){return res.arrayBuffer();})
+            .then(function(buf){return new File([buf], filename,{type:mimeType});})
+        );
+    },
+    TakeScreenshot(){
+      console.log(this.slide);
+
+      console.log("PreviewImage", this.slide.PreviewImage, this.$store.state.xr.Renderer.instance);
+
+      this.$store.state.xr.Renderer.instance.render(this.$store.state.xr.Scene, this.$store.state.xr.Camera.instance);
+      
+      var strMime = "image/jpeg";
+      var imgData = this.$store.state.xr.Renderer.instance.domElement.toDataURL(strMime);
+      
+      this.GetCamPos();
+      this.GetTargetPos();
+
+
+      this.urltoFile(imgData,'screenshot_slide_'+ this.slide.id +'.jpg', 'image/jpeg' ).then(file => {
+        console.log(file);
+        var formData = new FormData();
+            formData.append("files", file);
+
+            return formData;
+      }).then(formData => {
+
+        this.PostData(config.CMS_BASE_URL + "/upload/", formData).then(response =>{
+          console.log(response.data[0]);   
+
+          if(this.slide.PreviewImage != null){
+            this.Delete(config.CMS_BASE_URL + "/upload/files/" + this.slide.PreviewImage.id).then(res => {
+               this.Put(config.CMS_BASE_URL + "/slides/" + this.slide.id, Object.assign(this.slide, {
+                  PreviewImage: response.data[0]
+                })).then(this.SaveTmp);
+            });
+          }else{
+              this.Put(config.CMS_BASE_URL + "/slides/" + this.slide.id, Object.assign(this.slide, {
+                PreviewImage: response.data[0]
+              })).then(this.SaveTmp);
+              
+          }
+
+        
+          
+        });
+      
+      });
+     
+
+    },
     GetCamPos(){
       const camPos = this.$store.state.xr.Controls.GetPosition();
       this.$refs.camPos.SetValueFromOutside(camPos);

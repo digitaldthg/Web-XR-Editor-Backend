@@ -4,15 +4,18 @@
     <SidebarCompHeader name="Text"/>
 
     <template v-if="toggleOpen">
-      <TextField @onChange="ChangeText" :object="$store.state.selectedMesh.userData.slideElements.element" path="elements.FontSettings.TextContent" htmlTag="p"/>
+      <TextField class="row" @onChange="ChangeText" :object="$store.state.selectedMesh.userData.slideElements.element" path="elements.FontSettings.TextContent" htmlTag="p"/>
       
       <div class="row card-bg">
-        <MaterialField title="Text Farbe" :onChange="ChangeTextColor"/>
+        <MaterialField 
+          title="Text Farbe" 
+          :onChange="ChangeTextColor"
+          :value="$store.state.selectedMesh.userData.slideElements.element.FontSettings.Color" 
+        />
       </div>
 
-      <div class="row flex">
-        <div class="row">
-          <label></label>
+        <div class="row flex">
+          <label>Ausrichtung</label>
           <div class="flex">
             <button @click="ChangeAlignment('left')" class="icon-button">
               <AlignLeftIcon />
@@ -24,11 +27,9 @@
               <AlignRightIcon />
             </button>
           </div>
-        </div>
         
-        <div class="row flex">
-          <div class="row">
-            <label></label>
+          <div class="flex">
+            <label>Position</label>
             <div class="flex">
               <button @click="ChangeJustification('start')" class="icon-button">
                 <JustifyStartIcon />
@@ -41,16 +42,18 @@
               </button>
             </div>
           </div>
-        </div>
       </div>
 
-      <div class="flex">
+      <div class="row flex">
         <LineHeightIcon />
         <input type="range" @input="e => ChangeLineHeight(parseFloat(e.target.value))" min="1" max="100"/>
       </div>
       
       <div class="row card-bg">
-        <MaterialField title="BackgroundColor" :onChange="ChangeBackgroundColor"/>
+        <MaterialField 
+          title="BackgroundColor" 
+          :onChange="ChangeBackgroundColor" 
+          :value="$store.state.selectedMesh.userData.slideElements.element.FontSettings.BackgroundColor"/>
       </div>
       <div class="row flex flex-column">
         <label>Background Opacity</label>
@@ -136,7 +139,6 @@ export default {
     }
   },
   mounted(){
-   console.log(this.$store.state.selectedMesh);
    if(this.$store.state.selectedMesh == null){return}
    if(this.$store.state.selectedMesh.userData.slideElements.element.Type.Type != "Text"){return}
   },
@@ -150,7 +152,8 @@ export default {
       this.SetValue({
         object : this.$store.state.selectedMesh.userData.slideElements.element, 
         path : "elements.FontSettings.Color", 
-        value : color.hex
+        value : color.hex,
+        asObject: true
       });
 
 
@@ -164,14 +167,14 @@ export default {
       this.SetValue({
         object : this.$store.state.selectedMesh.userData.slideElements.element, 
         path : "elements.FontSettings.BackgroundColor", 
-        value : color.hex
+        value : color.hex,
+        asObject: true
       });
 
 
     },
     ChangeAlignment(value){
-      console.log(this.$store.state.selectedMesh);
-
+      
       this.$store.state.selectedMesh.set({
         alignContent : value
       });
@@ -179,14 +182,14 @@ export default {
       this.SetValue({
         object : this.$store.state.selectedMesh.userData.slideElements.element, 
         path : "elements.FontSettings.Alignment", 
-        value : value
+        value : value,
+        asObject: true
       });
 
 
     },
     ChangeJustification(value){
-      console.log(this.$store.state.selectedMesh);
-
+    
       this.$store.state.selectedMesh.set({
         justifyContent : value
       });
@@ -194,12 +197,12 @@ export default {
       this.SetValue({
         object : this.$store.state.selectedMesh.userData.slideElements.element, 
         path : "elements.FontSettings.Justification", 
-        value : value
+        value : value,
+        asObject: true
       });
     },
     ChangeLineHeight(value){
-      console.log(this.$store.state.selectedMesh);
-
+      
       this.$store.state.selectedMesh.set({
         interLine : value * .01
       });
@@ -207,12 +210,12 @@ export default {
       this.SetValue({
         object : this.$store.state.selectedMesh.userData.slideElements.element, 
         path : "elements.FontSettings.LineHeight", 
-        value : value
+        value : value,
+        asObject: true
       });
     },
     ChangeBackgroundOpacity(value){
-      console.log(this.$store.state.selectedMesh);
-
+      
       this.$store.state.selectedMesh.set({
         backgroundOpacity : value
       });
@@ -220,12 +223,12 @@ export default {
       this.SetValue({
         object : this.$store.state.selectedMesh.userData.slideElements.element, 
         path : "elements.FontSettings.BackgroundOpacity", 
-        value : value
+        value : value,
+        asObject: true
       });
     },
     ChangePadding(value){
-      console.log(this.$store.state.selectedMesh);
-
+      
       this.$store.state.selectedMesh.set({
         padding : value
       });
@@ -233,11 +236,11 @@ export default {
       this.SetValue({
         object : this.$store.state.selectedMesh.userData.slideElements.element, 
         path : "elements.FontSettings.Padding", 
-        value : value
+        value : value,
+        asObject: true
       });
     },
     ChangeWidth(value){
-      console.log(this.$store.state.selectedMesh);
 
       this.$store.state.selectedMesh.set({
         width : value
@@ -246,12 +249,12 @@ export default {
       this.SetValue({
         object : this.$store.state.selectedMesh.userData.slideElements.element, 
         path : "elements.FontSettings.Width", 
-        value : value
+        value : value,
+        asObject: true
       });
     },
     ChangeHeight(value){
-      console.log(this.$store.state.selectedMesh);
-
+      
       this.$store.state.selectedMesh.set({
         height : value
       });
@@ -259,11 +262,12 @@ export default {
       this.SetValue({
         object : this.$store.state.selectedMesh.userData.slideElements.element, 
         path : "elements.FontSettings.Height", 
-        value : value
+        value : value,
+        asObject: true
       });
     },
     ChangeText(value){
-      console.log(value);
+      
       this.$store.state.selectedMesh.children[1].set({
         content : value
       });

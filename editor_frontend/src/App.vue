@@ -3,7 +3,7 @@
     <Navigation/>
 
     <div class="main-app">
-      <router-view></router-view>
+      <router-view class="router-view"></router-view>
     </div>
   </div>
 </template>
@@ -72,5 +72,8 @@ export default {
 <style>
 @import url("./scss/stylesheet.scss");
 
-
+.router-view {
+  width: 100%;
+  height: 100%;
+}
 </style>

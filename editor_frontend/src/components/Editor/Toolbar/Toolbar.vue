@@ -68,17 +68,18 @@ export default {
     AddText(){
       var Element = {
         Name : "Text",
-        TextContent : "Default Text",
         FontSettings: {
-          Color : "#000000",
-          Content : "API Text Component",
-          Alignment : "left",
-          Justification : "start",
-          FontSize : 1,
-          LineHeight : 1,
-          BackgroundColor : "#aaaaaa",
-          BackgroundOpacity : 1,
-          Padding : .2
+          Content: "API Text Component",
+          Color: "#000000",
+          Alignment: "center",
+          Justification: "center",
+          LineHeight: 1,
+          FontSize: 1,
+          Width: 4,
+          Height: 1.5,
+          BackgroundColor: "#aaaaaa",
+          BackgroundOpacity: 1,
+          Padding: .2
         },
         Type: {
           Type: "Text"

@@ -1,7 +1,7 @@
 <template>
   <div class="slide-component">
     <SidebarCompHeader name="Allgemeine Info"/>
-    <template v-if="toggleOpen">
+    <template v-if="toggleOpen && $store.state.selectedMesh != null">
       <TextField title="Name" :object="$store.state.selectedMesh.userData.slideElements" path="slideElements.Name" htmlTag="h3"/>
     </template>
   </div>

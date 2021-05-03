@@ -1,5 +1,6 @@
 <template>
   <div class="login-form">
+    <h1>WebXR Login</h1>
     <template v-if="failed">
       <div class="warning">
         <h1>Ups! Etwas ist schiefgelaufen!</h1>
@@ -7,7 +8,7 @@
     </template>
     <input type="text" name="email" v-model="user.name"/>
     <input type="text" name="passwort" v-model="user.pw"/>
-    <button @click="Login" >Login</button>
+    <button class="cta-button" @click="Login" >Login</button>
   </div>
 </template>
 
@@ -68,9 +69,16 @@ export default {
   padding: 1rem;
   box-shadow: 0 0 1rem 0 rgb(0 0 0 / 20%);
   display: inline-block;
+}
 
-  /*input{
-    display: block;
-  }*/
+input{
+  font-size: 1rem;
+  display: block;
+  margin-bottom:.5rem;
+}
+
+.login-form {
+  width: 300px;
+  height: initial;
 }
 </style>

@@ -1,13 +1,14 @@
 <template>
   <div :class="'slide-preview slide-preview-active-'+ active">
     <button @click="ChangeSlide">
-      {{slide.id}}
+      
       <template v-if="slide.PreviewImage != null">
         <img :src="config.CMS_BASE_URL + slide.PreviewImage.url" alt=""/>
       </template>
       
       <template v-if="slide.PreviewImage === null">
-        no image
+       
+        <img :src="DefaultImage" />
       </template>
     </button>
   </div>
@@ -15,11 +16,14 @@
 
 <script>
 import config from '../../../../main.config';
+import DefaultImage from '../../Images/placeholder.jpg';
+
 export default {
   name : "SlideLink",
   props : ["slide","ChangeSlide", "index","active"],
   data(){
     return {
+      DefaultImage : DefaultImage,
       config :config
     }
   }
@@ -37,9 +41,10 @@ export default {
   background: #aaa;
   img{
     border-radius: 1rem;
-    width: 100%;
+    min-width: 100%;
     position: relative;
     display: block;
+    min-height: 100%;
   }
 }
 

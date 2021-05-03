@@ -17,21 +17,30 @@ export default {
   },
   props:{
     onChange : null,
-    title : String
+    title :{
+      type : String,
+      default : ""
+    },
+    value : {
+      type : String,
+      default :  "#ff0000"
+    }
   },
   data(){
     return {
       materials : null,
-      colors : "#ff0000"
+      colors : "#ffffff"
     }
   },
   computed:{
     
   },
   mounted(){
-    console.log("MaterialField");
-    if(this.$store.state.selectedMesh != null){
+    
+    this.colors = this.$props.value != null ? this.$props.value : "#fff000"
 
+
+    if(this.$store.state.selectedMesh != null){
       this.$store.state.selectedMesh.traverse(el =>{
         if(typeof(el.material) != "undefined"){
           if(this.materials == null){this.materials = {}}
@@ -72,4 +81,7 @@ export default {
   width: 100%!important;
 }
 
+.material {
+  padding: 1rem;
+}
 </style>

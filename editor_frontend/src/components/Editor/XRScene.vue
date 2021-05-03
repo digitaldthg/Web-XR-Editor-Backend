@@ -143,33 +143,45 @@ export default {
 
     },
     CreatePrimitives(){
-      this.library.Cube = {scene : new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshBasicMaterial())};
-      this.library.Cone= {scene : new THREE.Mesh(new THREE.ConeGeometry(.5,1,32), new THREE.MeshBasicMaterial())};
-      this.library.Cylinder= {scene :  new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,1,32), new THREE.MeshBasicMaterial())};
-      this.library.Sphere= {scene :  new THREE.Mesh(new THREE.SphereGeometry(.5,16,16), new THREE.MeshBasicMaterial())};
-      this.library.Torus= {scene :  new THREE.Mesh(new THREE.TorusGeometry(.314,.15,12,32), new THREE.MeshBasicMaterial())};
-      this.library.Plane= {scene :  new THREE.Mesh(new THREE.PlaneGeometry(1,1), new THREE.MeshBasicMaterial())};
+      this.library.Cube = {scene : new THREE.Mesh(new THREE.BoxGeometry(1,1,1), new THREE.MeshStandardMaterial())};
+      this.library.Cone= {scene : new THREE.Mesh(new THREE.ConeGeometry(.5,1,32), new THREE.MeshStandardMaterial())};
+      this.library.Cylinder= {scene :  new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,1,32), new THREE.MeshStandardMaterial())};
+      this.library.Sphere= {scene :  new THREE.Mesh(new THREE.SphereGeometry(.5,16,16), new THREE.MeshStandardMaterial())};
+      this.library.Torus= {scene :  new THREE.Mesh(new THREE.TorusGeometry(.314,.15,12,32), new THREE.MeshStandardMaterial())};
+      this.library.Plane= {scene :  new THREE.Mesh(new THREE.PlaneGeometry(1,1), new THREE.MeshStandardMaterial())};
     },
     CreateText(element){
+      console.log("element" , element);
 
-      const container = new ThreeMeshUI.Block({
-        height: element.element.FontSettings.Height != null ? element.element.FontSettings.Height : 2.5,
-        width: element.element.FontSettings.Width != null ? element.element.FontSettings.Width : 4,
-        padding: element.element.FontSettings.Padding != null ? element.element.FontSettings.Padding : .2,
-        backgroundOpacity: element.element.FontSettings.BackgroundOpacity != null ? new THREE.Color( element.element.FontSettings.BackgroundOpacity) : 1,
-        backgroundColor: element.element.FontSettings.BackgroundColor != null ? new THREE.Color( element.element.FontSettings.BackgroundColor) : new THREE.Color( 0xaaaaaa ),
-        alignContent : element.element.FontSettings.Alignment != null ? element.element.FontSettings.Alignment : "left",
-        justifyContent : element.element.FontSettings.Justification != null ? element.element.FontSettings.Justification : "center",
-        interLine : element.element.FontSettings.LineHeight != null ? element.element.FontSettings.LineHeight * .01 : .01
-      });
+
+      var {
+        Width, Height,
+        Padding, 
+        BackgroundOpacity,
+        BackgroundColor,
+        Alignment,Justification,
+        LineHeight,FontSize,
+        Content, Color
+      } = element.element.FontSettings;
+
+      const container = new ThreeMeshUI.Block(Object.assign({
+        height: Height != null ? Height : 2.5,
+        width:  Width != null ? Width : 4,
+        padding: Padding != null ? Padding: .2,
+        backgroundOpacity: BackgroundOpacity != null ? BackgroundOpacity : 1,
+        backgroundColor:BackgroundColor != null ? new THREE.Color(BackgroundColor) :  new THREE.Color( 0xaaaaaa ),
+        alignContent : Alignment != null ? Alignment : "left",
+        justifyContent: Justification != null ? Justification : "center",
+        interLine : LineHeight != null ? LineHeight * .01 : .01      
+      }));
       //this.$store.state.xr.Scene.add(container);
       console.log("element" , element);
 
 
       const text = new ThreeMeshUI.Text({
-        content: element.element.FontSettings.TextContent != null ? element.element.FontSettings.TextContent : 'Default Text',
-        fontSize: element.element.FontSettings.FontSize != null ? element.element.FontSettings.FontSize * .5 : .5,
-        fontColor: element.element.FontSettings.Color != null ? new THREE.Color( element.element.FontSettings.Color) : new THREE.Color( 0x000000 ),
+        content: Content != null ? Content : 'Default Text',
+        fontSize: FontSize != null ? FontSize * .5 : .5,
+        fontColor: Color != null ? new THREE.Color(Color) : new THREE.Color( 0x000000 ),
         fontFamily: textJSON,
         fontTexture: textPNG,
       });
@@ -544,6 +556,8 @@ export default {
 }
 #xr-scene{
   pointer-events: all;
+  width: 100%;
+  height: 100%;
 }
 
 </style>

@@ -32,24 +32,23 @@ export default {
     this.slideContainer = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex];
   },
   methods : {
+    GetProjekt(){
+      return this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id).then(response =>{
+        this.$store.commit("SetProjekt", response.data);
+      });
+    },
     AddSlide(slideContainer) {
       console.log("%c Projektmixin legt neues Slide an", "background:tomato;color:#fff;");
       this.Post(config.CMS_BASE_URL + "/slides", {
         Name : "New Slide",
+        author : this.$store.state.currentProjekt.author
       }).then((response) => {
         var container = slideContainer;
         container.Slides.push(response.data);
         return container;
       }).then(container => {
         return this.Put( config.CMS_BASE_URL + "/slide-containers/" + container.id, container);
-      }).then(response =>{
-        console.log(response);
-
-        return this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id);
-        //this.$store.commit("SetProjekt", response.data);
-      }).then(response =>{
-        this.$store.commit("SetProjekt", response.data);
-      });
+      }).then(this.GetProjekt);
     },
     AddContainer(){
       this.Post(
@@ -63,9 +62,7 @@ export default {
 
         this.Put(config.CMS_BASE_URL + "/projekts/" + id, {
             slide_containers: containers
-        }).then((response) => {
-          this.$store.commit("SetProjekt", response.data);
-        });
+        }).then(this.GetProjekt);
       });
     },
     AddElement(Element){
@@ -102,23 +99,7 @@ export default {
             SlideElements : sElements
           })
 
-      }).then(response =>{
-        console.log("%c 3. Slide" ,"background:tomato; color:#fff;");
-        console.log("final new Slides" , response.data);
-
-        return this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id);
-      }).then(response =>{
-        console.log("%c 4. Projekt" ,"background:tomato; color:#fff;");
-        console.log("Get Complete Response for new Slide" , response);
-
-        this.$store.commit("SetProjekt", response.data);
-
-        return response.data;
-      }).then(projekt =>{
-        console.log("%c 4. Final" ,"background:tomato; color:#fff;");
-        console.log("projekt" , projekt);
-        return projekt;
-      });
+      }).then(this.GetProjekt);
 
     }
   }

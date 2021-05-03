@@ -14,8 +14,6 @@
       <template v-if="slideContainer != null">
         <div class="row">
           {{slideContainer.PreviewImage}}
-
-          
         </div>
       </template>
 

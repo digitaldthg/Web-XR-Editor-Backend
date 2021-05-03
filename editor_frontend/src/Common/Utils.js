@@ -81,11 +81,13 @@ const Utils = {
   },
   GetNestedObjectValue(path, obj){
     const chain = path.split(".");    
+
+    
     return chain.reduce((object, key) => (object && object[key] !== 'undefined') ? object[key] : null, obj);
   },
   SetNestedObjectValue(path,obj,value){
     var chain = path.split(".");
-
+    
     chain.reduce((a, b, level) => {
 
       if (typeof a[b] === "undefined" && level !== chain.length - 1){

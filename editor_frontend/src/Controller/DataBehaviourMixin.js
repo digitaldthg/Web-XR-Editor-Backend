@@ -40,7 +40,7 @@ module.exports = {
       * @param options.value (*): The value to set.
     */
       SetValue(options){
-        let {object,path,value} = options;
+        let {object,path,value, asObject} = options;
         
         var tmp = Object.assign({}, this.$store.state.tmp);
 
@@ -48,6 +48,29 @@ module.exports = {
         //extract info für path
         const contentType = pathChain.shift();
         const objID = object.id;
+
+        
+
+        
+        if(asObject){
+          var pathChainCopy = [...pathChain];
+          var valueKey = pathChainCopy.pop();
+          var objectKey = pathChainCopy.shift();
+          var objectCopy = Object.assign(object[objectKey]);
+
+          if(tmp.hasOwnProperty(contentType)){
+            if(tmp[contentType].hasOwnProperty(objID)){
+              if(tmp[contentType][objID].hasOwnProperty(objectKey)){
+                objectCopy = Object.assign(objectCopy, tmp[contentType][objID][objectKey]);
+              }
+            }
+          }
+          objectCopy[valueKey] = value;
+          value = objectCopy;
+
+          //Remove last key 
+          pathChain.pop();
+        }
         
         //Kopiert die pathChain
         var pathChainCopyForTmp = [...pathChain];
@@ -56,11 +79,18 @@ module.exports = {
         pathChainCopyForTmp.unshift(contentType);
 
         if(value.isQuaternion){
-          console.log(value);
           value = {x : value._x,y: value._y, z: value._z,w : value._w};
         }
+        
+        
+        var nestedJoined = Utils.SetNestedObjectValue(pathChainCopyForTmp.join("."), tmp,value);
+        
+        if(this.$store.state.selectedMesh != null){
+          console.log("selection  " , this.$store.state.selectedMesh.userData.slideElements , this.$store.state.selectedMesh.userData.slideElements.id === objID,pathChain,pathChainCopyForTmp.join("."), objID, nestedJoined, tmp, value);
 
-        this.$store.commit("SetTmp", Utils.SetNestedObjectValue(pathChainCopyForTmp.join("."), tmp,value));
+        }
+
+        this.$store.commit("SetTmp", nestedJoined);
       }
   }
 }

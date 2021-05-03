@@ -65,10 +65,24 @@ $width : 100px;
 .add-slide{
   width:100px;
   min-width:100px;
-  background:greenyellow;
   text-align: center;
   line-height: 100px;
 }
+
+.add-slide button {
+  width: 50px;
+  height: 50px;
+  color:#fff;
+  background: #aaa;
+  border-radius: 5px;
+  font-size: 2rem;
+  line-height: 50px;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+}
+
+
 .slide-component-settings {
   margin-bottom: 1rem;
   background: #fff;

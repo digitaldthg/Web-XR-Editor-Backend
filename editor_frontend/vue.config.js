@@ -1,4 +1,5 @@
 module.exports = {
+  publicPath : "/tpXR",
   devServer: {
     https: true,
     headers: { 'Access-Control-Allow-Origin': '*' }

@@ -30,8 +30,8 @@ export default {
     return {
       failed : false,
       user:{
-        name : "wunsiedel",
-        pw : "dthgimmts"
+        name : "",  //wunsiedel
+        pw : ""     //dthgimmts
       }
     }
   },

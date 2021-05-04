@@ -9,7 +9,8 @@
       Container: {{ container.Name }} 
       <div class="slide-container">
         <SlidePreview
-          v-for="slide in container.Slides"
+          v-for="(slide,index) in container.Slides"
+          :index="index"
           v-bind:key="slide.id"
           :slide="slide"
           :DeleteSlide="DeleteSlide"
@@ -41,27 +42,14 @@ export default {
 
 
       this.Post(config.CMS_BASE_URL + "/projekts-add-slide/"+ this.$store.state.currentProjekt.id + "/" + container.id).then((response)=>{
-        console.log("response" , response);
         this.$store.commit("SetProjekt", response.data);
-
       });
 
-      // this.Post(
-      //   config.CMS_BASE_URL + "/slides"
-      // ).then((response) => {
-      //   console.log("SLIDE:" , response.data);
-      //   this.$store.state.currentProjekt.AddSlide(container,response.data);
-      // });
     },
     AddContainer() {
 
       this.$store.state.currentProjekt.AddContainer();
-      // this.Post(
-      //   config.CMS_BASE_URL + "/slide-containers"
-      // ).then((response) => {
-      //   console.log("SLIDECONTAINER:" , response.data);
-      //   this.$store.state.currentProjekt.AddContainer(response.data);
-      // });
+
     },
   },
   mounted() {},

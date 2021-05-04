@@ -54,7 +54,6 @@ export default {
   ],
   watch:{
     "$props.value" : function(){
-      console.log(this.$props.value);
     }
   },
   data (){

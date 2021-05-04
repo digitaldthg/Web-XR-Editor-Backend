@@ -86,7 +86,7 @@ module.exports = {
         var nestedJoined = Utils.SetNestedObjectValue(pathChainCopyForTmp.join("."), tmp,value);
         
         if(this.$store.state.selectedMesh != null){
-          console.log("selection  " , this.$store.state.selectedMesh.userData.slideElements , this.$store.state.selectedMesh.userData.slideElements.id === objID,pathChain,pathChainCopyForTmp.join("."), objID, nestedJoined, tmp, value);
+        //  console.log("selection  " , this.$store.state.selectedMesh.userData.slideElements , this.$store.state.selectedMesh.userData.slideElements.id === objID,pathChain,pathChainCopyForTmp.join("."), objID, nestedJoined, tmp, value);
 
         }
 

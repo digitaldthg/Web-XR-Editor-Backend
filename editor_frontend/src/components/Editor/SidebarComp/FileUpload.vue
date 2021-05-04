@@ -1,5 +1,6 @@
 <template>
   <div :class="'row drag-active-'+isOnDrag " ref="uploadField">
+    <label>{{title}}</label>
     <form>
       <div class="flex">
         <label class="width-12" for="fileUpload">
@@ -9,7 +10,7 @@
           <template v-if="!uploading && uploadDone">Hochgeladen!</template>
           
         </label>
-        <input id="fileUpload" type="file" name="files" ref="fileField" accept=".glb,.gltf" @change="UploadFile"/>
+        <input id="fileUpload" type="file" name="files" ref="fileField" :accept="acceptedTypes" @change="UploadFile"/>
       </div>
     </form>
   </div>
@@ -21,6 +22,16 @@ import IOMixin from '../../../Controller/IOMixin';
 export default {
   name : "FileUpload",
   mixins:[IOMixin],
+  props: {
+    title:{
+      type : String,
+      default : ""
+    },
+    acceptedTypes:{
+      type : String,
+      default : ".glb,.gltf"
+    }
+  },
   data(){
     return {
       canAdvancedUpload: false,

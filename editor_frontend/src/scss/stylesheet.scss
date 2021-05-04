@@ -30,6 +30,25 @@ h1,h2,h3,h4,h5,h6{
   margin-bottom: .25rem;
 }
 
+a{
+  color:#2c3e50;
+  font-weight: 700;
+  text-decoration: none;
+
+  &:hover{
+    color:#4d6883;
+    text-decoration: none;
+  }
+
+  &:active, &:focus, &:visited{
+    color: #2c3e50;
+  }
+}
+
+
+.svg-icon{
+  fill : #2c3e50;
+}
 
 #app,input,button {
  font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -59,7 +78,7 @@ nav.main-nav{
   top:0;
   left:0;
   background: #fff;
-  padding: 1rem;
+  align-items: center;
   box-shadow: 0 0 0.5rem 0 rgba(0,0,0,.2);
   display: flex;
   z-index: 1;
@@ -85,6 +104,20 @@ nav.main-nav{
 
 .flex{
   display:flex;
+}
+
+.margin-right{
+  margin-right:1rem;
+}
+
+.margin-left{
+  margin-left:1rem;
+}
+.margin-top{
+  margin-top:1rem;
+}
+.margin-bottom{
+  margin-bottom:1rem;
 }
 
 .row {
@@ -114,6 +147,7 @@ margin:0 -1rem;
 .svg-icon {
   width: 25px;
   height: 25px;
+  vertical-align: middle;
   display: inline-block;
 }
 .grid-layout {

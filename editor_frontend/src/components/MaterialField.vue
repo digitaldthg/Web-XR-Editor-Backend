@@ -53,7 +53,6 @@ export default {
     GetColorField(color){
       var col = new Color(color);
 
-      console.log(col, col.getHexString());
       return "#" + col.getHexString();
     },
     updateValue(color){

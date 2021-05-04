@@ -57,22 +57,20 @@ export default {
   watch:{
     "$store.state.currentProjekt" : function(){
 
-      console.log("slide" , this.slide);
+      if(this.slide === null || typeof(this.slide) == "undefined"){return;}
 
-      if(this.slide === null){return;}
+
+
       //var slide = this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex];
       var elementsNotInScene = this.slide.SlideElements.filter(sElement => !this.attachedModels.hasOwnProperty(sElement.id));
 
       var primitiveElements = elementsNotInScene.filter(el => el.element.Type.Type === "Primitive");
 
       primitiveElements.map(element => {
-
-        console.log("element primitive" , element.element.Primitive.PrimitiveType);
-
         this.AddSingleModelToScene(element, this.library[element.element.Primitive.PrimitiveType]);
       });
 
-      var elementsToLoad = elementsNotInScene.filter(el => el.element.Type.Type === "Object3D").filter(el => {console.log(el); return el;}).map(el => {
+      var elementsToLoad = elementsNotInScene.filter(el => el.element.Type.Type === "Object3D").filter(el => { return el;}).map(el => {
         return { name : el.Name , url: config.CMS_BASE_URL + el.element.Asset.url}
       }).filter(el => !this.library.hasOwnProperty(el.name) );
 
@@ -99,8 +97,7 @@ export default {
           //console.log("library" , this.library);
         });
       }else{
-        console.log("elementsNotInScene but in library" , elementsNotInScene);
-
+        
         elementsNotInScene.filter(el => el.element.Type.Type === "Object3D").map(elementNotInScene =>{
          // console.log("add Single Element Model to Scene", elementNotInScene);
           this.AddSingleModelToScene(elementNotInScene, this.library[elementNotInScene.Name])    
@@ -115,24 +112,29 @@ export default {
 
     },
     "$store.state.slideIndex" : function(newValue, oldValue){
-      console.log("slideIndex changed", newValue, oldValue);
-
+      
       this.DetatchCurrentSlideModels(oldValue);
       this.AppendCurrentSlideModels();
 
       this.MoveCamera(this.slideContainer.Slides[oldValue] , this.slideContainer.Slides[newValue]);
     },
     "$store.state.slideContainerIndex" : function(newValue, oldValue){
-      console.log("slideIndex changed", newValue, oldValue);
-
+      
       this.DetatchCurrentSlideModels(this.$store.state.slideIndex);
       this.AppendCurrentSlideModels();
+    },
+    "$route.params.slideContainerIndex" : function(newValue){
+
+      this.$store.commit("SetSlideContainerIndex", newValue);
+    },
+    "$route.params.slideIndex" : function(newValue){
+
+      this.$store.commit("SetSlideIndex", newValue);
     }
   },
   methods : {
     MoveCamera(oldSlide,newSlide){
-      console.log("oldSlide, newSlide" , oldSlide, newSlide);
-
+    
       if(newSlide.CameraPosition != null){
         this.$store.state.xr.Controls.SetPosition(newSlide.CameraPosition.x,newSlide.CameraPosition.y,newSlide.CameraPosition.z);      
 
@@ -148,11 +150,10 @@ export default {
       this.library.Cylinder= {scene :  new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,1,32), new THREE.MeshStandardMaterial())};
       this.library.Sphere= {scene :  new THREE.Mesh(new THREE.SphereGeometry(.5,16,16), new THREE.MeshStandardMaterial())};
       this.library.Torus= {scene :  new THREE.Mesh(new THREE.TorusGeometry(.314,.15,12,32), new THREE.MeshStandardMaterial())};
-      this.library.Plane= {scene :  new THREE.Mesh(new THREE.PlaneGeometry(1,1), new THREE.MeshStandardMaterial())};
+      this.library.Plane= {scene :  new THREE.Mesh(new THREE.PlaneGeometry(1,1), new THREE.MeshStandardMaterial({side : THREE.DoubleSide}))};
     },
     CreateText(element){
-      console.log("element" , element);
-
+     
 
       var {
         Width, Height,
@@ -175,9 +176,7 @@ export default {
         interLine : LineHeight != null ? LineHeight * .01 : .01      
       }));
       //this.$store.state.xr.Scene.add(container);
-      console.log("element" , element);
-
-
+     
       const text = new ThreeMeshUI.Text({
         content: Content != null ? Content : 'Default Text',
         fontSize: FontSize != null ? FontSize * .5 : .5,
@@ -186,8 +185,6 @@ export default {
         fontTexture: textPNG,
       });
 
-      console.log("text" , text.fontTexture);
-    
       container.add(text);
       //this.library.Text = { scene: container };
       return container;
@@ -209,8 +206,6 @@ export default {
       // box.position.set(0,.5,0);
       // xr.Scene.add(box);
 
-      console.log("slide", this.slide);
-  
       var {CameraPosition, CameraTarget} = this.slide;//this.$store.state.currentProjekt.slide_containers[this.$props.containerIndex].Slides[this.$props.slideIndex];
       if(CameraPosition != null){
         xr.Controls.SetPosition(CameraPosition.x,CameraPosition.y,CameraPosition.z);
@@ -268,8 +263,6 @@ export default {
           var mode = this.$store.state.xr.transformControls.getMode();
           var slideElements = this.selected.userData.slideElements;
 
-          console.log(mode);
-
           switch(mode){
             case "translate":
 
@@ -303,7 +296,6 @@ export default {
             break;
             case "rotate":
 
-              console.log(this.selected.quaternion);
               EventManager.$emit("ChangeTransform3D", {
                 type : "quaternion",
                 object : this.selected
@@ -389,13 +381,6 @@ export default {
           color = item.element.Color != null ? new THREE.Color(item.element.Color) : color;
           libItem.scene.material.color = color;
         }
-
-        if(item.element.Type.Type == "Text"){
-          
-          console.log("fontMaterial" , libItem.scene.fontMaterial);
-        }
-
-
       
       this.attachedModels[this.$store.state.containerIndex][this.$store.state.slideIndex].add(libItem.scene);
     },
@@ -421,7 +406,7 @@ export default {
         this.AddSingleModelToScene(element, {scene : container}, false);
       });
 
-      var elementsToLoad = slideElements.filter(el => {console.log("el" ,el.element.Type.Type === "Object3D"); return el.element.Type.Type === "Object3D";}).map(slideElement => {
+      var elementsToLoad = slideElements.filter(el => { return el.element.Type.Type === "Object3D";}).map(slideElement => {
         if(typeof(slideElement.element.Asset) == "undefined"){return null;}
        
         var path = config.CMS_BASE_URL + slideElement.element.Asset.url;
@@ -492,13 +477,11 @@ export default {
         console.warn("Selected mesh is not present in scene any more!");
         return;
       }
-      console.log("OnSelect Mesh: " , mesh);
-
+     
       var parent = Utils.GetParent(mesh);
       if(parent === this.selected){return;}
 
-      console.log("select", parent);
-
+     
       if(this.selected != null){
         EventManager.$emit("3DDeselect" , this.selected);
         this.selected.userData.selected = false;

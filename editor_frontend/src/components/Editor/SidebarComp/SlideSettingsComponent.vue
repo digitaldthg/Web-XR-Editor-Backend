@@ -13,10 +13,12 @@
           <TextField :object="slide" path="slides.Name" htmlTag="h3"/>
           </div>
           <div class="row">
-            Template: {{slide.SlideTemplate.Name}}
+            <label>Template</label>
+            {{slide.SlideTemplate.Name}}
           </div>
           <div class="row">
-            Screenshot <button class="cta-button" @click="TakeScreenshot">Take Screenshot</button>
+            <label>Screenshot</label>
+            <button class="cta-button" @click="TakeScreenshot">Take Screenshot</button>
           </div>
           <div class="row">
             <VectorField title="Kamera Position" ref="camPos" :object="slide" path="slides.CameraPosition" ><button class="icon-button" @click="GetCamPos"><SpotIcon /></button></VectorField>
@@ -58,12 +60,7 @@ export default {
     //console.log("SlideSettings mounted" , this.$props.slides);
   },
   methods:{
-    urltoFile(url, filename, mimeType){
-        return (fetch(url)
-            .then(function(res){return res.arrayBuffer();})
-            .then(function(buf){return new File([buf], filename,{type:mimeType});})
-        );
-    },
+    
     TakeScreenshot(){
       console.log(this.slide);
 

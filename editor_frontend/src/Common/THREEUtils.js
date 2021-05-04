@@ -9,7 +9,7 @@ function deepCopy( source, recursive ) {
 
     const cloneObject = new THREE.Mesh();
 
-    console.log("cloneObject" , cloneObject);
+    //console.log("cloneObject" , cloneObject);
 
     cloneObject.name = source.name;
     cloneObject.up.copy( source.up );

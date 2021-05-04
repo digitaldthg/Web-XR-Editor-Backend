@@ -6,7 +6,7 @@
           v-for="(slideContainer,index) in $store.state.currentProjekt.slide_containers" 
           :active="index === $store.state.slideContainerIndex" 
           v-bind:key="slideContainer.id" 
-          :slideContainer="slideContainer"
+          :slideContainerObject="slideContainer"
           :ChangeSlideContainer="e => ChangeSlideContainer(slideContainer.id, index)"
         />
         <div class="slide-container">
@@ -39,7 +39,9 @@
             :slide="custom_slide"
             :index="slideIndex"
             :active="slideIndex === $store.state.slideIndex"
-            :ChangeSlide="e => ChangeSlide(custom_slide.id)"/>
+            :ChangeSlide="e => ChangeSlide(custom_slide.id)"
+            
+            />
           
           <div class="add-slide">
             <button @click="e => AddSlide(slideContainer)">+</button>

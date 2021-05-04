@@ -176,11 +176,24 @@ export default {
 
       const id = slideElement.id;
 
-      this.Delete(mainConfig.CMS_BASE_URL + "/slide-elements/"+ id ).then(response => {
+      this.Delete(mainConfig.CMS_BASE_URL + "/slide-elements/"+ id ).then(this.GetProjekt).then(response => {
 
         const itemToDelete = Utils.GetParent(Utils.GetSceneReference(this.$store.state.xr.Scene,slideElement));
+
+
+      console.log("itemToDelete" , itemToDelete);
+
+
         if(itemToDelete != null){
-          this.$store.state.xr.Scene.remove(itemToDelete);      
+
+          if(this.$store.state.selectedMesh != null){
+            if(this.$store.state.selectedMesh.uuid == itemToDelete.uuid){
+              this.$store.commit("SetSelection",null);
+            }
+          }
+          console.log("Remove item to Delete");
+          itemToDelete.parent.remove(itemToDelete);
+          //this.$store.state.xr.Scene.remove(itemToDelete.parent);      
         }
 
       });

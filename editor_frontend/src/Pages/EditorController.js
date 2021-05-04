@@ -163,13 +163,26 @@ export default {
     },
     Init(){
 
+     
+
+     
+
+      
       this.$nextTick(()=>{
         
-       this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id).then(
-        (response) => {
+        this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id).then(
+          (response) => {
+            
+            this.$store.commit("SetProjekt", response.data);
+            
+          }).then(()=>{
+            const slideIndex = parseFloat(this.$route.params.slideIndex);
+            const slideContainerIndex = parseFloat(this.$route.params.slideContainerIndex);
+            
+            this.$store.commit("SetSlideIndex" , slideIndex);
+            this.$store.commit("SetSlideContainerIndex" , slideContainerIndex);
 
-          this.$store.commit("SetProjekt", response.data);
-        
+            console.log("slideIndex" , slideIndex);
         }).catch(console.log);
 
       });

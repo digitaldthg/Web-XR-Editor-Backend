@@ -39,7 +39,6 @@ export default {
   },
   computed:{
     GetElement(){
-      console.log(this.$props.htmlTag);
       return this.$props.htmlTag;
     }
   },
@@ -86,11 +85,15 @@ button{
   padding: 0;
   margin-right:.25rem;
   line-height: 40px;
+  padding-left: .5rem;
 }
 
 
 .text-content {
   background:#eee;
   border-bottom: 1px solid #aaa;
+}
+.text-content input {
+  margin-bottom: 0;
 }
 </style>

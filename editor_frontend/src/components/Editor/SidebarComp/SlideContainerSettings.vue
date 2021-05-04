@@ -11,26 +11,21 @@
         <VectorField :object="slideContainer" path="slideContainers.SlideContainerOffset" />
       </div>
 
-      <template v-if="slideContainer != null">
+      <template v-if="slideContainer.PreviewImage != null">
         <div class="row">
-          {{slideContainer.PreviewImage}}
+          <div class="card">
+            <label>Vorschaubild</label>
+            <div class="flex">
+              <div class="preview-image">
+                <img :src="config.CMS_BASE_URL + slideContainer.PreviewImage.url" />
+              </div>
+              <button class="cta-button" @click="DeleteVorschaubild">Vorschaubild löschen</button>
+            </div>
+          </div>
         </div>
       </template>
 
-
-      <!-- <div class="row">
-        <form @submit="UploadFile">
-          <input type="file" name="files" ref="previewImage"/>
-          <input type="submit" value="Submit" />
-        </form>
-
-        <div class="marker-image">
-          <template v-if="slideContainers.Marker != null">
-            {{slideContainers.Marker.Marker.url}}
-            <img :src="slideContainers.Marker.MarkerPreview.url" />
-          </template>
-        </div>
-      </div> -->
+      <FileUpload title="Vorschaubild hochladen" :acceptedTypes="'.jpg, .jpeg, .png'" @uploadComplete="HandleUploadedFile"/>
 
     
     </template>
@@ -44,6 +39,7 @@ import ToggleMixin from '../../../Controller/ToggleMixin';
 
 import TextField from '../../TextField';
 import VectorField from '../../VectorField.vue';
+import FileUpload from './FileUpload.vue';
 import SidebarCompHeader from './SidebarCompHeader.vue';
 
 export default {
@@ -52,29 +48,44 @@ export default {
   components:{
     TextField,
     VectorField,
-    SidebarCompHeader
+    SidebarCompHeader,
+    FileUpload
   },
   data(){
     return {
       previewImage : null,
+      config : config
     }
   },
   mounted(){
     //console.log("SlideContainerSettings", this.$props.slideContainers)
   },
-  // methods:{
-  //   UploadFile(e){
-  //     e.preventDefault(e);
+  methods:{
+    DeleteVorschaubild(){
+      if(this.slideContainer.PreviewImage != null){
+        this.Delete(config.CMS_BASE_URL + "/upload/files/" +  this.slideContainer.PreviewImage.id).then(()=>{
+          this.Put(config.CMS_BASE_URL + "/slide-containers/"+ this.slideContainer.id, {
+            PreviewImage : null
+          }).then(this.GetProjekt);
+        });
+      }
+    },
+    HandleUploadedFile(data){
+      var uploadedAsset = data[0];
 
-  //     if(this.$refs.previewImage.files.length == 0){return;}
-  //     var formData = new FormData();
-  //         formData.append("files", this.$refs.previewImage.files[0]);
+      this.Put(config.CMS_BASE_URL + "/slide-containers/"+ this.slideContainer.id, {
+        PreviewImage : uploadedAsset
+      }).then(this.GetProjekt);
 
-  //       this.PostData(config.CMS_BASE_URL + "/upload/", formData).then(response =>{
-  //         console.log(response);
-  //       });
-
-  //   }
-  // }
+    }
+  }
 }
 </script>
+
+<style lang="scss">
+.preview-image{
+  width:80px;
+  height:auto;
+  max-height:80px;
+}
+</style>

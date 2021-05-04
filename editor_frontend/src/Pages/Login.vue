@@ -6,8 +6,16 @@
         <h1>Ups! Etwas ist schiefgelaufen!</h1>
       </div>
     </template>
-    <input type="text" name="email" v-model="user.name"/>
-    <input type="text" name="passwort" v-model="user.pw"/>
+    <div class="row margin-bottom">
+      <div class="row">
+        <label for="username">Username</label>
+        <input id="username" type="text" name="email" v-model="user.name"/>
+      </div>
+      <div class="row">
+        <label for="pw">Passwort</label>
+        <input id="pw" type="text" name="passwort" v-model="user.pw"/>
+      </div>
+    </div>
     <button class="cta-button" @click="Login" >Login</button>
   </div>
 </template>
@@ -64,11 +72,19 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .login-form {
+  width: 300px;
+  height: initial;
   padding: 1rem;
-  box-shadow: 0 0 1rem 0 rgb(0 0 0 / 20%);
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
   display: inline-block;
+
+  h1 {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  }
 }
 
 input{
@@ -77,8 +93,4 @@ input{
   margin-bottom:.5rem;
 }
 
-.login-form {
-  width: 300px;
-  height: initial;
-}
 </style>

@@ -40,8 +40,8 @@ export default {
 
 .preview-image {
   width:100%;
-height: auto;
-margin-bottom: 10px;;
+  height: auto;
+  margin-bottom: 10px;
 }
 
 .visible-true {

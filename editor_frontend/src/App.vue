@@ -27,9 +27,6 @@ export default {
 
     this.CheckForLogin();
 
-
-    
-
   },
   data(){
     return {
@@ -45,7 +42,6 @@ export default {
         ){
         this.GoToLogin()
       }else if(jwtCookie != null){
-        console.log(jwtCookie, this.$store.state.jwt);
         this.$store.commit("SetJWT", jwtCookie );
 
         this.Get(config.CMS_BASE_URL + "/users/me").then((response)=>{
@@ -57,7 +53,7 @@ export default {
     },
     GoToLogin(){
       this.$router.push({ 
-        path: 'Login',
+        path: '/Login',
       });
     },    
     ChangeTextField ({ type, target }){

@@ -11,8 +11,11 @@ export default {
   },
   watch:{
     "$store.state.currentProjekt" : function(){
-      console.log(this.$store.state.currentProjekt);
-
+      if(this.$store.state.currentProjekt === null){
+        this.slide = null;
+        this.slideContainerIndex = null;
+        return;}
+      
       this.slide = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex].Slides[this.$route.params.slideIndex];
       this.slideContainer = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex];
       console.log("change currentProjekt");
@@ -47,7 +50,9 @@ export default {
         container.Slides.push(response.data);
         return container;
       }).then(container => {
+        console.log("PUT container", container);
         return this.Put( config.CMS_BASE_URL + "/slide-containers/" + container.id, container);
+      
       }).then(this.GetProjekt);
     },
     AddContainer(){
@@ -100,6 +105,53 @@ export default {
           })
 
       }).then(this.GetProjekt);
+
+    },
+    DeleteSlideContainer(containerID){
+      console.log("delete" , containerID, this.$store.state.currentProjekt);
+      
+      const slideContainerToDelete = this.$store.state.currentProjekt.slide_containers.find( sCont => sCont.id === containerID);
+      const slideContainerToDeleteIndex = this.$store.state.currentProjekt.slide_containers.findIndex( sCont => sCont.id === containerID);
+
+
+      console.log("findIndex " , slideContainerToDeleteIndex);
+      if(this.$store.state.slideContainerIndex === slideContainerToDeleteIndex){
+        this.$router.push({ params: {
+          slideContainerIndex : slideContainerToDeleteIndex - 1,
+          slideIndex : 0
+        }});
+      }
+      
+      console.log("delete" , slideContainerToDelete);
+
+      //1. Delete all slideelements
+      //2. Delete all slides
+      //3. Delete SlideContainer
+      const sElementPromises = slideContainerToDelete.Slides.map(slide => {
+        return slide.SlideElements.map(sElement => this.Delete(config.CMS_BASE_URL + "/slide-elements/"+sElement.id));
+      });
+
+      Promise.all(sElementPromises).then(()=>{
+
+        console.log("alle enthaltenen Slideelements wurden gelöscht");
+
+        return slideContainerToDelete.Slides.map(slide => {
+          return this.Delete(config.CMS_BASE_URL + "/slides/"+slide.id);
+        });
+
+      }).then((slidePromises)=>{
+       
+        Promise.all(slidePromises).then(()=>{
+
+          console.log("alle enthaltenen Slides wurden gelöscht");
+          
+          return this.Delete(config.CMS_BASE_URL + "/slide-containers/" + containerID).then(()=>{
+        
+            console.log("Der SlideContainer wurde gelöscht");
+
+          }).then(this.GetProjekt);
+        });
+      });
 
     }
   }

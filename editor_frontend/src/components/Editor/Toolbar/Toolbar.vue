@@ -1,25 +1,34 @@
 <template>
   <div class="toolbar">
-    <div class="flex transforms">
-      <button class="small-button" @click="ChangeMode('translate')">translate</button>
-      <button class="small-button" @click="ChangeMode('rotate')">rotate</button>
-      <button class="small-button" @click="ChangeMode('scale')">scale</button>
+    <div class="transforms">
+      <label>Transform</label>
+      <div class="flex button-group">
+        <button class="cta-button" @click="ChangeMode('translate')">translate</button>
+        <button class="cta-button" @click="ChangeMode('rotate')">rotate</button>
+        <button class="cta-button" @click="ChangeMode('scale')">scale</button>
+      </div>
     </div>
     
 
     <div class="width-1"></div>
-    <div class="flex primitives">
-      <button class="small-button" @click="e=>AddPrimitive('Plane')">Plane</button>
-      <button class="small-button" @click="e=>AddPrimitive('Cube')">Cube</button>
-      <button class="small-button" @click="e=>AddPrimitive('Sphere')">Sphere</button>
-      <button class="small-button" @click="e=>AddPrimitive('Cylinder')">Cylinder</button>
-      <button class="small-button" @click="e=>AddPrimitive('Cone')">Cone</button>
-      <button class="small-button" @click="e=>AddPrimitive('Torus')">Torus</button>
+    <div class="primitives">
+       <label>Primitives</label>
+      <div class="flex button-group">
+        <button class="cta-button" @click="e=>AddPrimitive('Plane')">Plane</button>
+        <button class="cta-button" @click="e=>AddPrimitive('Cube')">Cube</button>
+        <button class="cta-button" @click="e=>AddPrimitive('Sphere')">Sphere</button>
+        <button class="cta-button" @click="e=>AddPrimitive('Cylinder')">Cylinder</button>
+        <button class="cta-button" @click="e=>AddPrimitive('Cone')">Cone</button>
+        <button class="cta-button" @click="e=>AddPrimitive('Torus')">Torus</button>
+      </div>
     </div>
 
     <div class="width-1"></div>
-    <div class="flex primitives">
-      <button class="small-button" @click="e=>AddText()">Text</button>
+    <div class="primitives">
+      <label>TextElement</label>
+      <div class="flex">
+        <button class="cta-button small-button" @click="e=>AddText()">Text</button>
+      </div>
     </div>
     
     <div class="width-1"></div>
@@ -112,9 +121,11 @@ export default {
   top:0;
   left:0;
   width:100%;
-  height:50px;
+  height:70px;
   background:#eee;
   z-index: 9;
   display: flex;
+    align-items: center;
+  justify-content: space-around;
 }
 </style>

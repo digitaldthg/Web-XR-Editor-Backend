@@ -1,6 +1,8 @@
 import IOMixin from "./IOMixin";
 import config from '../../../main.config';
-
+/**
+ * 
+ */
 export default {
   mixins:[IOMixin],
   data(){
@@ -35,14 +37,23 @@ export default {
     this.slideContainer = this.$store.state.currentProjekt.slide_containers[this.$route.params.slideContainerIndex];
   },
   methods : {
+    /**
+     * Holt das aktuelle Projekt anhand der route.params.id und setzt es als aktuelles Projekt im Store
+     * @returns Projekt
+     */
     GetProjekt(){
       return this.Get(config.CMS_BASE_URL + "/projekts/" + this.$route.params.id).then(response =>{
         this.$store.commit("SetProjekt", response.data);
       });
     },
+    /**
+     * Fügt ein Slide zum SlideContainer hinzu
+     * @param {object} slideContainer 
+     * @returns 
+     */
     AddSlide(slideContainer) {
       console.log("%c Projektmixin legt neues Slide an", "background:tomato;color:#fff;");
-      this.Post(config.CMS_BASE_URL + "/slides", {
+      return this.Post(config.CMS_BASE_URL + "/slides", {
         Name : "New Slide",
         author : this.$store.state.currentProjekt.author
       }).then((response) => {
@@ -55,6 +66,9 @@ export default {
       
       }).then(this.GetProjekt);
     },
+    /**
+     * Fügt einen SlideContainer zum Projekt hinzu
+     */
     AddContainer(){
       this.Post(
         config.CMS_BASE_URL + "/slide-containers"
@@ -70,6 +84,11 @@ export default {
         }).then(this.GetProjekt);
       });
     },
+    /**
+     * Fügt dem aktuellen Slide ein Element hinzu und aktualisiert im Anschluss das Projekt
+     * @param {object} Element 
+     * @returns 
+     */
     AddElement(Element){
       
       return this.Post(config.CMS_BASE_URL + "/elements", Element).then(response => {
@@ -107,6 +126,10 @@ export default {
       }).then(this.GetProjekt);
 
     },
+    /**
+     * Löscht den SlideContainer mit containerID
+     * @param {number} containerID 
+     */
     DeleteSlideContainer(containerID){
       console.log("delete" , containerID, this.$store.state.currentProjekt);
       

@@ -120,6 +120,18 @@ export default {
       console.log(tab);
       this.activeTab = tab;
     },
+    HandleAddSlideContainer(slideContainer){
+      AddSlide(slideContainer)
+    },
+    HandleAddSlide(slideContainer){
+      this.AddSlide(slideContainer).then(()=>{
+
+        console.log(slideContainer);
+        this.$router.push({ params: {
+          slideIndex : slideContainer.Slides.length - 1
+        }})
+      })
+    },
     ChangeSlide(id){
       
       var index = this.slideContainer.Slides.findIndex(slide => slide.id === id);

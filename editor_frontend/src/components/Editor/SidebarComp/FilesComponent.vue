@@ -53,22 +53,19 @@ export default {
   mounted(){
     
     this.$nextTick(()=>{
+      this.GetElements();
 
-    
-    // this.Get(mainConfig.CMS_BASE_URL + "/upload/files").then(response => {
-    //   this.componentData = this.FilterData(Utils.GroupByKey(response.data, "ext"));
-    // });
-
-
-      this.Get(mainConfig.CMS_BASE_URL + "/elements").then(response => {
-        this.componentData = response.data.filter(asset => asset.Type.Type === "Object3D");//this.FilterData(Utils.GroupByKey(response.data, "ext"));
-        console.log("response slide-elements " , response.data);
-      });
+      this.toggleOpen = false;
     });
 
 
   },
   methods:{
+    GetElements(){
+      this.Get(mainConfig.CMS_BASE_URL + "/elements").then(response => {
+        this.componentData = response.data.filter(asset => asset.Type.Type === "Object3D");//this.FilterData(Utils.GroupByKey(response.data, "ext"));
+      });
+    },
     HandleUploadedFile(data){
       var uploadedAsset = data[0];
 
@@ -82,7 +79,7 @@ export default {
 
       console.log("slideElements " , this.slide.SlideElements);
 
-      this.AddElement(Element);
+      this.AddElement(Element).then(this.GetElements);
 
      
 

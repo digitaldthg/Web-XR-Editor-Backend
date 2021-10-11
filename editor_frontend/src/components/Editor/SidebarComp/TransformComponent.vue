@@ -44,6 +44,8 @@ export default {
     // EventManager.$on("3DSelect", this.Select3D);
     // EventManager.$on("3DDeselect", this.Deselect3D);
     EventManager.$on("ChangeTransform3D", this.TransformFrom3D);
+
+    this.toggleOpen = false;
   },
   computed:{
     GetPosition(){

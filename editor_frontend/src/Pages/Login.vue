@@ -1,5 +1,5 @@
 <template>
-  <div class="login-form">
+  <form class="login-form">
     <h1>WebXR Login</h1>
     <template v-if="failed">
       <div class="warning">
@@ -13,11 +13,11 @@
       </div>
       <div class="row">
         <label for="pw">Passwort</label>
-        <input id="pw" type="text" name="passwort" v-model="user.pw"/>
+        <input id="pw" type="password" name="passwort" v-model="user.pw"/>
       </div>
     </div>
     <button class="cta-button" @click="Login" >Login</button>
-  </div>
+  </form>
 </template>
 
 <script>
@@ -39,34 +39,29 @@ export default {
     console.log("Login");
   },
   methods:{
-    Login(){
-      console.log(this.user.name, this.user.pw);
-
+    /**
+     * Meldet den User anhand seines namens und passwords an
+     */
+    Login(e){
+      e.preventDefault(e);
       axios
       .post(config.CMS_BASE_URL + '/auth/local', {
         identifier: this.user.name,
         password: this.user.pw,
       })
       .then(response => {
-        console.log("success");
+        
         this.$store.commit("UserAuth", response.data);
-
-        console.log("success 1");
+        
         this.$router.push({ 
           path: 'Home',
         });
-        
-          console.log("success 2");
-
       })
       .catch(error => {
         // Handle error.
         this.failed = true;
         console.log('An error occurred:', error.response);
       });
-
-
-
     }
   }
 }

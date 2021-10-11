@@ -1,6 +1,6 @@
 <template>
-  <div :class="'slide-preview slide-preview-active-'+ active">
-    <button @click="ChangeSlide" @contextmenu="HandleRightClick" :style="{'background-image' : 'url('+ (slide.PreviewImage === null ? DefaultImage  : (config.CMS_BASE_URL + slide.PreviewImage.url)) + ')'}">      
+  <div :class="'slide-preview slide-preview-active-'+ active" @contextmenu="HandleRightClick">
+    <button @click="ChangeSlide"  :style="{'background-image' : 'url('+ (slide.PreviewImage === null ? DefaultImage  : (config.CMS_BASE_URL + slide.PreviewImage.url)) + ')'}">      
       <!-- <template v-if="slide.PreviewImage != null">
         <img :src="config.CMS_BASE_URL + slide.PreviewImage.url" alt=""/>
       </template>
@@ -82,7 +82,7 @@ export default {
 
   button{
     border-radius: 15px;
-    background-color:transparent;
+    //background-color:transparent;
     background-size: cover;
     background-position: center;
   }
@@ -112,8 +112,10 @@ button{
 }
 
 .context-menu {
+   left: 0;
+  right: 0;
+  background: #333;
     position: absolute;
-  background: #fffc;
   padding: 1rem;
   top: 0;
   bottom: 0;

@@ -3,18 +3,18 @@
     <label>{{title}}</label>
     <div class="flex">
       <template v-if="edit">
-        <div class="text-content width-10" >
+        <div class="text-content width-12 margin-right" >
           <input type="text" @input="e => Change(e)" :value="GetValue(object, path)">
         </div>
-        <div class="flex text-menu width-2">
+        <div class="flex text-menu">
           <button class="icon-button" @click="ToggleEdit(false)"><CloseIcon/></button>
         </div>
       </template>
       <template v-if="!edit">
-        <div class="text-content width-10" @click="ToggleEdit(true)">
+        <div class="text-content width-12 margin-right" @click="ToggleEdit(true)">
           <component class="html-tag" :is="GetElement">{{GetValue(object, path)}}</component>
         </div>
-        <div class="flex text-menu width-2">
+        <div class="flex text-menu">
           <button class="icon-button" @click="ToggleEdit(true)"><EditIcon/></button>
         </div>
       </template>
@@ -90,8 +90,7 @@ button{
 
 
 .text-content {
-  background:#eee;
-  border-bottom: 1px solid #aaa;
+  background:#f5f5f5;
 }
 .text-content input {
   margin-bottom: 0;

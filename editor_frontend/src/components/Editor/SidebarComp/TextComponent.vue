@@ -4,7 +4,7 @@
     <SidebarCompHeader name="Text"/>
 
     <template v-if="toggleOpen">
-      <TextField class="row" @onChange="ChangeText" :object="$store.state.selectedMesh.userData.slideElements.element" path="elements.FontSettings.TextContent" htmlTag="p"/>
+      <TextField class="row" @onChange="ChangeText" :object="$store.state.selectedMesh.userData.slideElements.element" path="elements.FontSettings.Content" htmlTag="p"/>
       
       <div class="row card-bg">
         <MaterialField 
@@ -46,6 +46,11 @@
 
       <div class="row flex">
         <LineHeightIcon />
+        <input type="range" @input="e => ChangeFontSize(parseFloat(e.target.value))" step=".01" min=".1" max="3"/>
+      </div>
+      
+      <div class="row flex">
+        <LineHeightIcon />
         <input type="range" @input="e => ChangeLineHeight(parseFloat(e.target.value))" min="1" max="100"/>
       </div>
       
@@ -57,23 +62,23 @@
       </div>
       <div class="row flex flex-column">
         <label>Background Opacity</label>
-        <input type="range" @input="e => ChangeBackgroundOpacity(parseFloat(e.target.value))" step="0.01" min="0" max="1"/>
+        <input type="range" :value="$store.state.selectedMesh.userData.slideElements.element.FontSettings.BackgroundOpacity" @input="e => ChangeBackgroundOpacity(parseFloat(e.target.value))" step="0.01" min="0" max="1"/>
       </div>
       
       <div class="row flex flex-column">
         <label>Padding</label>
-        <input type="range" @input="e => ChangePadding(parseFloat(e.target.value))" step="0.01" min="0" max="1"/>
+        <input type="range" :value="$store.state.selectedMesh.userData.slideElements.element.FontSettings.Padding" @input="e => ChangePadding(parseFloat(e.target.value))" step="0.01" min="0" max="1"/>
       </div>
       
       <div class="row">
         <label>Breite</label>
         <div class="flex">
-          <input type="range" @input="e => ChangeWidth(parseFloat(e.target.value))" step="0.01" min="0" max="30"/>
+          <input type="range" :value="$store.state.selectedMesh.userData.slideElements.element.FontSettings.Width" @input="e => ChangeWidth(parseFloat(e.target.value))" step="0.01" min="0" max="30"/>
         </div>
       </div>
       <div class="row flex flex-column">
         <label>Höhe</label>
-        <input type="range" @input="e => ChangeHeight(parseFloat(e.target.value))" step="0.01" min="0" max="30"/>
+        <input type="range" :value="$store.state.selectedMesh.userData.slideElements.element.FontSettings.Height" @input="e => ChangeHeight(parseFloat(e.target.value))" step="0.01" min="0" max="30"/>
       </div>
       <!-- 
         Alignment
@@ -214,6 +219,20 @@ export default {
         asObject: true
       });
     },
+    ChangeFontSize(value){
+      
+      console.log(this.$store.state.selectedMesh,this.$store.state.selectedMesh.set);
+      this.$store.state.selectedMesh.set({
+        fontSize : parseFloat(value) * .5
+      });
+
+      this.SetValue({
+        object : this.$store.state.selectedMesh.userData.slideElements.element, 
+        path : "elements.FontSettings.FontSize", 
+        value : value,
+        asObject: true
+      });
+    },
     ChangeBackgroundOpacity(value){
       
       this.$store.state.selectedMesh.set({
@@ -270,6 +289,13 @@ export default {
       
       this.$store.state.selectedMesh.children[1].set({
         content : value
+      });
+
+      this.SetValue({
+        object : this.$store.state.selectedMesh.userData.slideElements.element, 
+        path : "elements.FontSettings.Content", 
+        value : value,
+        asObject: true
       });
     }
   }

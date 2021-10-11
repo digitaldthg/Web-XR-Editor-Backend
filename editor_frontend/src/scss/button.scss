@@ -1,43 +1,43 @@
-button{
+button {
   display: inline-block;
   padding: 0;
   margin: 0;
-  border:0;
+  border: 0;
   outline: 0;
   background: transparent;
   cursor: pointer;
   text-align: center;
   white-space: nowrap;
 }
-button:hover{
-  opacity: .9;
+button:hover {
+  opacity: 0.9;
 }
 
-.cta-button{
+.cta-button {
   text-align: center;
-  padding:.5rem 1rem;
-  background: #595fa8;
-  color:#fff;
+  padding: 0.5rem 1rem;
+  background: $primaryColor;
+  color: #fff;
   font-weight: 700;
-  margin:auto;
+  margin: auto;
   border-radius: 5px;
   position: relative;
-  display: block; 
+  display: block;
   white-space: nowrap;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
-.cta-button-no-style{
+.cta-button-no-style {
   text-align: center;
-  padding:.5rem 1rem;
+  padding: 0.5rem 1rem;
   background: transparent;
-  color:#2c3e50;
+  color: #2c3e50;
   font-weight: 700;
-  margin:auto;
+  margin: auto;
   position: relative;
-  display: block; 
+  display: block;
   white-space: nowrap;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 .button-group button {
@@ -46,65 +46,62 @@ button:hover{
   margin-right: 2px;
 }
 
-.button-group button:first-child{
+.button-group button:first-child {
   border-radius: 5px 0 0 5px;
 }
-.button-group button:last-child{
+.button-group button:last-child {
   border-radius: 0 5px 5px 0;
   margin-right: 0;
 }
 
-.cta-button-small{
+.cta-button-small {
   text-align: center;
-  padding:.2rem .5rem;
-  background: #595fa8;
-  color:#fff;
+  padding: 0.2rem 0.5rem;
+  background: $primaryColor;
+  color: #fff;
   font-weight: 700;
-  margin:auto;
+  margin: auto;
   border-radius: 3px;
   position: relative;
-  display: block; 
+  display: block;
 }
 
-.cta-button.--warning{
-  background:tomato;
+.cta-button.--warning {
+  background: tomato;
 }
 
-.cta-button-small.--warning{
-  background:tomato;
+.cta-button-small.--warning {
+  background: tomato;
 }
 
-.cta-button.--cancel{
-  background:#aaa;
+.cta-button.--cancel {
+  background: #aaa;
 }
 
-.cta-button-small.--cancel{
-  background:#aaa;
+.cta-button-small.--cancel {
+  background: #aaa;
 }
 
-.cta-button.--white{
+.cta-button.--white {
   background: #fff;
 }
 
-.cta-button-small.--white{
-  background:#fff;
+.cta-button-small.--white {
+  background: #fff;
 }
 
-.small-button{
-  padding:.5rem;
-  background: #595fa8;
-  color:#fff;
+.small-button {
+  padding: 0.5rem;
+  background: $primaryColor;
+  color: #fff;
 }
 
-.icon-button{
-  padding:.25rem;
-
-  
-  
+.icon-button {
+  padding: 0.25rem;
 }
 
-.icon-button .svg-icon{
+.icon-button .svg-icon {
   width: 15px;
   height: 15px;
-  margin-right: .25rem;
+  margin-right: 0.25rem;
 }

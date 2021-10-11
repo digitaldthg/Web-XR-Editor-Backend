@@ -13,9 +13,6 @@ export default {
     SaveIcon
   },
   mixins: [IOMixin],
-  methods :{
-    
-  }
 }
 </script>
 

@@ -1,11 +1,9 @@
 export default {
-  data(){
-    return {
-      toggleOpen : true
-    }
+  data() {
+    return {toggleOpen: true}
   },
-  methods:{
-    ChangeVisibility(boolean){
+  methods: {
+    ChangeVisibility(boolean) {
       this.toggleOpen = boolean;
     }
   }

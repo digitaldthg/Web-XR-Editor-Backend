@@ -50,6 +50,7 @@ export default {
 
 <style lang="scss">
 .context-menu {
+ 
   position: absolute;
   right: -130px;
   padding: 1rem;

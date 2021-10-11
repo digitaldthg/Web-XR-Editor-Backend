@@ -1,24 +1,21 @@
 import {EventManager} from '../Events/EventManager';
 
 export default {
-  data(){
-    return {
-      slideElements : null
-    }
+  data() {
+    return {slideElements: null}
   },
-  mounted(){
+  mounted() {
     EventManager.$on("3DSelect", this.Select3D);
     EventManager.$on("3DDeselect", this.Deselect3D);
   },
-  methods:{
-    Select3D(mesh){
+  methods: {
+    Select3D(mesh) {
       this.slideElements = mesh;
-
-      this.$store.commit("SetSelection", mesh );
+      this.$store.commit("SetSelection", mesh);
     },
-    Deselect3D(){
+    Deselect3D() {
       this.slideElements = null;
-      this.$store.commit("SetSelection", null );
+      this.$store.commit("SetSelection", null);
     }
   }
 }

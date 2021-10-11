@@ -62,10 +62,8 @@ export default {
   methods:{
     
     TakeScreenshot(){
-      console.log(this.slide);
-
-      console.log("PreviewImage", this.slide.PreviewImage, this.$store.state.xr.Renderer.instance);
-
+      
+      
       this.$store.state.xr.Renderer.instance.render(this.$store.state.xr.Scene, this.$store.state.xr.Camera.instance);
       
       var strMime = "image/jpeg";
@@ -84,8 +82,7 @@ export default {
       }).then(formData => {
 
         this.PostData(config.CMS_BASE_URL + "/upload/", formData).then(response =>{
-          console.log(response.data[0]);   
-
+          
           if(this.slide.PreviewImage != null){
             this.Delete(config.CMS_BASE_URL + "/upload/files/" + this.slide.PreviewImage.id).then(res => {
                this.Put(config.CMS_BASE_URL + "/slides/" + this.slide.id, Object.assign(this.slide, {
@@ -97,9 +94,7 @@ export default {
                 PreviewImage: response.data[0]
               })).then(this.SaveTmp);
               
-          }
-
-        
+          }       
           
         });
       

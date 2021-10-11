@@ -1,7 +1,6 @@
 <template>
-  <div id="app" :class="'template-'+ this.$route.name">
-    <Navigation/>
-
+  <div id="app" :class="'template-' + this.$route.name">
+    <Navigation />
     <div class="main-app">
       <router-view class="router-view"></router-view>
     </div>
@@ -9,65 +8,29 @@
 </template>
 
 <script>
+import IOMixin from "./Controller/IOMixin";
+import AuthMixin from "./Controller/AuthMixin";
 
-import axios from 'axios';
-import Utils from './Common/Utils';
-import IOMixin from './Controller/IOMixin';
-import config from '../../main.config';
-import Navigation from './Components/Navigation';
-
+import Navigation from "./Components/Navigation";
 
 export default {
-  name: 'App',
-  mixins : [IOMixin],
+  name: "App",
+  mixins: [IOMixin, AuthMixin],
   components: {
-    Navigation
+    Navigation,
   },
-  mounted(){
-
+  mounted() {
     this.CheckForLogin();
-
   },
-  data(){
+  data() {
     return {
-      currentText : "1"
-    }
-  },
-  methods:{
-    CheckForLogin(){
-      const jwtCookie = Utils.GetCookie("jwt");
-      if(
-          (jwtCookie == null) &&
-          this.$router.currentRoute.name != "Login"
-        ){
-        this.GoToLogin()
-      }else if(jwtCookie != null){
-        this.$store.commit("SetJWT", jwtCookie );
-
-        this.Get(config.CMS_BASE_URL + "/users/me").then((response)=>{
-          this.$store.commit("SetUser" , response.data);
-        });
-      }else if(this.$router.currentRoute.name != "Login"){
-        this.GoToLogin()
-      }
-    },
-    GoToLogin(){
-      this.$router.push({ 
-        path: '/Login',
-      });
-    },    
-    ChangeTextField ({ type, target }){
-      this.currentText = target.value;
-    },
-   
-
+      currentText: "1",
+    };
   }
-}
+};
 </script>
 
 <style>
-@import url("./scss/stylesheet.scss");
-
 .router-view {
   width: 100%;
   height: 100%;

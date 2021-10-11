@@ -107,7 +107,11 @@ export default {
         this.PostData(config.CMS_BASE_URL + "/upload/", formData).then(response =>{
           console.log(response);
 
-          this.$emit("uploadComplete" , response.data);
+
+         
+
+          return response.data;
+        }).then((data)=>{
 
           this.uploading = false;
           this.uploadDone = true;
@@ -115,6 +119,10 @@ export default {
           setTimeout(()=>{
             this.uploadDone = false;
           },2000);
+
+
+          this.$emit("uploadComplete" , data);
+
         });
     }
   }
@@ -127,11 +135,11 @@ label[for="fileUpload"]{
   background: #eee;
   display: block;
   border-radius: 15px;
-  border: 2px dotted #595fa8;
+  border: 2px dotted $primaryColor;
   transition-duration: .5s;
   transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  background: #595fa833;
-  color: #595fa8;
+  background: $primaryColorAlpha;
+  color: $primaryColor;
   font-weight: 700;
   text-align: center;
 }

@@ -19,7 +19,7 @@
       <div class="wrapper">
         <h2>Projekte:</h2>
 
-        <div class="content-block flex">
+        <div class="content-block flex flex-wrap">
           
           <ProjektCard
             class="content width-4"
@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import config from "../../../main.config";
 import IOMixin from "../Controller/IOMixin";
 import ProjektCard from '../Components/Projekt/ProjektCard.vue';
@@ -72,15 +71,13 @@ export default {
   },
   methods: {
     Init(){
-      console.log("store," , this.$store.state.user == null);
-
+      
       if (this.$store.state.user == null) {
         return;
       }
 
+      // Holt alle Projekte des users
       this.Get(config.CMS_BASE_URL + "/projekts").then((response) => {
-        console.log(response.data);
-
         this.projekts = response.data;
       }).catch(error=> {
         console.log(error);
@@ -89,11 +86,17 @@ export default {
     OnDelete(data){
       this.projekts = this.projekts.filter(p => p.id != data.id);
     },
+    /**
+     * Link zum Projekt
+     */
     GoToProjekt(projekt) {
       this.$router.push({
         path: "/Editor/" + projekt.id,
       });
     },
+    /**
+     * Fügt ein neues Projekt hinzu
+    */
     NewProjekt() {
       this.Post(config.CMS_BASE_URL + "/projekts")
         .then((response) => {

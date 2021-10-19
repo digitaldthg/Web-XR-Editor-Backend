@@ -3,7 +3,7 @@ Mit dem WebXR Editor können angemeldete User 3D Projekte anlegen, gestalten und
 
 Dieser Prototyp ist im Rahmen des Forschungsprojekts "Im/material Theatre Spaces" entstanden. Weitere Informationen zum Projekt finden Sie [hier](https://digital.dthg.de/).
 
-## 2. Projektaufbau
+## Projektaufbau
 Das Projekt wurde mit [Vue 2](https://vuejs.org/) entwickelt und nutzt [three.js](https://threejs.org/) als WebGL Framework sowie das npm-package [three-mesh-ui](https://www.npmjs.com/package/three-mesh-ui) für die Darstellung von Text im 3D Raum. Als Backend wird das headless CMS Strapi genutzt. Eine Demo des WebXR Editors finden Sie [hier](http://developer.digital.dthg.de/tpXR/).
 
 ```

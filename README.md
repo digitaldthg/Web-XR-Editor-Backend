@@ -19,10 +19,37 @@ Login
 ```
 
 **Projekt** - ist eine Sammlung aus ein oder mehreren SlideContainer.
+- Name - <em>Text</em>
+- Description - <em>Formatierter Text</em>
+- slide_containers - <em>Beziehung mit SlideContainer</em>
 
 **SlideContainer** - enthält ein oder mehrere Slides
+- Name - <em>Text</em>
+- SlideContainerOffset - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- Slides - <em>Beziehung mit Slide</em>
+- PreviewImage - <em>Bild</em>
 
 **Slide** - eine 3D Szene die ein oder mehrere 3D Modelle enthalten kann
+- Name - <em>Text</em>
+- SlideContainerOffset - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- PreviewImage - <em>Bild</em>
+- CameraPosition - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- CameraOffset - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- SlideTemplate - <em>Beziehung mit SlideTemplate</em>
+- Slides - <em>Beziehung mit Slide</em>
+- SlideElement - <em>Beziehung mit SlideElement</em>
+
+**SlideElement** 
+- Name - <em>Text</em>
+- Scale - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- Offset - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- Rotation - <em>Komponent: x (Zahl), y(Zahl), z(Zahl), w(Zahl)</em>
+- SlideElement - <em>Beziehung mit SlideElement</em>
+
+**SlideTemplate** - kann für keiner, einer oder mehreren Slides zugeorndet werden
+- Name - <em>Text</em>
+- BackgroundColor - <em>Text</em>
+- FontSize - <em>Zahl</em>
 
 # Editorfunktionen
 ### Navigation

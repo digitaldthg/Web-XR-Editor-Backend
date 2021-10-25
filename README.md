@@ -3,10 +3,9 @@ Mit dem WebXR Editor können angemeldete User 3D Projekte anlegen, gestalten und
 
 Dieser Prototyp ist im Rahmen des Forschungsprojekts "Im/material Theatre Spaces" entstanden. Weitere Informationen zum Projekt finden Sie [hier](https://digital.dthg.de/).
 
-## 2. Projektaufbau
-Das Projekt wurde mit [Vue 2](https://vuejs.org/) entwickelt und nutzt [three.js](https://threejs.org/) als WebGL Framework sowie das npm-package [three-mesh-ui](https://www.npmjs.com/package/three-mesh-ui) für die Darstellung von Text im 3D Raum. Als Backend wird das headless CMS "Strapi" genutzt. Eine Demo des WebXR Editors finden Sie [hier](http://developer.digital.dthg.de/tpXR/).
+## Projektaufbau
+Das Projekt wurde mit [Vue 2](https://vuejs.org/) entwickelt und nutzt [three.js](https://threejs.org/) als WebGL Framework sowie das npm-package [three-mesh-ui](https://www.npmjs.com/package/three-mesh-ui) für die Darstellung von Text im 3D Raum. Als Backend wird das headless CMS Strapi genutzt. Eine Demo des WebXR Editors finden Sie [hier](http://developer.digital.dthg.de/tpXR/).
 
-## Sitemap
 ```
 Login
 |
@@ -16,15 +15,41 @@ Login
             |
             Projekt
             |
-            └─── Editor
+            └─── Editor/:id/:slideContainerIndex?/:slideIndex?
 ```
-**Editor** - `/:id/:slideContainerIndex?/:slideIndex?`
 
 **Projekt** - ist eine Sammlung aus ein oder mehreren SlideContainer.
+- Name - <em>Text</em>
+- Description - <em>Formatierter Text</em>
+- slide_containers - <em>Beziehung mit SlideContainer</em>
 
 **SlideContainer** - enthält ein oder mehrere Slides
+- Name - <em>Text</em>
+- SlideContainerOffset - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- Slides - <em>Beziehung mit Slide</em>
+- PreviewImage - <em>Bild</em>
 
 **Slide** - eine 3D Szene die ein oder mehrere 3D Modelle enthalten kann
+- Name - <em>Text</em>
+- SlideContainerOffset - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- PreviewImage - <em>Bild</em>
+- CameraPosition - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- CameraOffset - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- SlideTemplate - <em>Beziehung mit SlideTemplate</em>
+- Slides - <em>Beziehung mit Slide</em>
+- SlideElement - <em>Beziehung mit SlideElement</em>
+
+**SlideElement** 
+- Name - <em>Text</em>
+- Scale - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- Offset - <em>Komponent: x (Zahl), y(Zahl), z(Zahl)</em>
+- Rotation - <em>Komponent: x (Zahl), y(Zahl), z(Zahl), w(Zahl)</em>
+- SlideElement - <em>Beziehung mit SlideElement</em>
+
+**SlideTemplate** - kann für keiner, einer oder mehreren Slides zugeorndet werden
+- Name - <em>Text</em>
+- BackgroundColor - <em>Text</em>
+- FontSize - <em>Zahl</em>
 
 # Editorfunktionen
 ### Navigation

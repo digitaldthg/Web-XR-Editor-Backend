@@ -8,19 +8,26 @@
 </template>
 
 <script>
+//@group Components
+// Dropdown Component
 export default {
   name :"Dropdown",
   props : {
+    // Das Label des Dropdowns
     title : {
       type : String,
+      // ""
       default : ""
     },
+    // Die möglichen Auswahlfelder des Dropdowns
     options : {
       type : Array,
-      default : [],
+      default : ()=>[],
     },
+    // Der aktuelle Wert des Dropdowns
     value : {
       type : String,
+      // ""
       default : ""
     },
 
@@ -34,7 +41,10 @@ export default {
     this.id = this._uid;
   },
   methods : {
+    
     onChange(e){
+      // Wird ausgeführt sobald sich der Wert des Dropdowns ändert
+      // @arg Der aktuell auswählte Wert
       this.$emit("onChange" , e.target.value);
     }
   }

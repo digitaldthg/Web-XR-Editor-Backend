@@ -35,10 +35,11 @@ const router = new VueRouter({
 });
 
 
-/**
- * Löst: Duplicate Routing zum selben Path
- * Für mehr Info siehe: https://github.com/vuejs/vue-router/issues/2881#issuecomment-520554378
- */
+export default router;
+
+
+//Löst: Duplicate Routing zum selben Path
+//Für mehr Info siehe: https://github.com/vuejs/vue-router/issues/2881#issuecomment-520554378
 const originalPush = router.push;
 router.push = function push(location, onResolve, onReject) {
   if (onResolve || onReject) {
@@ -55,4 +56,3 @@ router.push = function push(location, onResolve, onReject) {
 }
 
 
-export default router

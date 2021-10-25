@@ -11,7 +11,8 @@
 import ToggleMixin from '../../../Controller/ToggleMixin';
 import TextField from '../../TextField.vue';
 import SidebarCompHeader from './SidebarCompHeader.vue';
-
+//@group Sidebar Components
+// Zeigt die Eigenschaften des Selektierten Objektes an
 export default {
   name : "SelectedComponent",
   mixins: [ToggleMixin],

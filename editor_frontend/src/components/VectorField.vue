@@ -32,6 +32,8 @@ import DataBehaviourMixin from '../Controller/DataBehaviourMixin';
 import EditIcon from '../Images/Icons/edit.svg';
 import CloseIcon from '../Images/Icons/close.svg';
 
+//@group Components
+// VectorField zeigt einen Vector3 an und kann diesen verändern
 export default {
   name : "VectorField",
   components :{EditIcon,CloseIcon},
@@ -45,9 +47,6 @@ export default {
     return {
       edit : false
     }
-  },
-  mounted(){
-    //console.log("props" , this.$props.object, this.$props.path);
   },
   methods:{
     ToggleEdit(bool){

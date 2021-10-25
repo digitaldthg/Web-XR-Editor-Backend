@@ -1,11 +1,14 @@
 import Utils from "../Common/Utils";
 import config from "../../../main.config";
 
-const AuthMixin = {
-  methods:{
-    /**
-     * Holt den jwt token aus den Cookies und prüft ob der User angemeldet ist
-     */
+// @vuese
+// @group Mixins
+// Dieses Mixin kann im geschützten Bereich eingesetzt werden um zu überprüfen ob die Userin angemeldet ist und sie ggf. auf die Loginseite weiterzuleiten.
+export default {
+  name: "AuthMixin",
+  methods: { 
+    //@vuese
+    //Holt den jwt token aus den Cookies und prüft ob der User angemeldet ist
     CheckForLogin() {
       const jwtCookie = Utils.GetCookie("jwt");
       if (jwtCookie == null && this.$router.currentRoute.name != "Login") {
@@ -20,14 +23,10 @@ const AuthMixin = {
         this.GoToLogin();
       }
     },
-    /**
-     * Redirect to Login Page
-     */
+    //@vuese
+    // Redirect to Login Page
     GoToLogin() {
-      this.$router.push({
-        path: "/Login",
-      });
+      this.$router.push({path: "/Login"});
     }
   }
 }
-export default AuthMixin;

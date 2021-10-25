@@ -52,6 +52,8 @@ import config from "../../../main.config";
 import IOMixin from "../Controller/IOMixin";
 import ProjektCard from '../Components/Projekt/ProjektCard.vue';
 
+//@group Page
+// Übersicht sämtlicher Projekte einer Userin
 export default {
   components: { ProjektCard },
   name: "Projekte",

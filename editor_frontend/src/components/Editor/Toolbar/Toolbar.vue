@@ -3,23 +3,36 @@
     <div class="transforms">
       <label>Transform</label>
       <div class="flex button-group">
-        <button class="cta-button" @click="ChangeMode('translate')">translate</button>
+        <button class="cta-button" @click="ChangeMode('translate')">
+          translate
+        </button>
         <button class="cta-button" @click="ChangeMode('rotate')">rotate</button>
         <button class="cta-button" @click="ChangeMode('scale')">scale</button>
       </div>
     </div>
-    
 
     <div class="width-1"></div>
     <div class="primitives">
-       <label>Primitives</label>
+      <label>Primitives</label>
       <div class="flex button-group">
-        <button class="cta-button" @click="e=>AddPrimitive('Plane')">Plane</button>
-        <button class="cta-button" @click="e=>AddPrimitive('Cube')">Cube</button>
-        <button class="cta-button" @click="e=>AddPrimitive('Sphere')">Sphere</button>
-        <button class="cta-button" @click="e=>AddPrimitive('Cylinder')">Cylinder</button>
-        <button class="cta-button" @click="e=>AddPrimitive('Cone')">Cone</button>
-        <button class="cta-button" @click="e=>AddPrimitive('Torus')">Torus</button>
+        <button class="cta-button" @click="(e) => AddPrimitive('Plane')">
+          Plane
+        </button>
+        <button class="cta-button" @click="(e) => AddPrimitive('Cube')">
+          Cube
+        </button>
+        <button class="cta-button" @click="(e) => AddPrimitive('Sphere')">
+          Sphere
+        </button>
+        <button class="cta-button" @click="(e) => AddPrimitive('Cylinder')">
+          Cylinder
+        </button>
+        <button class="cta-button" @click="(e) => AddPrimitive('Cone')">
+          Cone
+        </button>
+        <button class="cta-button" @click="(e) => AddPrimitive('Torus')">
+          Torus
+        </button>
       </div>
     </div>
 
@@ -27,56 +40,49 @@
     <div class="primitives">
       <label>TextElement</label>
       <div class="flex">
-        <button class="cta-button small-button" @click="e=>AddText()">Text</button>
+        <button class="cta-button small-button" @click="(e) => AddText()">
+          Text
+        </button>
       </div>
     </div>
-    
+
     <div class="width-1"></div>
-    
+
     <div class="flex">
       <SaveComponent />
     </div>
-
-
   </div>
-
 </template>
 
 <script>
-import ProjectMixin from '../../../Controller/ProjectMixin';
-import SaveComponent from '../SidebarComp/SaveComponent.vue';
+import ProjectMixin from "../../../Controller/ProjectMixin";
+import SaveComponent from "../SidebarComp/SaveComponent.vue";
 
-
+//@group Toolbar
+// Die Toolbar enthält Möglichkeiten um die Gizmo Transforms umzustellen, Primitives zur Scene hinzuzufügen sowie den aktuellen Stand zu speichern.
 export default {
-  name : "Toolbar",
-  components:{
-    SaveComponent
+  name: "Toolbar",
+  components: {
+    SaveComponent,
   },
-  mixins:[
-    ProjectMixin
-  ],
-  mounted(){
-    console.log("Toolbar");
-  },
-  methods:{
-    AddPrimitive(primitiveType){
-      console.log(primitiveType);
-
+  mixins: [ProjectMixin],
+  methods: {
+    AddPrimitive(primitiveType) {
       var Element = {
-        Name : primitiveType + " Primitive",
+        Name: primitiveType + " Primitive",
         Type: {
-          Type: "Primitive"
+          Type: "Primitive",
         },
         Primitive: {
-          PrimitiveType: primitiveType
-        }
-      }
-       
+          PrimitiveType: primitiveType,
+        },
+      };
+
       this.AddElement(Element);
     },
-    AddText(){
+    AddText() {
       var Element = {
-        Name : "Text",
+        Name: "Text",
         FontSettings: {
           Content: "API Text Component",
           Color: "#000000",
@@ -88,44 +94,43 @@ export default {
           Height: 1.5,
           BackgroundColor: "#aaaaaa",
           BackgroundOpacity: 1,
-          Padding: .2
+          Padding: 0.2,
         },
         Type: {
-          Type: "Text"
-        }
-      }
-       
+          Type: "Text",
+        },
+      };
+
       this.AddElement(Element);
     },
-    ChangeMode(mode){
+    ChangeMode(mode) {
       switch (mode) {
         case "translate":
-          this.$store.state.xr.transformControls.setMode("translate")
-        break
+          this.$store.state.xr.transformControls.setMode("translate");
+          break;
         case "rotate":
-          this.$store.state.xr.transformControls.setMode("rotate")
-        break
+          this.$store.state.xr.transformControls.setMode("rotate");
+          break;
         case "scale":
-          this.$store.state.xr.transformControls.setMode("scale")
-        break
+          this.$store.state.xr.transformControls.setMode("scale");
+          break;
       }
-    }
-
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
-.toolbar{
+.toolbar {
   position: absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:70px;
-  background:#eee;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background: #eee;
   z-index: 9;
   display: flex;
-    align-items: center;
+  align-items: center;
   justify-content: space-around;
 }
 </style>

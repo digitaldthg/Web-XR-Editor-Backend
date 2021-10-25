@@ -32,7 +32,6 @@
       </div>
     </div>
   </div>
-</div>
 </template>
 <script>
 import IOMixin from '../../Controller/IOMixin';
@@ -40,6 +39,7 @@ import mainConfig from '../../../../main.config';
 import config from '../../../../main.config';
 import placeHolderImage from '../../Images/placeholder.jpg';
 
+// Zeigt ein Projekt an und verlinkt darauf
 export default {
   name : "ProjektCard",
   mixins : [IOMixin],

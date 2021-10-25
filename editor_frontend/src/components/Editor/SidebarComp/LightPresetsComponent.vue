@@ -10,12 +10,12 @@
 <script>
 import ToggleMixin from '../../../Controller/ToggleMixin';
 import SidebarCompHeader from './SidebarCompHeader.vue';
+
+//@group Sidebar Components
+// Placeholder für eine Lichtpreset Component
 export default {
   components: { SidebarCompHeader },
   mixins:[ToggleMixin],
-  name : "LightPresets",
-  mounted(){
-    //console.log("LightPresets");
-  }
+  name : "LightPresets"
 }
 </script>

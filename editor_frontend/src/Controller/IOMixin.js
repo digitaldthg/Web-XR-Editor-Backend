@@ -1,9 +1,14 @@
+// @group Controller
 import axios from 'axios';
 import config from '../../../main.config';
 
+//@vuese
+//@group Mixins
 export default {
+  name: "IOMixin",
   methods: {
     /**
+     * @vuese
      * Wandelt ein Dataurlstring in eine uploadbare Datei um
      * @param {string} url 
      * @param {string} filename 
@@ -18,6 +23,7 @@ export default {
       }));
     },
     /**
+     * @vuese
      * GET Daten aus CMS => hinter login
      * @param {string} url 
      * @returns axios.promise
@@ -35,6 +41,7 @@ export default {
       })
     },
     /**
+     * @vuese
      * POST Daten an CMS => hinter login
      * @param {string} url API Endpoint zu dem die Daten geladen werden sollen
      * @param {object} payload Daten die im CMS gespeichert werden sollen
@@ -54,6 +61,7 @@ export default {
       })
     },
     /**
+     * @vuese
      * POST formData an CMS => hinter login
      * @param {string} url API Endpoint zu dem die Daten geladen werden sollen
      * @param {object} formData formData die im CMS gespeichert werden sollen
@@ -73,6 +81,7 @@ export default {
       })
     },
     /**
+     * @vuese
      * DELETE Daten aus dem CMS => hinter login
      * @param {string} url API Endpoint welche Daten gelöscht werden sollen
      * @returns axios.promise
@@ -90,6 +99,7 @@ export default {
       })
     },
     /**
+     * @vuese
      * PUT Daten aus dem CMS => hinter login
      * @param {string} url API Endpoint welche Daten gelöscht werden sollen
      * @param {object} payload Daten die ans CMS übermittelt werden sollen
@@ -109,6 +119,7 @@ export default {
       })
     },
     /**
+     * @vuese
      * Speichert die tmp Daten aus dem Store
      */
     SaveTmp: function () {

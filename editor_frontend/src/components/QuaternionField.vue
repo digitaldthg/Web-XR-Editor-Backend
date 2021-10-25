@@ -39,6 +39,8 @@ import DataBehaviourMixin from '../Controller/DataBehaviourMixin';
 import CloseIcon from '../Images/Icons/close.svg';
 import EditIcon from '../Images/Icons/edit.svg';
 
+//@group Components
+// Quaternionfield zeigt einen Quaternion Vector an und kann diesen verändern
 export default {
   name : "QuaternionField",
   mixins : [DataBehaviourMixin],

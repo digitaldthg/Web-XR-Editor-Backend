@@ -1,8 +1,10 @@
 const {default: Utils} = require("../Common/Utils");
 
+// @vuese
+// @group Mixins
 module.exports = {
-  methods: {
-    /**
+  name : "DataBehaviourMixin",
+  methods: { /**
      * 
      * @param {Object} object 
      * @param {string} path 

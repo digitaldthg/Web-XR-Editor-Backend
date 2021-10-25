@@ -17,18 +17,28 @@
 </template>
 
 <script>
+
+
 import config from '../../../../../main.config';
 import IOMixin from '../../../Controller/IOMixin';
+
+//@group Components
+// FileUpload
+// Lade per Drag&Drop lokale Dateien auf den Server
 export default {
   name : "FileUpload",
   mixins:[IOMixin],
   props: {
+    // Label
     title:{
       type : String,
+      // ""
       default : ""
     },
+    // Akzeptierte Dateiformate
     acceptedTypes:{
       type : String,
+      // ".glb,.gltf"
       default : ".glb,.gltf"
     }
   },
@@ -49,16 +59,6 @@ export default {
   methods:{
     AddListeners(){
 
-      console.log(this.$refs.uploadField);
-      // this.$refs.uploadField.addEventListener("drag" , this.preventer);
-      // this.$refs.uploadField.addEventListener("dragstart" , this.preventer);
-      // this.$refs.uploadField.addEventListener("dragend" , this.preventer);
-      // this.$refs.uploadField.addEventListener("dragover" , this.preventer);
-      // this.$refs.uploadField.addEventListener("dragenter" , this.preventer);
-      // this.$refs.uploadField.addEventListener("dragleave" , this.preventer);
-      // this.$refs.uploadField.addEventListener("drop" , this.preventer);
-      
-      //IsDraggin Over
       this.$refs.uploadField.addEventListener("dragover" , e=> this.OnDrag(e, true));
       this.$refs.uploadField.addEventListener("dragenter" ,e=> this.OnDrag(e, true));
 
@@ -105,12 +105,7 @@ export default {
 
         this.uploading = true;
         this.PostData(config.CMS_BASE_URL + "/upload/", formData).then(response =>{
-          console.log(response);
-
-
-         
-
-          return response.data;
+         return response.data;
         }).then((data)=>{
 
           this.uploading = false;
@@ -120,7 +115,7 @@ export default {
             this.uploadDone = false;
           },2000);
 
-
+          // 
           this.$emit("uploadComplete" , data);
 
         });

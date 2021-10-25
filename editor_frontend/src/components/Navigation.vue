@@ -43,7 +43,8 @@ import LogoutIcon from "../Images/Icons/logout.svg";
 import AccountIcon from "../Images/Icons/account.svg";
 import TextField from "./TextField.vue";
 import DataBehaviourMixin from "../Controller/DataBehaviourMixin";
-
+//@group UI
+//Zeigt das Nutzerprofil an und enthält den Login / Logout button
 export default {
   name: "Navigation",
   mixins: [DataBehaviourMixin],

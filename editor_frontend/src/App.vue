@@ -12,7 +12,8 @@ import IOMixin from "./Controller/IOMixin";
 import AuthMixin from "./Controller/AuthMixin";
 
 import Navigation from "./Components/Navigation";
-
+// Main Entry Point
+// Checkt beim Laden ob die Userin eingeloggt ist und leitet sie ggf auf die Login Seite um
 export default {
   name: "App",
   mixins: [IOMixin, AuthMixin],

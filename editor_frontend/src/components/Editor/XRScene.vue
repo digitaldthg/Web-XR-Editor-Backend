@@ -26,6 +26,7 @@ import * as textPNG from "@/Components/Editor/TextTextures/Roboto-msdf.png";
 import { EventManager } from "../../Events/EventManager.js";
 import ProjectMixin from "../../Controller/ProjectMixin";
 
+//@group 3D Scene
 export default {
   name: "XRScene",
   mixins: [DataBehaviourMixin, ProjectMixin],
@@ -81,6 +82,9 @@ export default {
     },
   },
   methods: {
+    // @vuese
+    // Setzt die Camera auf die Position des neue Slides
+    // @arg slide
     MoveCamera(oldSlide, newSlide) {
       if (newSlide.CameraPosition != null) {
         this.$store.state.xr.Controls.SetPosition(
@@ -97,6 +101,8 @@ export default {
         );
       }
     },
+    // @vuese
+    //Definiert alle Primitive Typen
     CreatePrimitives() {
       this.library.Cube = {
         scene: new THREE.Mesh(
@@ -135,6 +141,10 @@ export default {
         ),
       };
     },
+    // @vuese
+    // Kreiiert ein neues 3D - TextElement
+    // @arg FontSettings
+    // @return ThreeMeshUI.Block
     CreateText(element) {
       var {
         Width,
@@ -181,16 +191,24 @@ export default {
 
       return container;
     },
+    // @vuese
+    // Selektiert ein slideElement
+    // @arg slideElement
     HandleModelSelection(slideElement) {
       this.Select(
         Utils.GetSceneReference(this.$store.state.xr.Scene, slideElement)
       );
     },
+    // Deselektiert ein slideElement
+    // @arg slideElement
     HandleModelDeselection(slideElement) {
       this.Deselect(
         Utils.GetSceneReference(this.$store.state.xr.Scene, slideElement)
       );
     },
+    // @vuese
+    // Erstellt eine neue webxrscene und fügt die minimalen Editor 3D Scenen Elemente hinzu
+    // Camera, Renderer, Ambientlight, Directionallight, Grid
     InitWebXR() {
       var xr = new webXRScene("xr-scene");
       xr.Renderer.instance.setClearColor(0xffffff, 1);
@@ -239,12 +257,16 @@ export default {
       this.progress = progress;
     },
 
+    // @vuese
+    // Ändert die funktionsweise des Gizmos von Translate,Rotate,Scale
     ChangeObjectByGizmo() {
       var mode = this.$store.state.xr.transformControls.getMode();
-      var slideElements = this.selected.userData.slideElements;
 
+      var slideElements = this.selected.userData.slideElements;
       switch (mode) {
         case "translate":
+          // @vuese 
+          // Ändert die Position eines Object3D
           EventManager.$emit("ChangeTransform3D", {
             type: "position",
             object: this.selected,
@@ -284,6 +306,10 @@ export default {
           break;
       }
     },
+
+    // @vuese
+    // Fügt ein einzelnes 3D Object der Scene hinzu 
+    
     AddSingleModelToScene(item, libraryItem, copyItem = true) {
       var slideElements = this.slide.SlideElements;
       var sElement = slideElements.find((element) => element === item);
@@ -383,6 +409,9 @@ export default {
         this.$store.state.slideIndex
       ].add(libItem.scene);
     },
+
+    // @vuese
+    // Lädt alle Slide Modelle und fügt sie zum Slide hinzu
     AppendCurrentSlideModels() {
       var slideElements = this.slide.SlideElements;
 
@@ -462,10 +491,14 @@ export default {
         this.$store.state.xr.Events.addEventListener("ui-hovered", this.Hover);
       });
     },
+    // @vuese
+    // Platzhalterfunktion: 
     SetStateOfObject(state) {
       console.log("SetStateOfObject", state);
     },
-
+    // @vuese
+    // Löscht ein SlideModel vom aktuellen Slide
+    // @arg index:number des Slides
     DetatchCurrentSlideModels(oldSlideIndex) {
       if (this.selected != null) {
         this.Deselect(this.selected);
@@ -491,6 +524,10 @@ export default {
         }
       }
     },
+
+    // @vuese
+    // Selektiert ein Objekt, falls dieses Objekt ein child Element von einem größeren Object ist wird statt des childs der Parent ausgewählt
+    // @arg 3DObject welches selektiert werden soll
     Select(mesh) {
       if (mesh.parent === null) {
         console.warn("Selected mesh is not present in scene any more!");
@@ -517,6 +554,9 @@ export default {
       EventManager.$emit("3DSelect", this.selected);
       this.$store.commit("SetSelection", this.selected);
     },
+    // @vuese
+    // Deselektiert ein Object
+    // @arg Object3D
     Deselect(mesh) {
       if (mesh != this.selected) {
         return;
@@ -529,7 +569,9 @@ export default {
       this.selected = null;
     },
     Hover(mesh) {},
-
+    // @vuese
+    // Wird jeden OnAnimationFrame ausgeführt
+    // @arg THREE.Clock
     AnimationLoop(clock) {
       ThreeMeshUI.update();
     },

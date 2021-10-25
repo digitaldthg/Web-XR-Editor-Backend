@@ -80,24 +80,6 @@
         <label>Höhe</label>
         <input type="range" :value="$store.state.selectedMesh.userData.slideElements.element.FontSettings.Height" @input="e => ChangeHeight(parseFloat(e.target.value))" step="0.01" min="0" max="30"/>
       </div>
-      <!-- 
-        Alignment
-
-        left
-        center
-        right
-      -->
-      
-      <!-- 
-        Justification
-
-        top
-        center
-        bottom
-      -->
-      <!-- 
-        LineHeight
-      -->
     </template>
   </div>
 </div>
@@ -123,6 +105,9 @@ import LineHeightIcon from '../../../Images/Icons/lineheight.svg';
 import {Color} from 'three';
 import DataBehaviourMixin from '../../../Controller/DataBehaviourMixin';
 
+//@group Sidebar Components
+// Textfeld Eigenschaften
+// Zeigt die verfügbaren Eigenschaften für ein Textfeld an und kann diese verändern
 export default {
   name : "TextComponent",
   mixins:[ToggleMixin,ProjectMixin, SelectionMixin, DataBehaviourMixin],
@@ -137,11 +122,6 @@ export default {
     JustifyStartIcon,
     JustifyCenterIcon,
     JustifyEndIcon
-  },
-  data(){
-    return {
-      
-    }
   },
   mounted(){
    if(this.$store.state.selectedMesh == null){return}

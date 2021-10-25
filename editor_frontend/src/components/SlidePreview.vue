@@ -14,7 +14,8 @@
 import config from "../../../main.config";
 import IOMixin from "../Controller/IOMixin";
 import TextField from '../Components/TextField';
-
+//@group UI
+// Zeigt ein einzelnes Slide an und kann es auch löschen
 export default {
   name: "SlidePreview",
   mixins: [IOMixin],
@@ -26,10 +27,7 @@ export default {
     GetImageUrl(path) {
       return config.CMS_BASE_URL  + path.url;
     },
-  },
-  mounted() {
-
-  },
+  }
 };
 </script>
 <style scoped>

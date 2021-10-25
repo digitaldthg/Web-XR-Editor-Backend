@@ -42,6 +42,8 @@ import VectorField from '../../VectorField.vue';
 import FileUpload from './FileUpload.vue';
 import SidebarCompHeader from './SidebarCompHeader.vue';
 
+//@group Sidebar Components
+// Zeigt die Slide Container Settings an und ermöglicht es ein Vorschaubild hochzuladen
 export default {
   name : "SlideContainerSettings",
   mixins:[IOMixin, ToggleMixin, ProjectMixin],
@@ -56,9 +58,6 @@ export default {
       previewImage : null,
       config : config
     }
-  },
-  mounted(){
-    //console.log("SlideContainerSettings", this.$props.slideContainers)
   },
   methods:{
     DeleteVorschaubild(){

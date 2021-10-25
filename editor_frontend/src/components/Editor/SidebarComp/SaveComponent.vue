@@ -3,10 +3,11 @@
 </template>
 
 <script>
-import config from '../../../../../main.config';
 import IOMixin from '../../../Controller/IOMixin';
 import SaveIcon from '../../../Images/Icons/save.svg';
 
+//@group Sidebar Components
+// Speichert die aktuellen Werte aus dem $store.tmp in der Datenbank
 export default {
   name : "SaveComponent",
   components:{

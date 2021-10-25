@@ -7,8 +7,6 @@ module.exports = {
   include: [
     './src/**/*.vue',
     './src/**/**/*.js',
-    './src/Controller/*.js',
-    './src/Controller/AuthMixin.js'
   ],
   genType: 'docute',
   title: 'WebXR Editor Code Documentation'

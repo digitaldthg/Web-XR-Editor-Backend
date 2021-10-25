@@ -94,6 +94,8 @@ Klonen oder downloaden Sie das Projekt auf Ihren Rechner und installieren Sie di
 
 **Development** `npm run serve`
 
+**Component Dokumentation** `npm run doc`
+
 **Build** `npm run build`
 
 ### Entry Points

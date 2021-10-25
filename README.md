@@ -1,4 +1,4 @@
-# WebXR Editor
+# WebXR Editor (Backend)
 Mit dem WebXR Editor können angemeldete User 3D Projekte anlegen, gestalten und in XR-fähigen Browser ansehen.
 
 Dieser Prototyp ist im Rahmen des Forschungsprojekts "Im/material Theatre Spaces" entstanden. Weitere Informationen zum Projekt finden Sie [hier](https://digital.dthg.de/).
